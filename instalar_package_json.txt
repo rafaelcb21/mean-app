@@ -1,0 +1,810 @@
+npm install --save @angular/core @angular/common @angular/compiler @angular/http @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/upgrade
+npm install --save systemjs es6-shim reflect-metadata rxjs zone.js typings
+
+npm install -g typescript
+npm install -g typings  ou npm install typings --global   ou ./node_modules/.bin/typings search
+npm install -g typings --save
+
+typings init  => cria o arquivo typings.json vazio
+
+typings info dt~jasmine --versions   => versao do registry:dt
+TAG                  | VERSION  | DESCRIPTION COMPILER LOCATION                                                                        | UPDATED
+2.2.0+20160621224255 | 2.2.0    | github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#c49913aa9ea419ea46c1c684e488cf2a10303b1a | 2016-06-21T22:42:55.000Z
+2.2.0+20160412134438
+"jasmine": "registry:dt/jasmine#2.2.0+20160412134438"
+
+typings install --save => cria o diretorio typings e o arquivo typings
+
+se tiver o es6-shim nao precisa do core-js
+typings search es6-shim
+typings install dt~es6-shim --save --global
+
+typings search jasmine
+typings install dt~jasmine --save --global  => preenche 2 arquivos automaticamente (typings.json e o index.d.ts)
+
+https://neoheurist.wordpress.com/2016/06/20/definitely-typed/
+
+
+tsc -init  => cria o arquivo tsconfig.json
+http://www.typescriptlang.org/docs/handbook/tsconfig-json.html
+https://github.com/TypeStrong/atom-typescript/blob/master/docs/tsconfig.md#compileonsave
+https://www.jayway.com/2014/03/28/running-scripts-with-npm/
+http://tableless.com.br/gulp-o-novo-automatizador/
+https://angular.io/docs/ts/latest/quickstart.html
+http://gulpjs.com/plugins/
+https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md
+https://github.com/gulpjs/gulp/blob/master/docs/API.md
+https://www.npmjs.com/
+
+tsconfig.json configuraçao da compilacao
+typings.json declaracao de pacotes que nao possuem *.d.ts explicando como se deve compilar tais pacotes
+
+++++++++++++++++++++++++++++++++++++++++++++
+Vai para producao (/bin, /public, /routes , /views, app.js, package.json, /models)
+PREPARAR O AMBIENTE = FAZ 1 VEZ
+
+npm install express-generator -g  o g é de globall --global
+npm install -g typings ou npm install typings  e para executa-lo precisa usar o comando ./node_modules/.bin/typings [opções]
+
+============================================
+INSTALAÇÃO = FAZ PARA CADA PROJETO
+
+(lembrete mas nao precisa) npm init -y => cria package.json o express ja cria o basico
+
+express [projeto] --hbs => cria o projeto minimo (bin, public, routes, views, app.js, package.json)
+[X] typings init => cria o arquivo typings.json
+[X] typings install --save => cria o diretorio (typings, index.d.ts)
+
+?─────────────────────────────────────?
+│                                     │
+│   Update available 1.3.3 → 2.0.0    │
+│   Run npm i -g typings to update    │
+│                                     │
+?─────────────────────────────────────?
+
+cd [projeto]
+[X] npm install --save @angular/core @angular/common @angular/compiler @angular/http @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/upgrade systemjs es6-shim reflect-metadata rxjs zone.js typings core-js
+=> cria o diretorio node_modules e escreve no arquivo package.json
+
+Ao invez de instalar os pacotes editar o arquivo package.json da seguinte forma, garantindo assim a compatibilidade entre os pacotes:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+{
+  "name": "appDefault",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "postinstall": "typings install",
+    "typings": "typings",
+    "vendor": "gulp vendor",
+    "gulp": "gulp clean && gulp",
+    "build:production": "gulp clean && gulp build && node systemjs.builder.js"
+  },
+  "dependencies": {
+    "@angular/common": "2.0.0-rc.4",
+    "@angular/compiler": "2.0.0-rc.4",
+    "@angular/core": "2.0.0-rc.4",
+    "@angular/forms": "0.2.0",
+    "@angular/http": "2.0.0-rc.4",
+    "@angular/platform-browser": "2.0.0-rc.4",
+    "@angular/platform-browser-dynamic": "2.0.0-rc.4",
+    "@angular/router": "3.0.0-beta.1",
+    "@angular/router-deprecated": "2.0.0-rc.2",
+    "@angular/upgrade": "2.0.0-rc.4",
+
+    "systemjs": "0.19.27",
+    "reflect-metadata": "^0.1.3",
+    "rxjs": "5.0.0-beta.6",
+    "zone.js": "^0.6.12",
+
+    "body-parser": "~1.15.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.13.4",
+    "hbs": "~4.0.0",
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.0",
+
+    "es6-shim": "^0.35.1",
+    "typings": "^1.3.1"
+  },
+  "devDependencies": {
+    "del": "^2.2.1",
+    "gulp": "^3.9.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-typescript": "^2.13.6",
+    "systemjs-builder": "^0.15.23"
+  }
+}
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+UNMET PEER DEPENDENCY => Dependencia nao satisfeita
+npm install <package>@<version> --save
+
+typings install dt~es6-shim --save --global => declara no arquivo typings, cria o arquivo typings.json, cria o diretorio (typings, index.d.ts)
+o global significa global para todas as dependencias
+typings install dt~core-js --save --global
+
+typings install dt~jasmine --save --global => declara no arquivo NÃO VOU INSTALAR 
+copy NUL typings.d.ts  criará um arquivo no windows, detalhe, executar o comando na raiz do projeto. Esse arquivo servirá para compilar a sua aplicaçao
+preencher o arquivo acima com o seguinte conteudo:
+====================================================
+/// <reference path="./typings/index.d.ts" />
+
+declare var require: any;
+declare var module: { id: string };
+====================================================
+typings install dt~jquery --global --save
+typings install dt~hammerjs --global --save
+
+
+Instalar o automatizador de tarefas gulp e alguns plugins para o gulp
+npm install --save-dev gulp gulp-typescript gulp-sourcemaps
+gulp-typescript: Um compilador typescript para gulp com o apoio de compilação incremental.
+gulp-sourcemaps: Apoio de Mapa Fonte para Gulp.js
+copy NUL gulpfile.js => na raiz do projeto
+
+Criar diretório /app na raiz do projeto
+Alterar o diretorio /public/javascripts para /public/js
+
+[X] npm install --save-dev del  => para deletar limpar arquivos
+[X] npm install --save-dev systemjs-builder => empacotar e construir o sistemajs
+npm install --save-dev del systemjs-builder
+
+gulpfile.js
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+var gulp = require('gulp');
+var gulpTypescript = require('gulp-typescript');
+var gulpSourcemaps = require('gulp-sourcemaps');
+
+var del = require('del');
+
+var appDev = 'app/';
+var appProd = 'public/js/app/';
+var vendor = 'public/js/vendor/';
+
+var tsconfig = gulpTypescript.createProject('tsconfig.json');
+
+gulp.task('build-ts', function () {
+    var tsResult = tsconfig.src()
+        .pipe(tsconfig());
+    return tsResult.js.pipe(gulp.dest(appProd));
+});
+
+gulp.task('build-copy', function() {
+   return gulp.src([appDev + '**/*.html', appDev + '**/*.css'])
+       .pipe(gulp.dest(appProd));
+});
+
+gulp.task('clean', function() {
+   del(appProd + '**/*');
+});
+
+gulp.task('vendor', function() {
+    gulp.src('node_modules/@angular/**')
+        .pipe(gulp.dest(vendor + '/@angular'));
+
+    gulp.src('node_modules/es6-shim/**')
+        .pipe(gulp.dest(vendor + '/es6-shim'));
+
+    //reflect metadata
+    gulp.src('node_modules/reflect-metadata/**')
+        .pipe(gulp.dest(vendor + '/reflect-metadata/'));
+
+    //rxjs
+    gulp.src('node_modules/rxjs/**')
+        .pipe(gulp.dest(vendor + '/rxjs/'));
+
+    //systemjs
+    gulp.src('node_modules/systemjs/**')
+        .pipe(gulp.dest(vendor + '/systemjs/'));
+
+    //zonejs
+    return gulp.src('node_modules/zone.js/**')
+        .pipe(gulp.dest(vendor + '/zone.js/'));
+});
+
+gulp.task('watch', function() {
+   gulp.watch(appDev + '**/*.ts', ['build-ts']);
+   gulp.watch(appDev + '**/*.{html,css}', ['build-copy']);
+});
+
+gulp.task('default', ['watch', 'build-ts', 'build-copy', 'vendor']);
+gulp.task('build', ['build-ts', 'build-copy', 'vendor']);
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+'''
+OBS: Nao precisa fazer Leia os WARN e aprenda concerta-los exemplo:
+npm ls graceful-fs
+npm install graceful-fs@^4.0.0 minimatch@3.0.2 lodash@^4.0.0
+'''
+
+npm run gulp => executará somente o script gulp que se encontra declarado no package.json
+OBS: diretorio vendor (backend), serve para separar frontend e backend. No vendor ficará todos os modulos "node-modules" de producao que se encontram no arquivo package.json
+@angular | es6-shim | systemjs | core-js | reflect-metadata | rxjs | zone.js
+
+es6-shim => ECMAScript 6 (Harmonia) ponto de compatibilidade para engenharia de JavaScript legados
+rxjs => Extensões de reagentes para JavaScript moderna
+systemjs => Universal carregador de módulo dinâmico
+zone.js => Implementa Zonas para JavaScript, inspirados por Dart. | é a porta para as funcionalidades alvos do JavaScript https://www.youtube.com/watch?v=3IqtmUscE_U https://www.dartlang.org/articles/zones/ 
+Uma zona é um contexto de execução que persiste entre as tarefas assíncronas. Você pode pensar nisso como armazenamento local de segmento para JavaScript VMs.
+reflect-metadata => Proposta para adicionar decoradores para ES7
+core-js => Biblioteca padrão modular para JavaScript.
+
+copy NUL tsconfig.json
+tsconfig.json => esse arquivo apresenta as opcoes no momento da compilacao ES6 para o ES5
+tsc -init
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": false,
+        "noImplicitAny": false,
+        "outDir": "../public/js/app",
+		"rootDir": "app"
+    },
+    "files":[
+        "./app/**/*.ts"
+    ],
+    "exclude":[
+        "node-modules"
+    ]
+}
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+./app.js
+Alterar o arquivo app.js que se encontra na raiz do projeto:
+
+Alterar a linha:
+DE: var routes = require('./routes/index');
+PARA: var appRoutes = require('./routes/app');
+
+DE: app.use('/', routes);
+PARA: app.use('/', appRoutes);
+
+Excluir as linhas:
+var users = require('./routes/users');
+app.use('/users', users);
+
+Entre as linhas app.use(express.static(path.join(__dirname, 'public'))); e app.use('/', appRoutes); inserir o trecho de código abaixo:
+app.use(function(req, res, next) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE');
+	next();
+});
+
+Alterar o trecho de código:
+
+if (app.get('env') === 'development') {
+	app.use(function(err, req, res, next) {
+		res.status(err.status || 500);
+		res.render('error', {
+			message: err.message,
+			error: err
+		});
+	});
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+	res.status(err.status || 500);
+	res.render('error', {
+		message: err.message,
+		error: {}
+	});
+});
+PARA:
+if (app.get('env') === 'development') {
+	app.use(function(err, req, res, next) {
+		res.status(err.status || 500);
+		res.json({
+			message: err.message,
+			error: err
+		});
+	});
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+	res.status(err.status || 500);
+	res.json({
+		message: err.message,
+		error: {}
+	});
+});
+./routes/
+Dentro do diretório routes excluir o arquivo users.js e alterar o nome do arquivo index.js para app.js.
+Dessa forma refletindo as mudanças realizadas no arquivo app.js da raiz do projeto.
+
+No arquivo ./routes/app.js alterar a linha:
+DE: res.render('index', { title: 'Express' });
+PARA: res.render('index');
+
+./views/
+Dentro do diretório views excluir os arquivos erro.hbs e layout.hbs.
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+scripts adicionais do package.json
+npm run typings - runs the typings tool separately
+npm run postinstall - called by npm automatically after it successfully completes package installation. This script installs the TypeScript definition files defined in typings.json
+
+    "postinstall": "typings install",
+    "typings": "typings",
+    "vendor": "gulp vendor",
+    "gulp": "gulp clean && gulp",
+    "build:production": "gulp clean && gulp build && node systemjs.builder.js"
+
+/views/index.hbs
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+<!doctype html>
+<html lang="en">
+<head>
+    <base href="/">
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+
+    <script src="js/vendor/es6-shim/es6-shim.min.js"></script>
+    <script src="js/vendor/zone.js/dist/zone.js"></script>
+    <script src="js/vendor/reflect-metadata/Reflect.js"></script>
+    <script src="js/vendor/systemjs/dist/system.src.js"></script>
+
+    <script src="systemjs.config.js"></script>
+</head>
+<body>
+    <my-app>Loading...</my-app>
+
+<script>
+    System.import('app').catch(function(err){ console.error(err); });
+</script>
+</body>
+</html>
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+criar o arquivo abaixo
+/public/systemjs.config.js => configuraçao para carregar o app
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+var map = {
+    'app': 'js/app',
+    'rxjs': 'js/vendor/rxjs',
+    '@angular': 'js/vendor/@angular'
+};
+
+var packages = {
+    'app': { main: 'boot.js', defaultExtension: 'js' },
+    'rxjs': { defaultExtension: 'js' }
+};
+
+var packageNames = [
+    '@angular/common',
+    '@angular/compiler',
+    '@angular/core',
+    '@angular/http',
+    '@angular/platform-browser',
+    '@angular/platform-browser-dynamic',
+    '@angular/router',
+    '@angular/testing',
+    '@angular/upgrade' 
+];
+
+packageNames.forEach(function(pkgName) {
+   packages[pkgName] = { main: 'index.js', defaultExtension: 'js' };
+});
+
+var config = {
+    map: map,
+    packages: packages
+};
+
+System.config(config);
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+Criar o arquivo systemjs.builder.js
+systemjs.builder.js
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+var path = require('path');
+var Builder = require('systemjs-builder');
+var del = require('del');
+
+var builder = new Builder('public', 'public/systemjs.config.js');
+
+builder.bundle('app/boot.js', './public/js/app/boot.js', { minify: true, encodeNames: false })
+    .then(function() {
+        del(['./public/js/app/**/*.js', '!./public/js/app/**/{boot.js,*.html,*.css}'])
+            .then(function(paths) {
+                console.log('Deleted files and folders:\n', paths.join('\n'));
+            });
+        console.log('Build completed!');
+    })
+    .catch(function(err) {
+        console.log('Build error!')
+        console.log(err);
+    });
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+copy NUL app\app.module.ts
+copy NUL app\boot.ts
+copy NUL app\app.component.ts
+
+Criar os arquivos
+app/app.component.html
++++++++++++++++++++++++++++++++++++++
+<h1>Ola Mundo</h1>
++++++++++++++++++++++++++++++++++++++
+
+app/app.component.ts
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+import { Component } from '@angular/core';
+
+@Component({
+    moduleId: module.id,
+    selector: 'my-app',
+    templateUrl: 'app.component.html'
+})
+
+export class AppComponent {}
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+app/boot.ts
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+/// <reference path="../typings.d.ts" />
+import { bootstrap } from '@angular/platform-browser-dynamic';
+import { AppComponent } from './app.component';
+import { enableProdMode } from "@angular/core";
+
+enableProdMode();
+bootstrap(AppComponent);
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+npm install graceful-fs => precisei atualizar pois esta pedindo no apos rodar o comando npm run gulp
+Depois
+npm run gulp => fica ouvindo, abra outro terminal e execute o comando abaixo
+npm start
+
+
+Deploy
+systemjs.builder.js
+
+npm run build:production =>criou a construcao e empacotamento do app
+npm start => executa ainda o desenvolvimento
+"build:production": "gulp clean && gulp build && node systemjs.builder.js" => LIMPA, COMPILA, EMPACOTA, o de Desenv só LIMPA, COMPILA
+**************************************************************************
+Projeto zerado vindo do Github
+
+Pré requisitos:
+NodeJs instalado, que ja instala por padrao o npm
+npm instalado
+
+npm install
+npm run gulp
+npm start
+
+
+
+
+HEROKU
+==========================================================================
+Crie uma conta no heroku, assine o plano free
+
+Após ter criado a conta no heroku, vamos utilizar só a interface de linha de comando
+
+Instale o Heroku Toolbelt, para poder usar a linha de comando
+
+heroku login
+cd [projeto]
+
+heroku apps:create [projeto] => vai criar um projeto no Heroku
+git init => se for a primeira vez, criará o versionamento de arquivos do git .git na raiz do projeto
+git add .
+git commit -m "mensagem"
+git remote -v => vê os remote configurados dentro do arquivo .git
+
+Se o app do criado nao aparecer
+heroku git:remote -a [projeto] => Criará o link com o heroku
+
+o heroku abaixo é o remote
+git push heroku master --force => enviará o app ao Heroku
+
+para ler o arquivo .env variaveis de ambiente, esse arquivo .env entra no .gitignore
+heroku config => vê as informações que estao no Heroku referentes as variaveis de ambiente
+heroku config:push => envia ao Heroku as configuraçoes que estao no .env
+
+heroku config:set GITHUB_USERNAME=joesmith
+Adding config vars and restarting myapp... done, v12
+GITHUB_USERNAME: joesmith
+
+heroku config
+GITHUB_USERNAME: joesmith
+OTHER_VAR:    production
+
+heroku config:get GITHUB_USERNAME
+joesmith
+
+heroku config:unset GITHUB_USERNAME
+Unsetting GITHUB_USERNAME and restarting myapp... done, v13
+
+DETALHE O .gitignore NÃO entra no próprio arquivo
+
+heroku help
+heroku apps --all => ve todos os seus apps no heroku
+heroku logs => ve o log
+
+heroku addons:open cloudinary
+
+Meu    CLOUDINARY_URL=cloudinary://327899937597418:_0IDD0e_ENBkQ-NHv2bE5pIYrOM@dlzzjgs5f
+Heroku CLOUDINARY_URL=cloudinary://228388287583791:w24hkKN5Q9xH1IJe-50PFhg5a3I@hsnpfavjg
+
+
+ecbanespa-email-test
+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
+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
+
+CLOUDINARY_URL:    cloudinary://228388287583791:w24hkKN5Q9xH1IJe-50PFhg5a3I@hsnpfavjg
+HOST_EMAIL:        https://ecbanespa.herokuapp.com/user?confirm=
+SECRET:            e5SZGSLNfnKjhAk0HrwUykfhRYBZEzQzCYz4q+sB+Z4=
+SENDGRID_PASSWORD: 4nu1mpvx3608
+SENDGRID_USERNAME: app53365234@heroku.com
+SENDGRID_API_KEY: 8QnmdjH9ROqlUVtOZlOvVw
+
+heroku addons:open sendgrid
+
+heroku addons:create sendgrid:starter
+Criara duas variaveis de ambiente SENDGRID_PASSWORD e SENDGRID_USERNAME
+heroku addons: docs sendgrid
+
+
+OBS: fazer o NodeJS ler as variaveis de ambiente e enviar ao app AngularJS
+Secret Key = ?
+DEBUG=true ?
+Banco de dados =
+
+O app esta em modo Debug? Nao, por causa do enableProdMode();
+
+.gitignore:
+=================================================================================
+/assets
+/node_modules
+/typings
+typings.json
+typings.d.ts
+tsconfig.json
+systemjs.builder.js
+gulpfile.js
+
+
+Couchdb
+=============================================================================================
+Apos ter instalado o Couchdb, vá no diretorio "C:\Program Files\Apache Software Foundation\CouchDB\bin" bin e execute o arquivo couchdb.bat para inicia-lo
+Documentos JSON
+Busca em B-Tree
+MapReduce para fazer as querys
+RESTFull, comandos, buscas, etc na url
+
+Configuration, para trabalhar localhost
+credentials: true
+enable_cors: true
+
+C:\Program Files\Apache Software Foundation\CouchDB\etc\couchdb\default.ini
+Fazer as mesmas mudanças no arquivo default.ini, habilitando tb a variavel origins, para poder acessar de qualquer lugar
+credentials: true
+enable_cors: true
+origins = *
+Inicie novamente o couchdb executando o arquivo couchdb.bat
+
+http://127.0.0.1:5984/
+{"couchdb":"Welcome","uuid":"67b2a317ab86cfaf173235f6b6fee831","version":"1.6.1","vendor":{"version":"1.6.1","name":"The Apache Software Foundation"}}
+
+http://127.0.0.1:5984/_all_dbs
+["_replicator","_users"]
+
+http://127.0.0.1:5984/_utils/
+Futon interface grafica
+
+curl -X GET http://127.0.0.1:5984/banco_teste/_all_docs
+Recupera os documentos do banco_teste
+{"total_rows":1,"offset":0,"rows":[
+{"id":"93880ee8f48cafff603599e7a6000f7c","key":"93880ee8f48cafff603599e7a6000f7c","value":{"rev":"1-a43837af3a373f37a14bcd465935cf8f"}}
+]}
+
+curl -X GET http://127.0.0.1:5984/banco_teste/_all_docs?include_docs=true
+Recupera os documentos do banco_teste com seu conteudo
+{"total_rows":1,"offset":0,"rows":[
+{"id":"93880ee8f48cafff603599e7a6000f7c","key":"93880ee8f48cafff603599e7a6000f7c","value":{"rev":"1-a43837af3a373f37a14bcd465935cf8f"},"doc":{"_id":"93880ee8f48cafff603599e7a6000f7c","_rev":"1-a43837af3a373f37a14bcd465935cf8f","public":true,"message":null,"table":"main"}}
+]}
+
+curl -X GET http://127.0.0.1:5984/banco_teste/93880ee8f48cafff603599e7a6000f7c
+Recupera um unico documento
+{"_id":"93880ee8f48cafff603599e7a6000f7c","_rev":"1-a43837af3a373f37a14bcd465935cf8f","public":true,"message":null,"table":"main"}
+
+http://127.0.0.1:5984/banco_teste/93880ee8f48cafff603599e7a6000f7c?rev=1-a43837af3a373f37a14bcd465935cf8f
+Recupera um documento juntamente com uma versao especifica
+
+Adiciona um documento, utilzando o POST 
+curl -X POST http://127.0.0.1:5984/test_db/ -d '{"name": "Ash Ketchum", "age": 10, "type": "trainer"}' -H "Content-Type: application/json"
+-X type = POST
+-d data
+-H header = JSON
+
+Update documento
+curl -X PUT http://127.0.0.1:5984/test_db/cc6b37f1e6b2215f2a5ccac38c000a43 -d '{"_rev": "1-61280846062dcdb986c5a6c4aa9aaf03", "name": "Ash Ketchum", "age": 12, "type": "trainer"}' -H "Content-Type: application/json"
+
+Delete um documento especifico com sua versao especifica
+curl -X DELETE http://127.0.0.1:5984/test_db/cc6b37f1e6b2215f2a5ccac38c000a43?rev=2-0023f19d7d3097468a8eeec014018840
+
+Backup do Banco por meio do script couchdb-backup.sh https://github.com/danielebailo/couchdb-dump/blob/master/couchdb-backup.sh
+Ao invez de replicar com dados sujos, arquivos ja deletados e outros que nao somem definitivamente do banco
+bash couchdb-backup.sh -b -H 127.0.0.1 -d test_db -f test_db.json -u your_username -p your_password   => Backup
+bash couchdb-backup.sh -r -H 127.0.0.1 -d test_db -f test_db.json -u your_username -p your_password   => Restore
+
+Views = "SELECT"
+Views é uma função JavaScript que emite o documento desejado
+
+Exemplo:
+function(doc) {
+   emit(doc.public, null);
+}
+nome do _design da view que eu dei = table
+nome da _view que eu deu = by_public
+query = 
+
+http://127.0.0.1:5984/test_db/_design/table/_view/by_public?public=%22true%22"
+
+Ver segurança do banco CouchDB
+
+
+
+
+
+
+
+email email
+function(doc) {
+  if(doc.email){
+  	emit(doc.email, [doc.email, doc.password, doc.salt]);
+  }
+}
+
+message type_message
+function(doc) {
+  if(doc.type=='message'){
+  	emit(null, doc);
+  }
+}
+
+message doc_keys
+function(doc) {
+  if(doc.type=='message'){
+    emit(doc._id, {_id: doc._id, _rev: doc._rev, content: doc.content, userId: doc.userId, username: doc.username});
+  }
+}
+
+user user
+function(doc) {
+  if(doc.email){
+    emit(doc._id, {_id: doc._id, _rev: doc._rev, email: doc.email, firstName: doc.firstName, lastName: doc.lastName, messagesIds: doc.messagesIds, password: doc.password, salt: doc.salt});
+  }
+}
+
+@Cloudant2016#
+https://braga-service.cloudant.com
+http://localhost:5984/mean/_design/email/_view/email?key=%22rafaelcb20@hotmail.com%22
+
+var express = require('express');
+var router = express.Router();
+//var passwordHash = require('password-hash'); //npm install --save password-hash
+var jwt = require('jsonwebtoken');
+var crypto = require('crypto');
+
+//var nano = require('nano')('http://localhost:5984');
+//var nano = require('nano')('https://braga-service.cloudant.com');
+//var nano = require('nano')('https://braga-service:@Cloudant2016#@braga-service.cloudant.com');
+//var mean = nano.db.use('mean');
+
+var Cloudant = require('cloudant');
+var me = 'braga-service';
+var password = '@Cloudant2016#';
+var cloudant = Cloudant({account:me, password:password});
+var mean = cloudant.db.use('mean');
+
+
+
+
+var express = require('express');
+var jwt = require('jsonwebtoken');
+//var crypto = require('crypto');
+
+var router = express.Router();
+/*var Message = require('../public/js/app/message/message');*/
+//var nano = require('nano')('http://localhost:5984');
+//var nano = require('nano')('https://braga-service.cloudant.com');
+//var mean = nano.db.use('mean');
+
+var Cloudant = require('cloudant');
+var me = 'braga-service';
+var password = '@Cloudant2016#';
+var cloudant = Cloudant({account:me, password:password});
+var mean = cloudant.db.use('mean');
+
+heroku apps:create curso-cean
+heroku config:set CLOUDANT_USERNAME='braga-service'
+heroku config:set CLOUDANT_PASSWORD='@Cloudant2016#'
+heroku config:push
+
+heroku ps -a mean {ver quantas horas de dynos}
+git push heroku master --force
+git remote -v
+
+
+
+
+
+=======================================================================================================
+IONIC 2
+npm install typings --global
+npm install -g prebuild
+npm install -g ionic@beta
+npm install -g cordova
+
+http://www.joshmorony.com/syncing-data-with-pouchdb-and-cloudant-in-ionic-2/
+#ionic start myApp sidemenu --v2 --ts
+#ionic start myApp tabs --v2 --ts
+ionic start meanModule blank --v2 --ts
+#ionic platform add android
+#ionic platform add ios
+#ionic plugin add https://github.com/litehelpers/Cordova-sqlite-storage
+ionic plugin add cordova-plugin-sqlite-2
+npm install pouchdb --save
+typings install dt~require --global --save
+ionic g provider Data
+
+Instalar o SDK Android e do Java
+No Mananger SDK Plataform instalar tb o Android 5.1.1 (API 22) e o Tool 23 -> SDK Plataform => Tudo como Administrador da maquina
+ionic build android
+
+C:\ProgramData\Oracle\Java\javapath;C:\Program Files\Python35-32\Scripts\;C:\Program Files\Python35-32\;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Heroku\bin
+41dc88efe9ceeebd1057564929f9a1a3b02984d0
+Key:ccavoublerywhoureatelyno
+Password:41dc88efe9ceeebd1057564929f9a1a3b02984d0
+
+warning: possible EventEmitter memory leak detected. 11 listeners added. Use emitter.setMaxListeners() to increase limit.
+http://stackoverflow.com/questions/9768444/possible-eventemitter-memory-leak-detected
+
+
+
+
+TESTE
+http://blog.rangle.io/testing-angular-2-applications/
+http://blog.rangle.io/testing-your-angular-2-application-part2/
+http://tphangout.com/angular-2-testing/
+https://medium.com/google-developer-experts/angular-2-unit-testing-with-jasmine-defe20421584#.39g55fvfg
+https://www.youtube.com/watch?v=C0F2E-PRm44
+
+https://www.youtube.com/watch?v=2u7mHBCCSQ4
+https://www.youtube.com/watch?v=8ZLFRKqGRv0
+
+
+
+
+
+
+
+
+
+=================================================================================
+
+CSRF
+
+http://stackoverflow.com/questions/36594516/how-does-angular-2-beta-handle-with-xss-or-csrf
+http://stackoverflow.com/questions/34494876/what-is-the-right-way-to-use-angular2-http-requests-with-django-csrf-protection

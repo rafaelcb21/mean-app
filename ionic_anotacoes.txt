@@ -1,0 +1,56 @@
+npm install -g ionic cordova
+ionic start myapp blank --v2
+ionic start myapp --v2 sidemenu
+#npm install
+ionic serve
+ionic platform add android
+
+/ionic start e depois um pull/
+
+ionic start projeto blank --v2     tabs sidemenu
+ionic info
+ionic platform add android
+ionic run android -l -c  fica watch
+ionic run android sem watch
+ionic g page login
+ionic g provider nomedoservico
+ionic serve
+ionic build android
+ionic build --release android
+cordova build --release android
+cordova plugin rm cordova-plugin-console  remover esse plugin
+
+vysor
+chrome://inspect
+https://github.com/ansodev/AnsoMessage
+Instalar plugin:
+ionic plugin add cordova-plugin-facebook4 --save --variable APP_ID="SEU ID" --variable APP_NAME=“SEU APP”
+
+Gerar hash chave do debug:
+keytool -exportcert -alias androiddebugkey -keystore debug.keystore | openssl sha1 -binary | openssl base64
+C:\Users\"user"\.android\ on Windows Vista and Windows 7, 8, and 10
+
+IntelXDK
+
+Para Produçao retirar do arquivo package.json DEBUG
+Nao funciona!!!
+  "config": {
+    "ionic_bundler": "webpack",
+    "ionic_source_map": "source-map"
+  },
+
+-Instalar Java JDK
+-Instalar Andorid JDK
+-Instalar os pacotes do Android
+ Control Panel
+ System
+ Advanced(tab)
+ Environment Variables
+ System Variables
+ New
+  Variable name: _JAVA_OPTIONS
+  Variable value: -Xmx512M
+ionic platform add android
+**e ir concertando as plataformas que precisar instalar, precisei intalar tambem a 24
+ANDROID_HOME=C:\Program Files\Android\android-sdk
+JAVA_HOME=C:\Program Files\Java\jdk1.8.0_112

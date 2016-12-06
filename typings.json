@@ -1,0 +1,10 @@
+{
+  "name": "mean-app",
+  "dependencies": {},
+  "globalDependencies": {
+    "core-js": "registry:dt/core-js#0.0.0+20160914114559",
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
+    "hammerjs": "registry:dt/hammerjs#2.0.8+20160724063812",
+    "jquery": "registry:dt/jquery#1.10.0+20160929162922"
+  }
+}

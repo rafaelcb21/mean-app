@@ -1,0 +1,34 @@
+clone
+git clone <url>
+
+.gitignore Altere de Desenv para Producao
+
+limpar gitignore
+git rm -r --cached .
+git add .
+git commit -m "fixed untracked files" 
+
+OBS: colocou algo novo no .gitignore limpe novamente
+
+npm install
+alterar configuracao para producao
+- nos arquivos
+    app/config.ts
+    app.js (mongoose e o redirect)
+
+- e no heroku se tiver
+    git remote -v
+    git remote add heroku <url>
+    inserir a configuraçao do .env
+      Comandos:
+        heroku config:set GITHUB_USERNAME=joesmith
+        heroku config
+        heroku config:get GITHUB_USERNAME=joesmith
+
+npm run gulp
+
+git add .
+git commit -m ""
+git push heroku master --force
+
+heroku addons:create cloudinary
