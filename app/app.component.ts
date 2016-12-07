@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 @Component({
   moduleId: module.id,
   selector: 'my-app',
-  template: `Ola mundo`,
+  template: `<router-outlet></router-outlet>`,
 })
 export class AppComponent {
   date7: any;

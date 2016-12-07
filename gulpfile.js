@@ -8,12 +8,14 @@ var appDev = 'app/';
 var appProd = 'public/js/app/';
 var vendor = 'public/js/vendor/';
 
-var tsconfig = gulpTypescript.createProject('tsconfig.json');
+var tsconfig = gulpTypescript.createProject('tsconfig.json', {
+    typescript: require('typescript')
+});
 
 gulp.task('build-ts', function () {
     var tsResult = tsconfig.src()
         .pipe(tsconfig());
-    return tsResult.js.pipe(gulp.dest(appProd));
+    return tsResult.js.pipe(gulp.dest('public/js/app'));
 });
 
 gulp.task('build-copy', function() {
@@ -36,6 +38,18 @@ gulp.task('vendor', function() {
     gulp.src('node_modules/reflect-metadata/**')
         .pipe(gulp.dest(vendor + '/reflect-metadata/'));
 
+    //moment
+    gulp.src('node_modules/moment/**')
+        .pipe(gulp.dest(vendor + '/moment/'));
+        
+    //primeng
+    gulp.src('node_modules/primeng/**')
+        .pipe(gulp.dest(vendor + '/primeng/'));
+
+    //primeui
+    gulp.src('node_modules/primeui/**')
+        .pipe(gulp.dest(vendor + '/primeui/'));
+        
     //rxjs
     gulp.src('node_modules/rxjs/**')
         .pipe(gulp.dest(vendor + '/rxjs/'));

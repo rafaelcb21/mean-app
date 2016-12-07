@@ -8,10 +8,11 @@
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": false,
-    "outDir": "../public/js/app"
+    "outDir": "../public/js/",
+	"rootDir": "./app"
   },
   "files":[
-    "./app/*"
+    "app/**/*.ts"
   ],
   "exclude":[
     "node-modules"

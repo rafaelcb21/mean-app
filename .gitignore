@@ -1,0 +1,24 @@
+# Producao
+#.env
+#.vscode
+#.git
+#/node_modules/
+#typings
+#.gitignore
+#.idea/ecbanespa.iml
+#.idea/modules.xml
+#.idea/workspace.xml
+#/app
+#typings.json
+#typings.d.ts
+#tsconfig.json
+#systemjs.builder.js
+#gulpfile.js
+
+# Desenvolvimento
+.git
+.vscode
+/node_modules/
+.idea
+/public/js/*
+/uploads/*

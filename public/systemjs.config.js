@@ -9,8 +9,10 @@
       '@angular/http': 'js/vendor/@angular/http',
       '@angular/router': 'js/vendor/@angular/router',
       '@angular/forms': 'js/vendor/@angular/forms',
-	  '@angular/upgrade': 'js/vendor/@angular/upgrade',
+	    '@angular/upgrade': 'js/vendor/@angular/upgrade',
       'rxjs': 'js/vendor/rxjs',
+      'primeng': 'js/vendor/primeng',
+      'moment': 'js/vendor/moment/moment.js',
     },
 
     packages = {
@@ -24,7 +26,8 @@
       '@angular/http': { main: 'bundles/http.umd.js', defaultExtension: 'js' },
       '@angular/router': { main: 'bundles/router.umd.js', defaultExtension: 'js' },
       '@angular/forms': { main: 'bundles/forms.umd.js', defaultExtension: 'js' },
-	  '@angular/upgrade': { main: 'bundles/upgrade.umd.js', defaultExtension: 'js' },
+	    '@angular/upgrade': { main: 'bundles/upgrade.umd.js', defaultExtension: 'js' },
+      'primeng': { defaultExtension: 'js' },
     };
   System.config({map: map, packages: packages});
 })(this);
