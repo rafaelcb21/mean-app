@@ -1,0 +1,8 @@
+.display {
+    margin-top: 15px;
+    display: flex;
+}
+
+.field {
+    margin-right: 10px;
+}

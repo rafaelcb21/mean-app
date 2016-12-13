@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { SelectItem } from 'primeng/primeng';
 
 @Component({
     selector: '<fornecedor></fornecedor>',
@@ -7,5 +8,56 @@ import { Router } from '@angular/router';
     styleUrls: ['./js/app/fornecedor/fornecedor.component.css'],
 })
 export class FornecedorComponent {
-    constructor(private _router: Router,){}
+
+    fornecedores: SelectItem[];
+    operacao: SelectItem[];
+    categoria: SelectItem[];
+    produto: SelectItem[];
+    transportadora: SelectItem[];
+    selectedFornecedor: string;
+    selectedOperacao: string;
+    selectedCategoria: string;
+    selectedProduto: string;
+    selectedTransportadora: string;
+    valueEmissao: Date;
+    valuePgto: Date;
+
+    constructor(private _router: Router,){
+        this.fornecedores = [    
+            {label:'Fornecedores', value:null},
+            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
+            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
+            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
+        ];
+        //this.fornecedores.push({label:'Paris', value:{id:5, name: 'Paris', code: 'PRS'}});
+
+        this.operacao = [    
+            {label:'Operação', value:null},
+            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
+            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
+            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
+        ];
+
+        this.categoria = [
+            {label:'Categoria', value:null},
+            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
+            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
+            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
+        ];
+
+        this.produto = [
+            {label:'Produto', value:null},
+            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
+            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
+            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
+        ];
+
+
+        this.transportadora = [
+            {label:'Transportadora', value:null},
+            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
+            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
+            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
+        ];
+    }
 }

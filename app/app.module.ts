@@ -5,7 +5,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { routing } from './routes';
 import { FornecedorComponent } from './fornecedor/fornecedor.component';
- 
+import { DropdownModule, CalendarModule, InputTextModule } from 'primeng/primeng';
+
 
 @NgModule({
   declarations: [AppComponent, FornecedorComponent],
@@ -13,7 +14,10 @@ import { FornecedorComponent } from './fornecedor/fornecedor.component';
     BrowserModule,
     FormsModule,
     routing,
-	CommonModule,
+	  CommonModule,
+    DropdownModule,
+    CalendarModule,
+    InputTextModule,
   ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy}

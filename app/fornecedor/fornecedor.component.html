@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="display">
+        <div class="field">
+            <p-dropdown [options]="fornecedores" [(ngModel)]="selectedFornecedor"></p-dropdown>
+        </div>
+        <div div class="field">
+            <p-calendar [(ngModel)]="valueEmissao" dateFormat="dd/mm/yy" placeholder="Data Emissão"></p-calendar>
+        </div>
+        <div class="field">
+            <p-dropdown [options]="operacao" [(ngModel)]="selectedOperacao"></p-dropdown>
+        </div>
+        <div class="field">
+            <p-dropdown [options]="categoria" [(ngModel)]="selectedCategoria"></p-dropdown>
+        </div>
+    </div>
+    <div class="display">
+        <div class="field">
+            <input type="text" pInputText [(ngModel)]="serie" placeholder="Série"/>
+        </div>
+        <div class="field">
+            <input type="text" pInputText [(ngModel)]="nf" placeholder="Número NF"/>
+        </div>
+        <div class="field">
+            <input type="text" pInputText [(ngModel)]="compra" placeholder="Número da Compra"/>
+        </div>
+    </div>
+    <div class="display">
+        <div class="field">
+            <p-dropdown [options]="produto" [(ngModel)]="selectedProduto"></p-dropdown>
+        </div>
+            <div class="field">
+            <input type="text" pInputText [(ngModel)]="quantidade" placeholder="Quantidade"/>
+        </div>
+        <div class="field">
+            <input type="text" pInputText [(ngModel)]="valor" placeholder="Valor"/>
+        </div>
+    </div>
+    <div class="display">
+        <div class="field">
+            <p-dropdown [options]="transportadora" [(ngModel)]="selectedTransportadora"></p-dropdown>
+        </div>
+            <div class="field">
+            <input type="text" pInputText [(ngModel)]="frete" placeholder="Frete"/>
+        </div>
+    </div>
+    <label for="" style="margin-top: 15px;">Dias do Pagamento</label>
+    <div class="display">
+        <div class="field">
+            <input type="text" pInputText [(ngModel)]="valorPagto" placeholder="Valor"/>
+        </div>
+        <div div class="field">
+            <p-calendar [(ngModel)]="valuePgto" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
+        </div>
+    </div>
+</div>
+
+
