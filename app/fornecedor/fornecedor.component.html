@@ -3,14 +3,29 @@
         <div class="field">
             <p-dropdown [options]="fornecedores" [(ngModel)]="selectedFornecedor"></p-dropdown>
         </div>
+        <div class="field icon-display">
+            <div>
+                <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Fornecedores', op)"></i>
+            </div>
+        </div>
         <div div class="field">
             <p-calendar [(ngModel)]="valueEmissao" dateFormat="dd/mm/yy" placeholder="Data Emissão"></p-calendar>
         </div>
         <div class="field">
             <p-dropdown [options]="operacao" [(ngModel)]="selectedOperacao"></p-dropdown>
         </div>
+        <div class="field icon-display">
+            <div>
+                <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Operação', op)"></i>
+            </div>
+        </div>
         <div class="field">
             <p-dropdown [options]="categoria" [(ngModel)]="selectedCategoria"></p-dropdown>
+        </div>
+        <div class="field icon-display">
+            <div>
+                <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Categoria', op)"></i>
+            </div>
         </div>
     </div>
     <div class="display">
@@ -28,7 +43,12 @@
         <div class="field">
             <p-dropdown [options]="produto" [(ngModel)]="selectedProduto"></p-dropdown>
         </div>
-            <div class="field">
+        <div class="field icon-display">
+            <div>
+                <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Produto', op)"></i>
+            </div>
+        </div>
+        <div class="field">
             <input type="text" pInputText [(ngModel)]="quantidade" placeholder="Quantidade"/>
         </div>
         <div class="field">
@@ -39,11 +59,18 @@
         <div class="field">
             <p-dropdown [options]="transportadora" [(ngModel)]="selectedTransportadora"></p-dropdown>
         </div>
-            <div class="field">
+        <div class="field icon-display" (click)="selectEdit($event, 'Transportadora', op)">
+            <div>
+                <i class="fa fa-plus-circle"></i>
+            </div>
+        </div>
+        <div class="field">
             <input type="text" pInputText [(ngModel)]="frete" placeholder="Frete"/>
         </div>
     </div>
-    <label for="" style="margin-top: 15px;">Dias do Pagamento</label>
+    <div class="display">
+        <label>Dias do Pagamento</label>
+    </div>
     <div class="display">
         <div class="field">
             <input type="text" pInputText [(ngModel)]="valorPagto" placeholder="Valor"/>
@@ -53,5 +80,10 @@
         </div>
     </div>
 </div>
+
+<p-overlayPanel #op>
+    <input type="text" pInputText [(ngModel)]="item" placeholder="{{ label }}"/>
+    <i class="fa fa-check-circle" style="color:green;margin-left:10px" (click)="itemEscolhido(label, item);op.hide($event)"></i>    
+</p-overlayPanel>
 
 

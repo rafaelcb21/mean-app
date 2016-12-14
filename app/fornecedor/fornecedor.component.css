@@ -6,3 +6,26 @@
 .field {
     margin-right: 10px;
 }
+
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+label {
+    font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 1em;
+}
+
+.icon-display {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+i {
+    color: blue;
+    cursor: pointer;
+}

@@ -5,11 +5,21 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var appRoutes = require('./routes/app');
+var listaRoutes = require('./routes/lista');
 
-var app = express();
-
+var app = express()
+  .use(function (req, res, next) {
+      if (req.header('x-forwarded-proto') == 'http') {
+        res.redirect('https://' + 'localhost:3000' + req.url)
+        //res.redirect('https://' + 'ecbanespa.herokuapp.com' + req.url)
+        return
+      }
+      next()
+  });
+mongoose.connect('mongodb://admfinancamongodb:pwadmfinancamongodb@ds133388.mlab.com:33388/admfinanca');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -25,9 +35,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE');
-	next();
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
 });
 
+app.use('/lista', listaRoutes);
 app.use('/', appRoutes);
 
 // catch 404 and forward to error handler

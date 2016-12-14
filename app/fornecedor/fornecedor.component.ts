@@ -21,6 +21,8 @@ export class FornecedorComponent {
     selectedTransportadora: string;
     valueEmissao: Date;
     valuePgto: Date;
+    label: string;
+    item: string;
 
     constructor(private _router: Router,){
         this.fornecedores = [    
@@ -59,5 +61,16 @@ export class FornecedorComponent {
             {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
             {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
         ];
+    }
+
+    selectEdit(event, lista, overlaypanel) {
+        this.label = lista
+        this.item = "";
+        overlaypanel.toggle(event);
+    }
+
+    itemEscolhido(lista, item) {
+        console.log(lista)
+        console.log(item)
     }
 }
