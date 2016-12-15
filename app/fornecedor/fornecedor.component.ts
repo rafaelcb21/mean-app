@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
+import { FornecedorService } from './fornecedor.service';
 
 @Component({
     selector: '<fornecedor></fornecedor>',
@@ -24,7 +25,9 @@ export class FornecedorComponent {
     label: string;
     item: string;
 
-    constructor(private _router: Router,){
+    constructor(private _router: Router,
+        private fornecedorService: FornecedorService,
+    ){
         this.fornecedores = [    
             {label:'Fornecedores', value:null},
             {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
@@ -34,10 +37,9 @@ export class FornecedorComponent {
         //this.fornecedores.push({label:'Paris', value:{id:5, name: 'Paris', code: 'PRS'}});
 
         this.operacao = [    
-            {label:'Operação', value:null},
-            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
-            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
-            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
+            {label:'Operação', value:{name: null, status: true }},
+            {label:'New York', value:{name: 'New York', status: true }}
+
         ];
 
         this.categoria = [
@@ -69,8 +71,16 @@ export class FornecedorComponent {
         overlaypanel.toggle(event);
     }
 
-    itemEscolhido(lista, item) {
-        console.log(lista)
-        console.log(item)
+    itemEscolhido(label, item) {
+        var lista = item.split(";");
+        this.fornecedorService.postItem(label, lista)
+            .subscribe(
+                data => {
+                    console.log(data)
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
     }
 }
