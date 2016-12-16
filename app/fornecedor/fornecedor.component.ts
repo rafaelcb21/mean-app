@@ -37,41 +37,46 @@ export class FornecedorComponent {
                     console.log(error)
                 }                
             );
-        /*this.fornecedores = [    
-            {label:'Fornecedores', value:null},
-            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
-            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
-            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
-        ];*/
-        //this.fornecedores.push({label:'Paris', value:{id:5, name: 'Paris', code: 'PRS'}});
 
-        this.operacao = [    
-            {label:'Operação', value:{name: null, status: true }},
-            {label:'New York', value:{name: 'New York', status: true }}
+        this.fornecedorService.getItem("Operação")
+            .subscribe(
+                data => {
+                    this.operacao = data;
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
 
-        ];
+        this.fornecedorService.getItem("Categoria")
+            .subscribe(
+                data => {
+                    this.categoria = data;
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
 
-        this.categoria = [
-            {label:'Categoria', value:null},
-            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
-            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
-            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
-        ];
+        this.fornecedorService.getItem("Produto")
+            .subscribe(
+                data => {
+                    this.produto = data;
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
 
-        this.produto = [
-            {label:'Produto', value:null},
-            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
-            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
-            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
-        ];
-
-
-        this.transportadora = [
-            {label:'Transportadora', value:null},
-            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
-            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
-            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
-        ];
+        this.fornecedorService.getItem("Transportadora")
+            .subscribe(
+                data => {
+                    this.transportadora = data;
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
     }
 
     selectEdit(event, lista, overlaypanel) {
@@ -85,7 +90,25 @@ export class FornecedorComponent {
         this.fornecedorService.postItem(label, lista)
             .subscribe(
                 data => {
-                    console.log(data)
+                    this.fornecedorService.getItem(data)
+                        .subscribe(
+                            data => {
+                                if(data[0].label == "Fornecedores") {
+                                    this.fornecedores = data;
+                                }else if(data[0].label == "Operação") {
+                                    this.operacao = data;
+                                }else if(data[0].label == "Categoria") {
+                                    this.categoria = data;
+                                }else if(data[0].label == "Produto") {
+                                    this.produto = data;
+                                }else if(data[0].label == "Transportadora") {
+                                    this.transportadora = data;
+                                }
+                            },
+                            error => {
+                                console.log(error)
+                            }                
+                        );
                 },
                 error => {
                     console.log(error)

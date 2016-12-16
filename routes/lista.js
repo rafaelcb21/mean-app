@@ -14,6 +14,7 @@ router.post('/item', function(req, res, next) {
     })
     ll.save(function(err, result) {})
   }
+
   res.status(201).json({
     label: label
   })
@@ -34,9 +35,10 @@ router.get('/item/:label', function(req, res, next) {
         });
       }
       res.status(200).json({
+        label: label,
         obj: doc
       });
-    })
+  })
 })
 
 module.exports = router;

@@ -3,7 +3,6 @@ import { Http, Headers } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/Rx';
 import { Config } from '../config';
-//import {User} from './user';
 
 @Injectable()
 export class FornecedorService {
@@ -13,7 +12,7 @@ export class FornecedorService {
         const body = JSON.stringify({label: label, lista: lista});
         const header = new Headers({'Content-Type': 'application/json'});
         return this._http.post(Config.URL_SITE + 'lista/item', body, {headers: header})
-            .map(response => response.json())
+            .map(response => response.json().label)
             .catch(error => Observable.throw(error.json()));
     }
 
@@ -21,15 +20,20 @@ export class FornecedorService {
         return this._http.get(Config.URL_SITE + 'lista/item/' + label)
             .map(response => {
                 const data = response.json().obj;
-                let objs: any[] = [];
-                var label = data[0].label
-                objs.push({label: label, value: {name: label}})
-                for (let i = 0; i < data.length; i++) {
-                    var name = data[i].name
-                    var item = {label: name, value: {name: name}}
-                    objs.push(item)
+                const labelItem = response.json().label;
+                if(data.length > 0){
+                    let objs: any[] = [];
+                    var label = data[0].label;
+                    objs.push({label: label, value: {name: label}})
+                    for (let i = 0; i < data.length; i++) {
+                        var name = data[i].name
+                        var item = {label: name, value: {name: name}}
+                        objs.push(item)
+                    }
+                    return objs;
+                }else if(data.length == 0){
+                    return [{label: labelItem, value: {name: labelItem}}]
                 }
-                return objs;
             })
             .catch(error => Observable.throw(error.json()));
     }
