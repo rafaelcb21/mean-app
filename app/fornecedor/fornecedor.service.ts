@@ -16,4 +16,21 @@ export class FornecedorService {
             .map(response => response.json())
             .catch(error => Observable.throw(error.json()));
     }
+
+    getItem(label) {
+        return this._http.get(Config.URL_SITE + 'lista/item/' + label)
+            .map(response => {
+                const data = response.json().obj;
+                let objs: any[] = [];
+                var label = data[0].label
+                objs.push({label: label, value: {name: label}})
+                for (let i = 0; i < data.length; i++) {
+                    var name = data[i].name
+                    var item = {label: name, value: {name: name}}
+                    objs.push(item)
+                }
+                return objs;
+            })
+            .catch(error => Observable.throw(error.json()));
+    }
 }

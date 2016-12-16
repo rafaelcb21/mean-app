@@ -28,12 +28,21 @@ export class FornecedorComponent {
     constructor(private _router: Router,
         private fornecedorService: FornecedorService,
     ){
-        this.fornecedores = [    
+        this.fornecedorService.getItem("Fornecedores")
+            .subscribe(
+                data => {
+                    this.fornecedores = data;
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+        /*this.fornecedores = [    
             {label:'Fornecedores', value:null},
             {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
             {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
             {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}}
-        ];
+        ];*/
         //this.fornecedores.push({label:'Paris', value:{id:5, name: 'Paris', code: 'PRS'}});
 
         this.operacao = [    
