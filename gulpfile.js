@@ -49,7 +49,23 @@ gulp.task('vendor', function() {
     //primeui
     gulp.src('node_modules/primeui/**')
         .pipe(gulp.dest(vendor + '/primeui/'));
-        
+
+    //text-mask-core
+    gulp.src('node_modules/text-mask-core/**')
+        .pipe(gulp.dest(vendor + '/text-mask-core/'));
+
+    //angular2-text-mask
+    gulp.src('node_modules/angular2-text-mask/**')
+        .pipe(gulp.dest(vendor + '/angular2-text-mask/'));
+
+    //ng2-currency-mask
+    //gulp.src('node_modules/ng2-currency-mask/**')
+    //    .pipe(gulp.dest(vendor + '/ng2-currency-mask/'));
+
+    //ng2-money-mask
+    //gulp.src('node_modules/ng2-money-mask/**')
+    //    .pipe(gulp.dest(vendor + '/ng2-money-mask/'));
+
     //rxjs
     gulp.src('node_modules/rxjs/**')
         .pipe(gulp.dest(vendor + '/rxjs/'));

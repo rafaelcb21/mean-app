@@ -19,7 +19,8 @@ var app = express()
       }
       next()
   });
-mongoose.connect('mongodb://admfinancamongodb:pwadmfinancamongodb@ds133388.mlab.com:33388/admfinanca');
+mongoose.connect('localhost:27017/admfinanca');
+//mongoose.connect('mongodb://admfinancamongodb:pwadmfinancamongodb@ds133388.mlab.com:33388/admfinanca');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');

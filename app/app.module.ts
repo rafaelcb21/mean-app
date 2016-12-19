@@ -7,11 +7,14 @@ import { AppComponent } from './app.component';
 import { routing } from './routes';
 import { FornecedorComponent } from './fornecedor/fornecedor.component';
 import { FornecedorService } from './fornecedor/fornecedor.service';
-import { DropdownModule, CalendarModule, InputTextModule, OverlayPanelModule } from 'primeng/primeng';
-
+import { DropdownModule, CalendarModule, InputTextModule, OverlayPanelModule, ButtonModule } from 'primeng/primeng';
+import { TextMaskModule } from 'angular2-text-mask';
+import { MoneyMaskDirective } from './mask/money-mask.directive';
+//import { CurrencyMaskModule } from "ng2-currency-mask";
+//import { MoneyMaskModule } from 'ng2-money-mask';
 
 @NgModule({
-  declarations: [AppComponent, FornecedorComponent],
+  declarations: [AppComponent, FornecedorComponent, MoneyMaskDirective],
   imports: [
     BrowserModule,
     FormsModule,
@@ -22,6 +25,10 @@ import { DropdownModule, CalendarModule, InputTextModule, OverlayPanelModule } f
     InputTextModule,
     OverlayPanelModule,
     HttpModule,
+    ButtonModule,
+    TextMaskModule,
+//    CurrencyMaskModule,
+//    MoneyMaskModule,
   ],
   providers: [
     FornecedorService,

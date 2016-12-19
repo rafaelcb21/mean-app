@@ -40,21 +40,47 @@
         </div>
     </div>
     <div class="display">
-        <div class="field">
-            <p-dropdown [options]="produto" [(ngModel)]="selectedProduto"></p-dropdown>
-        </div>
-        <div class="field icon-display">
-            <div>
-                <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Produto', op)"></i>
+        <button (click)="addProduto()" pButton type="button" label="Add" iconPos="left" icon="fa-plus-circle"></button>
+    </div>
+    <div *ngFor="let num of items; let i=index">
+        <div class="display">
+            <div class="field">
+                <p-dropdown [options]="produto" [(ngModel)]="selectedProduto[num]"></p-dropdown>
+            </div>
+            <div class="field icon-display">
+                <div>
+                    <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Produto', op)"></i>
+                </div>
+            </div>
+            <div class="field">
+                <input type="text" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
+            </div>
+
+            <div class="field">
+                <input
+                    pInputText
+                    mask-money
+                    [(ngModel)]="valor[num]"
+                    [(moneyModel)]="moneyValue"
+                    [money-mask-options]="{ prefix: '$ ', thousands: ',', decimal: '.' }" />
+            </div>
+           
+            <!--div class="field">
+                <input type="text" currencyMask 
+                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                pInputText [(ngModel)]="valor[num]" placeholder="Valor"/>
+            </div-->
+            <div class="field">
+                <input type="text" pInputText (input)="quantidade[num]*valor[num]" [ngModel]="quantidade[num]*valor[num]" disabled placeholder="Valor"/>
+            </div>
+            <div class="field icon-display">
+                <div>
+                    <i class="fa fa-times" (click)="remove(i)"></i>
+                </div>
             </div>
         </div>
-        <div class="field">
-            <input type="text" pInputText [(ngModel)]="quantidade" placeholder="Quantidade"/>
-        </div>
-        <div class="field">
-            <input type="text" pInputText [(ngModel)]="valor" placeholder="Valor"/>
-        </div>
     </div>
+    {{selectedProduto}}
     <div class="display">
         <div class="field">
             <p-dropdown [options]="transportadora" [(ngModel)]="selectedTransportadora"></p-dropdown>

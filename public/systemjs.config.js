@@ -13,6 +13,10 @@
       'rxjs': 'js/vendor/rxjs',
       'primeng': 'js/vendor/primeng',
       'moment': 'js/vendor/moment/moment.js',
+      'text-mask-core': 'js/vendor/text-mask-core',
+      'angular2-text-mask': 'js/vendor/angular2-text-mask/dist/angular2TextMask.js',
+      //'ng2-currency-mask': 'js/vendor/ng2-currency-mask',
+      //'ng2-money-mask': 'js/vendor/ng2-money-mask',
     },
 
     packages = {
@@ -28,6 +32,10 @@
       '@angular/forms': { main: 'bundles/forms.umd.js', defaultExtension: 'js' },
 	    '@angular/upgrade': { main: 'bundles/upgrade.umd.js', defaultExtension: 'js' },
       'primeng': { defaultExtension: 'js' },
+      'text-mask-core': { defaultExtension: 'js' },
+      'angular2-text-mask': { defaultExtension: 'js'},
+      //'ng2-currency-mask': { main: 'index.js', defaultExtension: 'js' },
+      //'ng2-money-mask': {main: 'index.js', defaultExtension: 'js' }
     };
   System.config({map: map, packages: packages});
 })(this);
