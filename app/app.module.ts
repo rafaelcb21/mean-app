@@ -9,12 +9,17 @@ import { FornecedorComponent } from './fornecedor/fornecedor.component';
 import { FornecedorService } from './fornecedor/fornecedor.service';
 import { DropdownModule, CalendarModule, InputTextModule, OverlayPanelModule, ButtonModule } from 'primeng/primeng';
 import { TextMaskModule } from 'angular2-text-mask';
-import { MoneyMaskDirective } from './mask/money-mask.directive';
+//import { MoneyMaskDirective } from './mask/money-mask.directive';
+import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.directive';
 //import { CurrencyMaskModule } from "ng2-currency-mask";
 //import { MoneyMaskModule } from 'ng2-money-mask';
 
 @NgModule({
-  declarations: [AppComponent, FornecedorComponent, MoneyMaskDirective],
+  declarations: [
+    AppComponent,
+    FornecedorComponent, 
+    //MoneyMaskDirective, 
+    CurrencyMaskDirective],
   imports: [
     BrowserModule,
     FormsModule,

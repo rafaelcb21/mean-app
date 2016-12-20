@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="display">
-        <button (click)="addProduto()" pButton type="button" label="Add" iconPos="left" icon="fa-plus-circle"></button>
+        <button (click)="addProduto()" pButton type="button" label="Produto" iconPos="left" icon="fa-plus-circle"></button>
     </div>
     <div *ngFor="let num of items; let i=index">
         <div class="display">
@@ -59,28 +59,26 @@
             <div class="field">
                 <input
                     pInputText
-                    mask-money
-                    [(ngModel)]="valor[num]"
-                    [(moneyModel)]="moneyValue"
-                    [money-mask-options]="{ prefix: '$ ', thousands: ',', decimal: '.' }" />
+                    currencyMask
+                    [(ngModel)]="valor[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
             </div>
-           
-            <!--div class="field">
-                <input type="text" currencyMask 
-                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                pInputText [(ngModel)]="valor[num]" placeholder="Valor"/>
-            </div-->
             <div class="field">
-                <input type="text" pInputText (input)="quantidade[num]*valor[num]" [ngModel]="quantidade[num]*valor[num]" disabled placeholder="Valor"/>
+                <input
+                    type="text" 
+                    pInputText
+                    currencyMask
+                    [ngModel]="quantidade[num]*valor[num]" 
+                    disabled
+                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                    />
             </div>
             <div class="field icon-display">
                 <div>
-                    <i class="fa fa-times" (click)="remove(i)"></i>
+                    <i class="fa fa-times" (click)="remove(i)" style="color:red"></i>
                 </div>
             </div>
         </div>
     </div>
-    {{selectedProduto}}
     <div class="display">
         <div class="field">
             <p-dropdown [options]="transportadora" [(ngModel)]="selectedTransportadora"></p-dropdown>
@@ -97,14 +95,44 @@
     <div class="display">
         <label>Dias do Pagamento</label>
     </div>
+
     <div class="display">
+        <button (click)="addPagamento()" pButton type="button" label="Pagamento" iconPos="left" icon="fa-plus-circle"></button>
+    </div>
+
+    <div *ngFor="let _num of itemsPgto; let i=index">
+        <div class="display">
+            <div class="field">
+                <input
+                    pInputText
+                    currencyMask
+                    [(ngModel)]="valorPgto[_num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+            </div>
+            <div div class="field">
+                <p-calendar [(ngModel)]="datePgto[_num]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
+            </div>
+            <div class="field icon-display">
+                <div>
+                    <i class="fa fa-times" (click)="removePgto(i)" style="color:red"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{valorPgto}}<br>
+    {{datePgto}}<br>
+    {{itemsPgto}}
+
+
+
+
+    <!--div class="display">
         <div class="field">
             <input type="text" pInputText [(ngModel)]="valorPagto" placeholder="Valor"/>
         </div>
         <div div class="field">
             <p-calendar [(ngModel)]="valuePgto" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
         </div>
-    </div>
+    </div-->
 </div>
 
 <p-overlayPanel #op>

@@ -20,7 +20,6 @@ export class FornecedorComponent implements OnInit {
     selectedCategoria: string;
     selectedTransportadora: string;
     valueEmissao: Date;
-    valuePgto: Date;
     label: string;
     item: string;
     items = [];
@@ -29,6 +28,9 @@ export class FornecedorComponent implements OnInit {
     valorEdit = [];
     selectedProduto = [];
     total = [];
+    itemsPgto = [];
+    valorPgto = [];
+    datePgto = [];
     //mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
     //<input [textMask]="{mask: mask}" [(ngModel)]="myModel" type="text"/>
 
@@ -57,38 +59,15 @@ export class FornecedorComponent implements OnInit {
         }, "") + "," + p[1];
     }
 
-    public onInput(x) {
-    
-        console.log(x)
-    }
-
-    process(e) {
-        //console.log(this.valor)`
 
 
-        for(let i = 0; i < this.valor.length; i++) {
-            var pr01 = this.valor[i].replace("R$ ", "");
-            var pr02 = pr01.replace(",", ".");
-            var float = parseFloat(pr02)
-            //this.valorEdit.push(float);
-            //console.log(this.valorEdit);
-            var qtd = this.quantidade[i];
 
-            
-            //
-        }
-        this.total.push(qtd * float)
-        console.log(this.total)
-        //this.valorEdit.push(total);
-        //console.log(this.valorEdit);
-
-    }
 
     ngOnInit() {
-        this.items.push("0");
-        this.quantidade.push("");
-        this.valor.push("");
-        this.selectedProduto.push("");
+        //this.items.push("0");
+        //this.quantidade.push("");
+        //this.valor.push("");
+        //this.selectedProduto.push("");
 
         this.fornecedorService.getItem("Produto")
             .subscribe(
@@ -156,6 +135,19 @@ export class FornecedorComponent implements OnInit {
         
     }
 
+    addPagamento() {
+        if(this.itemsPgto.length == 0) {
+            this.itemsPgto.push("0");
+            this.valorPgto.push("");
+            this.datePgto.push("");          
+        }else{
+            this.itemsPgto.push(String(this.itemsPgto.length));
+            this.valorPgto.push("");
+            this.datePgto.push("");
+        }
+        
+    }
+
     remove(x) {
         var tamanho = this.items.length;
         for(let i = 0; i < tamanho-1; i++) {
@@ -165,6 +157,16 @@ export class FornecedorComponent implements OnInit {
         this.quantidade.splice(x, 1);
         this.valor.splice(x, 1);
         this.selectedProduto.splice(x, 1);
+    }
+
+    removePgto(x) {
+        var tamanho = this.itemsPgto.length;
+        for(let i = 0; i < tamanho-1; i++) {
+            this.itemsPgto.push(String(i))
+        }
+        this.itemsPgto.splice(0, tamanho);
+        this.valorPgto.splice(x, 1);
+        this.datePgto.splice(x, 1);
     }
 
     selectEdit(event, lista, overlaypanel) {
