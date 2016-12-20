@@ -31,6 +31,10 @@ export class FornecedorComponent implements OnInit {
     itemsPgto = [];
     valorPgto = [];
     datePgto = [];
+    frete: any;
+    sum: any;
+    sumPgto: any;
+    //ok: any;
     //mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
     //<input [textMask]="{mask: mask}" [(ngModel)]="myModel" type="text"/>
 
@@ -59,15 +63,31 @@ export class FornecedorComponent implements OnInit {
         }, "") + "," + p[1];
     }
 
+    somar() {
+        var ll = []
+        for(let i = 0;  i < this.quantidade.length; i++) {
+            var x = parseFloat(this.quantidade[i])*parseFloat(this.valor[i])
+            ll.push(x)
+        }
+        this.sum = ll.reduce((a, b) => a + b, 0) + this.frete;
+    }
 
-
-
+    /*validar() {
+        this.sumPgto = this.valorPgto.reduce((a, b) => a + b, 0)
+        if(this.sumPgto == this.sum) {
+            this.ok = true;
+        }else{
+            this.ok = false;
+        }
+    }*/
 
     ngOnInit() {
         //this.items.push("0");
         //this.quantidade.push("");
         //this.valor.push("");
         //this.selectedProduto.push("");
+        this.frete = 0;
+        this.sum = 0;
 
         this.fornecedorService.getItem("Produto")
             .subscribe(

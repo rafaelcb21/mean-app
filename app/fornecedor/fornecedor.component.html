@@ -59,7 +59,7 @@
             <div class="field">
                 <input
                     pInputText
-                    currencyMask
+                    currencyMask                    
                     [(ngModel)]="valor[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
             </div>
             <div class="field">
@@ -67,8 +67,8 @@
                     type="text" 
                     pInputText
                     currencyMask
-                    [ngModel]="quantidade[num]*valor[num]" 
-                    disabled
+                    [(ngModel)]="quantidade[num]*valor[num]" 
+                    disabled                    
                     [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
                     />
             </div>
@@ -89,9 +89,24 @@
             </div>
         </div>
         <div class="field">
-            <input type="text" pInputText [(ngModel)]="frete" placeholder="Frete"/>
+            <input type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                   pInputText [(ngModel)]="frete" placeholder="Frete"/>
         </div>
     </div>
+    <div class="display">
+        <div class="field">
+            <button (click)="somar()" pButton type="button" label="Somar" iconPos="left" icon="fa-plus-circle"></button>
+        </div>
+        <input
+            type="text" 
+            pInputText
+            currencyMask
+            [(ngModel)]="sum" 
+            disabled                    
+            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+        />
+    </div>
+
     <div class="display">
         <label>Dias do Pagamento</label>
     </div>
@@ -118,12 +133,13 @@
             </div>
         </div>
     </div>
-    {{valorPgto}}<br>
-    {{datePgto}}<br>
-    {{itemsPgto}}
-
-
-
+    <!--div class="display">
+        <div class="field">
+            <button (click)="validar()" pButton type="button" label="Validar" iconPos="left" icon="fa-plus-circle"></button>
+        </div>
+        <i *ngIf="ok" class="fa fa-check fa-2x" style="color:green;margin-left:10px"></i>
+        <i *ngIf="!ok" class="fa fa-times fa-2x" style="color:red;margin-left:10px"></i>
+    </div-->
 
     <!--div class="display">
         <div class="field">
