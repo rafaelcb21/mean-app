@@ -34,6 +34,8 @@ export class FornecedorComponent implements OnInit {
     frete: any;
     sum: any;
     sumPgto: any;
+    ll = [];
+    subtracao: any;
     //ok: any;
     //mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
     //<input [textMask]="{mask: mask}" [(ngModel)]="myModel" type="text"/>
@@ -56,30 +58,33 @@ export class FornecedorComponent implements OnInit {
         })*/
     }
 
-    formatDollar(num) {
-        var p = num.toFixed(2).split(",");
-        return "R$ " + p[0].split("").reverse().reduce(function(acc, num, i, orig) {
-            return  num=="-" ? acc : num + (i && !(i % 3) ? "." : "") + acc;
-        }, "") + "," + p[1];
+    onlyNumber(event){
+        var lista = [48,49,50,51,52,53,54,55,56,57];
+        var result = lista.indexOf(event.keyCode);
+        if(result == -1) {
+            return false
+        }else{
+            return true
+        }        
     }
 
     somar() {
-        var ll = []
+        this.ll = []
         for(let i = 0;  i < this.quantidade.length; i++) {
             var x = parseFloat(this.quantidade[i])*parseFloat(this.valor[i])
-            ll.push(x)
+            this.ll.push(x)
         }
-        this.sum = ll.reduce((a, b) => a + b, 0) + this.frete;
+        this.sum = this.ll.reduce((a, b) => a + b, 0) + this.frete;
     }
 
-    /*validar() {
+    verificar() {
         this.sumPgto = this.valorPgto.reduce((a, b) => a + b, 0)
-        if(this.sumPgto == this.sum) {
-            this.ok = true;
-        }else{
-            this.ok = false;
-        }
-    }*/
+        this.subtracao = this.sum - this.sumPgto;
+    }
+
+    salvar() {
+
+    }
 
     ngOnInit() {
         //this.items.push("0");
@@ -88,6 +93,7 @@ export class FornecedorComponent implements OnInit {
         //this.selectedProduto.push("");
         this.frete = 0;
         this.sum = 0;
+        this.subtracao = 0;
 
         this.fornecedorService.getItem("Produto")
             .subscribe(

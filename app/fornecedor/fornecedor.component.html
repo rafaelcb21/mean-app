@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div class="field">
-                <input type="text" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
+                <input (keypress)="onlyNumber($event)" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
             </div>
 
             <div class="field">
@@ -70,7 +70,7 @@
                     [(ngModel)]="quantidade[num]*valor[num]" 
                     disabled                    
                     [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                    />
+                />
             </div>
             <div class="field icon-display">
                 <div>
@@ -95,7 +95,7 @@
     </div>
     <div class="display">
         <div class="field">
-            <button (click)="somar()" pButton type="button" label="Somar" iconPos="left" icon="fa-plus-circle"></button>
+            <button (click)="somar()" pButton type="button" label="Somar" iconPos="left" icon="fa-check"></button>
         </div>
         <input
             type="text" 
@@ -133,22 +133,27 @@
             </div>
         </div>
     </div>
-    <!--div class="display">
+    <div class="display">
         <div class="field">
-            <button (click)="validar()" pButton type="button" label="Validar" iconPos="left" icon="fa-plus-circle"></button>
+            <button (click)="verificar()" pButton type="button" label="Verificar Pagamentos" iconPos="left" icon="fa-check"></button>
         </div>
-        <i *ngIf="ok" class="fa fa-check fa-2x" style="color:green;margin-left:10px"></i>
-        <i *ngIf="!ok" class="fa fa-times fa-2x" style="color:red;margin-left:10px"></i>
-    </div-->
+        <div class="field">
+            <input
+                type="text" 
+                pInputText
+                currencyMask
+                [(ngModel)]="subtracao" 
+                disabled                    
+                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+            />
+        </div>
+    </div>
+    <div class="display">
+        <div class="field">
+            <button (click)="salvar()" pButton type="button" label="Salvar" style="color:#fff;background-color:green"></button>
+        </div>
+    </div>
 
-    <!--div class="display">
-        <div class="field">
-            <input type="text" pInputText [(ngModel)]="valorPagto" placeholder="Valor"/>
-        </div>
-        <div div class="field">
-            <p-calendar [(ngModel)]="valuePgto" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
-        </div>
-    </div-->
 </div>
 
 <p-overlayPanel #op>

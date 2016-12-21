@@ -7,6 +7,10 @@
     margin-right: 10px;
 }
 
+element.style {
+    width: 115px;
+}
+
 .container {
     padding-right: 15px;
     padding-left: 15px;
