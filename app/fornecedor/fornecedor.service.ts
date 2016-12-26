@@ -23,8 +23,8 @@ export class FornecedorService {
                 const labelItem = response.json().label;
                 if(data.length > 0){
                     let objs: any[] = [];
-                    var label = data[0].label;
-                    objs.push({label: label, value: {name: label}})
+                    //var label = data[0].label;
+                    //objs.push({label: label, value: {name: label}})
                     for (let i = 0; i < data.length; i++) {
                         var name = data[i].name
                         var item = {label: name, value: {name: name}}

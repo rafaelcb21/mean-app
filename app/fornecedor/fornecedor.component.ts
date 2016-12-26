@@ -36,6 +36,24 @@ export class FornecedorComponent implements OnInit {
     sumPgto: any;
     ll = [];
     subtracao: any;
+    text: string;    
+    results: any[] = [];
+
+    fornecedoresList: any[] = [];
+    searchFornecedorList: any[] = [];
+
+    operacaoList: any[] = [];
+    searchOperacaoList: any[] = [];
+
+    categoriaList: any[] = [];
+    searchCategoriaList: any[] = [];
+
+    produtoList: any[] = [];
+    searchProdutoList: any[] = [];
+
+    transportadoraList: any[] = [];
+    searchTransportadoraList: any[] = [];
+    
     //ok: any;
     //mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
     //<input [textMask]="{mask: mask}" [(ngModel)]="myModel" type="text"/>
@@ -80,6 +98,84 @@ export class FornecedorComponent implements OnInit {
     verificar() {
         this.sumPgto = this.valorPgto.reduce((a, b) => a + b, 0)
         this.subtracao = this.sum - this.sumPgto;
+    }
+
+    searchProduto(event) {
+         this.searchProdutoList = []
+
+        for (let j = 0; j < this.produtoList.length; j++) {
+            try{
+                if (this.produtoList[j].match(event.query)) {
+                    this.searchProdutoList.push(this.produtoList[j])
+                }
+            }catch(e){}
+        }
+    }
+
+    searchFornecedor(event) {
+         this.searchFornecedorList = []
+
+        for (let j = 0; j < this.fornecedoresList.length; j++) {
+            try{
+                if (this.fornecedoresList[j].match(event.query)) {
+                    this.searchFornecedorList.push(this.fornecedoresList[j])
+                }
+                //console.log(this.searchFornecedorList)
+            }catch(e){}
+        }
+    }
+
+    searchTransportadora(event) {
+         this.searchTransportadoraList = []
+
+        for (let j = 0; j < this.transportadoraList.length; j++) {
+            try{
+                if (this.transportadoraList[j].match(event.query)) {
+                    this.searchTransportadoraList.push(this.transportadoraList[j])
+                }
+                //console.log(this.searchTransportadoraList)
+            }catch(e){}
+        }
+    }
+
+    searchOperacao(event) {
+         this.searchOperacaoList = []
+
+        for (let j = 0; j < this.operacaoList.length; j++) {
+            try{
+                if (this.operacaoList[j].match(event.query)) {
+                    this.searchOperacaoList.push(this.operacaoList[j])
+                }
+                //console.log(this.searchOperacaoList)
+            }catch(e){}
+        }
+    }
+
+    operacaoDropdownClick(event) {       
+        this.searchOperacaoList = [];
+        setTimeout(() => {
+            this.searchOperacaoList = this.operacaoList;
+        }, 100)
+    }
+
+    searchCategoria(event) {
+         this.searchCategoriaList = []
+
+        for (let j = 0; j < this.categoriaList.length; j++) {
+            try{
+                if (this.categoriaList[j].match(event.query)) {
+                    this.searchCategoriaList.push(this.categoriaList[j])
+                }
+                //console.log(this.searchCategoriaList)
+            }catch(e){}
+        }
+    }
+
+    categoriaDropdownClick(event) {       
+        this.searchCategoriaList = [];
+        setTimeout(() => {
+            this.searchCategoriaList = this.categoriaList;
+        }, 100)
     }
 
     salvar(
@@ -127,17 +223,23 @@ export class FornecedorComponent implements OnInit {
         this.fornecedorService.getItem("Produto")
             .subscribe(
                 data => {
-                    this.produto = data;
+                    //this.produto = data;
+                    for(let i = 0; i < data.length; i++) {
+                        this.produtoList.push(data[i].label);
+                    }
                 },
                 error => {
                     console.log(error)
                 }                
             );
 
-                this.fornecedorService.getItem("Fornecedores")
+        this.fornecedorService.getItem("Fornecedores")
             .subscribe(
                 data => {
-                    this.fornecedores = data;
+                    //this.fornecedores = data;
+                    for(let i = 0; i < data.length; i++) {
+                        this.fornecedoresList.push(data[i].label);
+                    }
                 },
                 error => {
                     console.log(error)
@@ -147,7 +249,10 @@ export class FornecedorComponent implements OnInit {
         this.fornecedorService.getItem("Operação")
             .subscribe(
                 data => {
-                    this.operacao = data;
+                    //this.operacao = data;
+                    for(let i = 0; i < data.length; i++) {
+                        this.operacaoList.push(data[i].label);
+                    }
                 },
                 error => {
                     console.log(error)
@@ -157,7 +262,10 @@ export class FornecedorComponent implements OnInit {
         this.fornecedorService.getItem("Categoria")
             .subscribe(
                 data => {
-                    this.categoria = data;
+                    //this.categoria = data;
+                    for(let i = 0; i < data.length; i++) {
+                        this.categoriaList.push(data[i].label);
+                    }
                 },
                 error => {
                     console.log(error)
@@ -167,7 +275,10 @@ export class FornecedorComponent implements OnInit {
         this.fornecedorService.getItem("Transportadora")
             .subscribe(
                 data => {
-                    this.transportadora = data;
+                    //this.transportadora = data;
+                    for(let i = 0; i < data.length; i++) {
+                        this.transportadoraList.push(data[i].label);
+                    }
                 },
                 error => {
                     console.log(error)

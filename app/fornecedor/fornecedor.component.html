@@ -1,7 +1,8 @@
 <div class="container">
     <div class="display">
         <div class="field">
-            <p-dropdown [options]="fornecedores" [(ngModel)]="selectedFornecedor"></p-dropdown>
+            <p-autoComplete [(ngModel)]="selectedFornecedor" [suggestions]="searchFornecedorList" (completeMethod)="searchFornecedor($event)" placeholder="Fornecedor"></p-autoComplete>
+            <!--p-dropdown [options]="fornecedores" [(ngModel)]="selectedFornecedor"></p-dropdown-->
         </div>
         <div class="field icon-display">
             <div>
@@ -12,7 +13,8 @@
             <p-calendar [(ngModel)]="valueEmissao" dateFormat="dd/mm/yy" placeholder="Data Emissão"></p-calendar>
         </div>
         <div class="field">
-            <p-dropdown [options]="operacao" [(ngModel)]="selectedOperacao"></p-dropdown>
+            <p-autoComplete (onDropdownClick)="operacaoDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedOperacao" [suggestions]="searchOperacaoList" (completeMethod)="searchOperacao($event)" placeholder="Operação"></p-autoComplete>
+            <!--p-dropdown [options]="operacao" [(ngModel)]="selectedOperacao"></p-dropdown-->
         </div>
         <div class="field icon-display">
             <div>
@@ -20,7 +22,8 @@
             </div>
         </div>
         <div class="field">
-            <p-dropdown [options]="categoria" [(ngModel)]="selectedCategoria"></p-dropdown>
+            <p-autoComplete (onDropdownClick)="categoriaDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedCategoria" [suggestions]="searchCategoriaList" (completeMethod)="searchCategoria($event)" placeholder="Categoria"></p-autoComplete>
+            <!--p-dropdown [options]="categoria" [(ngModel)]="selectedCategoria"></p-dropdown-->
         </div>
         <div class="field icon-display">
             <div>
@@ -45,7 +48,8 @@
     <div *ngFor="let num of items; let i=index">
         <div class="display">
             <div class="field">
-                <p-dropdown [options]="produto" [(ngModel)]="selectedProduto[num]"></p-dropdown>
+                <p-autoComplete [(ngModel)]="selectedProduto[num]" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
+                <!--p-dropdown [options]="produto" [(ngModel)]="selectedProduto[num]"></p-dropdown-->
             </div>
             <div class="field icon-display">
                 <div>
@@ -81,7 +85,8 @@
     </div>
     <div class="display">
         <div class="field">
-            <p-dropdown [options]="transportadora" [(ngModel)]="selectedTransportadora"></p-dropdown>
+            <p-autoComplete [(ngModel)]="selectedTransportadora" [suggestions]="searchTransportadoraList" (completeMethod)="searchTransportadora($event)" placeholder="Transportadora"></p-autoComplete>
+            <!--p-dropdown [options]="transportadora" [(ngModel)]="selectedTransportadora"></p-dropdown-->
         </div>
         <div class="field icon-display" (click)="selectEdit($event, 'Transportadora', op)">
             <div>
@@ -172,9 +177,10 @@
             </button>
         </div>
     </div>
-
+    <p-autoComplete [(ngModel)]="text" [suggestions]="searchList" (completeMethod)="search($event)" 
+            (onDropdownClick)="handleDropdown(event)"></p-autoComplete>
 </div>
-
+{{selectedFornecedor}}
 <p-overlayPanel #op>
     <input type="text" pInputText [(ngModel)]="item" placeholder="{{ label }}"/>
     <i class="fa fa-check-circle" style="color:green;margin-left:10px" (click)="itemEscolhido(label, item);op.hide($event)"></i>    
