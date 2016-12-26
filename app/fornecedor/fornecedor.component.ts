@@ -82,8 +82,37 @@ export class FornecedorComponent implements OnInit {
         this.subtracao = this.sum - this.sumPgto;
     }
 
-    salvar() {
-
+    salvar(
+            selectedFornecedor,
+            valueEmissao,
+            selectedCategoria,
+            serie,
+            nf,
+            compra,
+            selectedProduto,
+            quantidade,
+            valor,
+            selectedTransportadora,
+            frete,
+            sum,
+            valorPgto,
+            datePgto,
+            subtracao
+        ) {
+        console.log(valueEmissao)
+        console.log(selectedCategoria)
+        console.log(serie)
+        console.log(nf)
+        console.log(compra)
+        console.log(selectedProduto)
+        console.log(quantidade)
+        console.log(valor)
+        console.log(selectedTransportadora)
+        console.log(frete)
+        console.log(sum)
+        console.log(valorPgto)
+        console.log(datePgto)
+        console.log(subtracao)
     }
 
     ngOnInit() {
