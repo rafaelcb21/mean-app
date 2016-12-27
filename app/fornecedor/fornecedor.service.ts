@@ -30,7 +30,7 @@ export class FornecedorService {
                         var item = {label: name, value: {name: name}}
                         objs.push(item)
                     }
-                    return objs;
+                    return [objs, labelItem];
                 }else if(data.length == 0){
                     return [{label: labelItem, value: {name: labelItem}}]
                 }

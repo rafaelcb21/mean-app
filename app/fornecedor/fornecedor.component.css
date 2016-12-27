@@ -1,17 +1,39 @@
 .display {
-    margin-top: 15px;
     display: flex;
+}
+
+.margin {
+    margin-top: 15px;
 }
 
 .field {
     margin-right: 10px;
 }
 
+.paragrafo {
+    margin-left: 20px;
+}
+
 .container {
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
 }
 
 label {
@@ -26,8 +48,22 @@ label {
 }
 
 i {
-    color: blue;
+    color: #2399e5;
     cursor: pointer;
+}
+
+i:hover {
+    cursor: pointer;
+    color: #1f89ce;
+}
+
+.certo{
+    color:#5fba7d;
+    margin-left:10px
+}
+.certo:hover{
+    color:green;
+    margin-left:10px
 }
 
 fa-times {

@@ -38,6 +38,8 @@ export class FornecedorComponent implements OnInit {
     subtracao: any;
     text: string;    
     results: any[] = [];
+    verify: boolean;
+    br: any;
 
     fornecedoresList: any[] = [];
     searchFornecedorList: any[] = [];
@@ -84,6 +86,10 @@ export class FornecedorComponent implements OnInit {
         }else{
             return true
         }        
+    }
+
+    onlyDate(event){
+        return false
     }
 
     somar() {
@@ -181,6 +187,7 @@ export class FornecedorComponent implements OnInit {
     salvar(
             selectedFornecedor,
             valueEmissao,
+            selectedOperacao,
             selectedCategoria,
             serie,
             nf,
@@ -195,20 +202,59 @@ export class FornecedorComponent implements OnInit {
             datePgto,
             subtracao
         ) {
-        console.log(valueEmissao)
-        console.log(selectedCategoria)
-        console.log(serie)
-        console.log(nf)
-        console.log(compra)
-        console.log(selectedProduto)
-        console.log(quantidade)
-        console.log(valor)
-        console.log(selectedTransportadora)
-        console.log(frete)
-        console.log(sum)
-        console.log(valorPgto)
-        console.log(datePgto)
-        console.log(subtracao)
+            if(selectedFornecedor == undefined) {this.verify = false}
+            if(this.fornecedoresList.indexOf(selectedFornecedor) == -1) {this.verify = false}
+
+            if(valueEmissao == undefined || valueEmissao == null) {this.verify = false}
+            
+
+            if(selectedOperacao == undefined) {this.verify = false}
+            if(this.operacaoList.indexOf(selectedOperacao) == -1) {this.verify = false}
+
+            if(selectedCategoria == undefined) {this.verify = false} 
+            if(this.categoriaList.indexOf(selectedCategoria) == -1) {this.verify = false}
+
+            if(serie == undefined || serie == "") {this.verify = false}
+            if(nf == undefined || nf == "") {this.verify = false}
+            if(compra == undefined || compra == "") {this.verify = false}
+
+            if(selectedProduto.indexOf("") != -1) {this.verify = false}
+            for (let j = 0; j < selectedProduto.length; j++) {
+                if (this.produtoList.indexOf(selectedProduto[j]) == -1) {
+                    this.verify = false;
+                    break;
+                }
+            }
+
+            if(quantidade.indexOf("") != -1) {this.verify = false}
+            if(quantidade.length == 0) {this.verify = false}
+
+            if(valor.indexOf("") != -1) {this.verify = false}
+            if(valor.indexOf(0) != -1) {this.verify = false}
+            
+            if(selectedTransportadora == undefined || selectedTransportadora == "") {this.verify = false}
+            if(this.transportadoraList.indexOf(selectedTransportadora) == -1) {this.verify = false}
+
+            if(frete > 0) {
+                if( (selectedTransportadora == undefined) || 
+                    (selectedTransportadora == "") || 
+                    (this.transportadoraList.indexOf(selectedTransportadora) == -1)) {
+                        this.verify = false
+                    }
+            }else{
+                selectedTransportadora = ""
+            }
+
+            var num = parseInt(sum) || 0;
+            if(num == 0) {this.verify = false}
+
+
+
+            if(valorPgto == undefined) {this.verify = false}
+            if(datePgto == undefined || datePgto == null) {this.verify = false}
+            if(subtracao == undefined) {this.verify = false}
+
+            console.log(valorPgto)
     }
 
     ngOnInit() {
@@ -224,8 +270,8 @@ export class FornecedorComponent implements OnInit {
             .subscribe(
                 data => {
                     //this.produto = data;
-                    for(let i = 0; i < data.length; i++) {
-                        this.produtoList.push(data[i].label);
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.produtoList.push(data[0][i].label);
                     }
                 },
                 error => {
@@ -237,8 +283,8 @@ export class FornecedorComponent implements OnInit {
             .subscribe(
                 data => {
                     //this.fornecedores = data;
-                    for(let i = 0; i < data.length; i++) {
-                        this.fornecedoresList.push(data[i].label);
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.fornecedoresList.push(data[0][i].label);
                     }
                 },
                 error => {
@@ -250,8 +296,8 @@ export class FornecedorComponent implements OnInit {
             .subscribe(
                 data => {
                     //this.operacao = data;
-                    for(let i = 0; i < data.length; i++) {
-                        this.operacaoList.push(data[i].label);
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.operacaoList.push(data[0][i].label);
                     }
                 },
                 error => {
@@ -263,8 +309,8 @@ export class FornecedorComponent implements OnInit {
             .subscribe(
                 data => {
                     //this.categoria = data;
-                    for(let i = 0; i < data.length; i++) {
-                        this.categoriaList.push(data[i].label);
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.categoriaList.push(data[0][i].label);
                     }
                 },
                 error => {
@@ -276,14 +322,52 @@ export class FornecedorComponent implements OnInit {
             .subscribe(
                 data => {
                     //this.transportadora = data;
-                    for(let i = 0; i < data.length; i++) {
-                        this.transportadoraList.push(data[i].label);
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.transportadoraList.push(data[0][i].label);
                     }
                 },
                 error => {
                     console.log(error)
                 }                
             );
+
+        this.addProduto();
+        this.addPagamento();
+
+        this.br = {
+            //data
+            closeText: "Pronto",
+        	prevText: "<Ant",
+        	nextText: "Pro>",
+        	currentText: "Hoje",
+        	monthNames: [ "janeiro","fevereiro","março","abril","maio","junho",
+        	"julho","agosto","setembro","outubro","novembro","dezembro" ],
+        	monthNamesShort: [ "jan","fev","mar","abr","mai","jun",
+        	"jul","ago","set","out","nov","dez" ],
+        	dayNames: [ "domingo","segunda","terça","quarta","quinta","sexta","sábado" ],
+        	dayNamesShort: [ "dom","seg","ter","qua","qui","sex","sáb" ],
+        	dayNamesMin: [ "D","S","T","Q","Q","S","S" ],
+        	weekHeader: "Sm",
+        	dateFormat: "dd/mm/yy",
+        	firstDay: 1,
+        	isRTL: false,
+        	showMonthAfterYear: false,
+        	yearSuffix: "",
+
+            //tempo
+            timeOnlyTitle: 'Escolher horário',
+    		timeText: 'Hora',
+    		hourText: 'Horas',
+    		minuteText: 'Minutos',
+    		secondText: 'Segundos',
+    		millisecText: 'Milisegundos',
+    		microsecText: 'Microsegundos',
+    		timezoneText: 'Fuso horario',
+    		timeFormat: 'HH:mm',
+    		timeSuffix: '',
+    		amNames: ['a.m.', 'AM', 'A'],
+    		pmNames: ['p.m.', 'PM', 'P'],
+        };
     }
 
     addProduto() {
@@ -342,33 +426,56 @@ export class FornecedorComponent implements OnInit {
     }
 
     itemEscolhido(label, item) {
-        var lista = item.split(";");
-        this.fornecedorService.postItem(label, lista)
-            .subscribe(
-                data => {
-                    this.fornecedorService.getItem(data)
-                        .subscribe(
-                            data => {
-                                if(data[0].label == "Fornecedores") {
-                                    this.fornecedores = data;
-                                }else if(data[0].label == "Operação") {
-                                    this.operacao = data;
-                                }else if(data[0].label == "Categoria") {
-                                    this.categoria = data;
-                                }else if(data[0].label == "Produto") {
-                                    this.produto = data;
-                                }else if(data[0].label == "Transportadora") {
-                                    this.transportadora = data;
-                                }
-                            },
-                            error => {
-                                console.log(error)
-                            }                
-                        );
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
+        if(item.trim() != ""){
+            var lista = item.split(";");
+            var listaApoio = [];
+            this.fornecedorService.postItem(label, lista)
+                .subscribe(
+                    data => {
+                        this.fornecedorService.getItem(data)
+                            .subscribe(
+                                data => {
+                                    for(let i = 0; i < data[0].length; i++) {
+                                        listaApoio.push(data[0][i].label);
+                                    }
+
+                                    if(data[1] == "Fornecedores") {
+                                        this.fornecedoresList.splice(0, this.fornecedoresList.length);
+                                        for(let i = 0; i < listaApoio.length; i++) {
+                                            this.fornecedoresList.push(listaApoio[i]);
+                                        }
+                                    }else if(data[1] == "Operação") {
+                                        this.operacaoList.splice(0, this.operacaoList.length);
+                                        for(let i = 0; i < listaApoio.length; i++) {
+                                            this.operacaoList.push(listaApoio[i]);
+                                        }
+                                    }else if(data[1] == "Categoria") {
+                                        this.categoriaList.splice(0, this.categoriaList.length);
+                                        for(let i = 0; i < listaApoio.length; i++) {
+                                            this.categoriaList.push(listaApoio[i]);
+                                        }
+                                    }else if(data[1] == "Produto") {
+                                        this.produtoList.splice(0, this.produtoList.length);
+                                        for(let i = 0; i < listaApoio.length; i++) {
+                                            this.produtoList.push(listaApoio[i]);
+                                        }
+                                    }else if(data[1] == "Transportadora") {
+                                        this.transportadoraList.splice(0, this.transportadoraList.length);
+                                        for(let i = 0; i < listaApoio.length; i++) {
+                                            this.transportadoraList.push(listaApoio[i]);
+                                        }
+                                    }
+                                    listaApoio = [];
+                                },
+                                error => {
+                                    console.log(error)
+                                }                
+                            );
+                    },
+                    error => {
+                        console.log(error)
+                    }                
+                );
+        }
     }
 }
