@@ -35,6 +35,8 @@ export class FornecedorComponent implements OnInit {
     sum: any;
     sumPgto: any;
     ll = [];
+    pp = [];
+    proporcao = [];
     subtracao: any;
     text: string;    
     results: any[] = [];
@@ -90,6 +92,22 @@ export class FornecedorComponent implements OnInit {
 
     onlyDate(event){
         return false
+    }
+
+    proporcional() {
+        this.pp = []
+        for(let i = 0;  i < this.quantidade.length; i++) {
+            var x = parseFloat(this.quantidade[i])*parseFloat(this.valor[i])
+            this.pp.push(x)
+        }
+        this.sum = this.pp.reduce((a, b) => a + b, 0) + this.frete;
+
+        for(let i = 0;  i < this.pp.length; i++) {
+            var y = parseFloat(this.pp[i])/this.sum;
+            this.proporcao.push(y);
+        }
+
+        return this.proporcao
     }
 
     somar() {
@@ -265,6 +283,30 @@ export class FornecedorComponent implements OnInit {
             }
 
             listaVerify = [];
+
+            var soma = this.somar();
+            var proporcaoList = this.proporcional();
+
+            if(this.verify == true) {
+                this.fornecedorService.postFornecedores(
+                    selectedFornecedor,
+                    valueEmissao,
+                    selectedOperacao,
+                    selectedCategoria,
+                    serie,
+                    nf,
+                    compra,
+                    selectedProduto,
+                    quantidade,
+                    valor,
+                    selectedTransportadora,
+                    frete,
+                    valorPgto,
+                    datePgto,
+                    proporcaoList,
+                    soma
+                )
+            }
 
 
     }
