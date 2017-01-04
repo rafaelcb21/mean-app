@@ -95,7 +95,8 @@ export class FornecedorComponent implements OnInit {
     }
 
     proporcional() {
-        this.pp = []
+        this.pp = [];
+        this.proporcao = [];
         for(let i = 0;  i < this.quantidade.length; i++) {
             var x = parseFloat(this.quantidade[i])*parseFloat(this.valor[i])
             this.pp.push(x)
@@ -107,7 +108,7 @@ export class FornecedorComponent implements OnInit {
             this.proporcao.push(y);
         }
 
-        return this.proporcao
+        return this.proporcao;
     }
 
     somar() {
@@ -305,7 +306,14 @@ export class FornecedorComponent implements OnInit {
                     datePgto,
                     proporcaoList,
                     soma
-                )
+                ).subscribe(
+                    data => {
+                        console.log(data)
+                    },
+                    error => {
+                        console.log(error)
+                    }                
+                );
             }
 
 

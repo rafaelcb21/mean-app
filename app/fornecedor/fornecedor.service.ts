@@ -54,7 +54,7 @@ export class FornecedorService {
         });
         const header = new Headers({'Content-Type': 'application/json'});
         return this._http.post(Config.URL_SITE + 'lista/fornecedores', body, {headers: header})
-            .map(response => response.json().label)
+            .map(response => response.json().msg)
             .catch(error => Observable.throw(error.json()));
     }
 

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Lista = require('../modules/lista');
+var Produto = require('../modules/produto');
 
 /* GET home page. */
 router.post('/item', function(req, res, next) {
@@ -38,16 +39,48 @@ router.post('/fornecedores', function(req, res, next) {
   var proporcaoList = req.body.proporcaoList; //lista
   var soma = req.body.soma;
 
-  for (let i = 0; i < lista.length; i++) {
-    var ll = new Lista({
-      label: label,
-      name: lista[i]
-    })
-    ll.save(function(err, result) {})
+  var list1 = [];
+  var list2 = [];
+
+  for (let i = 0; i < proporcaoList.length; i++) {
+    for (let j = 0; j < valorPgto.length; j++) {
+      var parcela = parseFloat(proporcaoList[i])*parseFloat(valorPgto[j])/quantidade[i];
+      list1.push(parcela);
+    }
+    list2.push(list1);
+    list1 = [];
   }
 
+  for (let i = 0; i < quantidade.length; i++) {
+    for (let j = 0; j < quantidade[i]; j++) {
+
+      var produto = selectedProduto[i];
+      var qtd = quantidade[i];
+      var val = valor[i];
+      var prop = proporcaoList[i];
+      var parc = list2[i];
+      var dataParc = datePgto;
+
+      var product = new Produto({
+        fornecedor: selectedFornecedor,
+        emissao: valueEmissao,
+        operacao: selectedOperacao,
+        categoria: selectedCategoria,
+        serie: serie,
+        nf: nf,
+        compra: compra,
+        produto: produto,
+        qtd: qtd,
+        val: val,
+        prop: prop,
+        parc: parc,
+        dataParc: dataParc,
+      })
+      product.save(function(err, result) {})          
+    }      
+  }
   res.status(201).json({
-    label: label
+    msg: "sucesso"
   })
 })
 
