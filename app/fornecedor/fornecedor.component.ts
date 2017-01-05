@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { FornecedorService } from './fornecedor.service';
+import { Message } from 'primeng/primeng';
 
 @Component({
     selector: '<fornecedor></fornecedor>',
@@ -20,6 +21,9 @@ export class FornecedorComponent implements OnInit {
     selectedCategoria: string;
     selectedTransportadora: string;
     valueEmissao: Date;
+    serie: Number;
+    nf: Number;
+    compra: Number;
     label: string;
     item: string;
     items = [];
@@ -42,6 +46,9 @@ export class FornecedorComponent implements OnInit {
     results: any[] = [];
     verify = false;
     br: any;
+    check: Boolean;
+    checkError:  Boolean;
+    msgs: Message[] = [];
 
     fornecedoresList: any[] = [];
     searchFornecedorList: any[] = [];
@@ -124,6 +131,13 @@ export class FornecedorComponent implements OnInit {
     verificar() {
         this.sumPgto = this.valorPgto.reduce((a, b) => a + b, 0)
         this.subtracao = this.somar() - this.sumPgto;
+        if(this.subtracao == 0){
+            this.check = true;
+            this.checkError = false;
+        }else{
+            this.check = false;
+            this.checkError = true;
+        }
         return this.subtracao;
     }
 
@@ -289,6 +303,7 @@ export class FornecedorComponent implements OnInit {
             var proporcaoList = this.proporcional();
 
             if(this.verify == true) {
+                this.showSucesso();
                 this.fornecedorService.postFornecedores(
                     selectedFornecedor,
                     valueEmissao,
@@ -308,15 +323,45 @@ export class FornecedorComponent implements OnInit {
                     soma
                 ).subscribe(
                     data => {
-                        console.log(data)
+                        console.log(data);
+                        this.selectedFornecedor = "";
+                        this.valueEmissao = undefined;
+                        this.selectedOperacao = "";
+                        this.selectedCategoria = "";
+                        this.serie = undefined;
+                        this.nf = undefined;
+                        this.compra = undefined;
+                        this.items = [];
+                        this.selectedProduto.splice(0, this.selectedProduto.length);
+                        this.quantidade.splice(0, this.quantidade.length);
+                        this.valor.splice(0, this.valor.length);
+                        this.selectedTransportadora = "";
+                        this.frete = 0;
+                        this.sum = 0;
+                        this.itemsPgto.splice(0, this.itemsPgto.length);
+                        this.valorPgto.splice(0, this.valorPgto.length);
+                        this.datePgto.splice(0, this.datePgto.length);
+                        this.subtracao = 0;
                     },
                     error => {
                         console.log(error)
                     }                
                 );
+            }else{
+                this.showError();
             }
 
 
+    }
+
+    showError() {
+        this.msgs = [];
+        this.msgs.push({severity:'error', summary:'Erro', detail:'Formulário preenchido incorretamente'});
+    }
+
+    showSucesso() {
+        this.msgs = [];
+        this.msgs.push({severity:'success', summary:'Sucesso', detail:'Formulario enviado com sucesso'});
     }
 
     toFixed(x) {

@@ -166,6 +166,11 @@
                 [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
             />
         </div>
+        <div>
+            <i class="fa fa-check fa-lg" style="margin-top: 6px;color:green" aria-hidden="true" *ngIf="check"></i>
+            <i class="fa fa-times fa-lg" style="margin-top: 6px;color:red" aria-hidden="true" *ngIf="checkError"></i>
+        </div>
+        <p-growl [value]="msgs"></p-growl>
     </div>
     <div class="display margin">
         <div class="field paragrafo">

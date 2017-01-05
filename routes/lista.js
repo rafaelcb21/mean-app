@@ -41,6 +41,11 @@ router.post('/fornecedores', function(req, res, next) {
 
   var list1 = [];
   var list2 = [];
+  var list3 = [];
+
+  var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+  var freteByProduto = frete / quantidadeTotal;
+  var parcelaUnidadeFrete = parseFloat(freteByProduto) / valorPgto.length;
 
   for (let i = 0; i < proporcaoList.length; i++) {
     for (let j = 0; j < valorPgto.length; j++) {
@@ -49,6 +54,10 @@ router.post('/fornecedores', function(req, res, next) {
     }
     list2.push(list1);
     list1 = [];
+  }
+
+  for (let j = 0; j < valorPgto.length; j++) {
+      list3.push(parcelaUnidadeFrete);
   }
 
   for (let i = 0; i < quantidade.length; i++) {
@@ -75,6 +84,7 @@ router.post('/fornecedores', function(req, res, next) {
         prop: prop,
         parc: parc,
         dataParc: dataParc,
+        parcFrete: list3
       })
       product.save(function(err, result) {})          
     }      

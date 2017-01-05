@@ -16,6 +16,7 @@ var schema = new Schema({
     prop: {type: Array},
     parc: {type: Array},
     dataParc: {type: Array},
+    parcFrete: {type: Array},
 });
 
 schema.plugin(timestamps());
