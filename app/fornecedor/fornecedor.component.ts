@@ -342,6 +342,7 @@ export class FornecedorComponent implements OnInit {
                         this.valorPgto.splice(0, this.valorPgto.length);
                         this.datePgto.splice(0, this.datePgto.length);
                         this.subtracao = 0;
+                        this.check = undefined;
                     },
                     error => {
                         console.log(error)
