@@ -4,12 +4,11 @@
         <p-fieldset legend="Cabeçalho"> 
             <div class="display">
                 <div class="field">
-                    <p-autoComplete [(ngModel)]="selectedFornecedor" [suggestions]="searchFornecedorList" (completeMethod)="searchFornecedor($event)" placeholder="Fornecedor"></p-autoComplete>
-                    <!--p-dropdown [options]="fornecedores" [(ngModel)]="selectedFornecedor"></p-dropdown-->
+                    <p-autoComplete [(ngModel)]="selectedCliente" [suggestions]="searchClienteList" (completeMethod)="searchCliente($event)" placeholder="Cliente"></p-autoComplete>
                 </div>
                 <div class="field icon-display">
                     <div>
-                        <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Fornecedores', op)"></i>
+                        <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Cliente', op)"></i>
                     </div>
                 </div>
                 <div div class="field">
@@ -19,19 +18,9 @@
                     <p-autoComplete (onDropdownClick)="operacaoDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedOperacao" [suggestions]="searchOperacaoList" (completeMethod)="searchOperacao($event)" placeholder="Operação"></p-autoComplete>
                     <!--p-dropdown [options]="operacao" [(ngModel)]="selectedOperacao"></p-dropdown-->
                 </div>
-                <div class="field icon-display">
-                    <div>
-                        <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Operação', op)"></i>
-                    </div>
-                </div>
                 <div class="field">
                     <p-autoComplete (onDropdownClick)="categoriaDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedCategoria" [suggestions]="searchCategoriaList" (completeMethod)="searchCategoria($event)" placeholder="Categoria"></p-autoComplete>
                     <!--p-dropdown [options]="categoria" [(ngModel)]="selectedCategoria"></p-dropdown-->
-                </div>
-                <div class="field icon-display">
-                    <div>
-                        <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Categoria', op)"></i>
-                    </div>
                 </div>
             </div>
             <div class="display margin">
@@ -39,10 +28,7 @@
                     <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="serie" placeholder="Série"/>
                 </div>
                 <div class="field">
-                    <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="nf" placeholder="Número NF" style="margin-left: 34px;"/>
-                </div>
-                <div class="field">
-                    <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="compra" placeholder="Número da Compra"/>
+                    <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="venda" placeholder="Número da Venda" style="margin-left: 34px;"/>
                 </div>
             </div>
         </p-fieldset>
@@ -204,7 +190,3 @@
     <input type="text" pInputText [(ngModel)]="item" placeholder="{{ label }}"/>
     <i class="fa fa-check-circle certo" (click)="itemEscolhido(label, item);op.hide($event)"></i>    
 </p-overlayPanel>
-
-
-
-

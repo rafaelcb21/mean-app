@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { routing } from './routes';
 import { FornecedorComponent } from './fornecedor/fornecedor.component';
 import { FornecedorService } from './fornecedor/fornecedor.service';
+import { LoginComponent } from './login/login.component';
+import { VenderComponent } from './vender/vender.component';
 import { 
   DropdownModule,
   CalendarModule,
@@ -15,7 +17,9 @@ import {
   ButtonModule,
   AutoCompleteModule, 
   FieldsetModule,
-  GrowlModule } from 'primeng/primeng';
+  GrowlModule,
+  ContextMenuModule,
+  MenuModule } from 'primeng/primeng';
 import { TextMaskModule } from 'angular2-text-mask';
 //import { MoneyMaskDirective } from './mask/money-mask.directive';
 import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.directive';
@@ -25,7 +29,9 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
 @NgModule({
   declarations: [
     AppComponent,
-    FornecedorComponent, 
+    FornecedorComponent,
+    LoginComponent,
+    VenderComponent,
     //MoneyMaskDirective, 
     CurrencyMaskDirective],
   imports: [
@@ -43,6 +49,8 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     AutoCompleteModule,
     FieldsetModule,
     GrowlModule,
+    ContextMenuModule,
+    MenuModule,
 //    CurrencyMaskModule,
 //    MoneyMaskModule,
   ],

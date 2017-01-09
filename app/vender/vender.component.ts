@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
-import { FornecedorService } from './fornecedor.service';
+import { FornecedorService } from './../fornecedor/fornecedor.service';
 import { Message, MenuItem } from 'primeng/primeng';
 
 @Component({
-    selector: '<fornecedor></fornecedor>',
-    templateUrl: './js/app/fornecedor/fornecedor.component.html',
-    styleUrls: ['./js/app/fornecedor/fornecedor.component.css'],
+    selector: '<vender></vender>',
+    templateUrl: './js/app/vender/vender.component.html',
+    styleUrls: ['./js/app/vender/vender.component.css'],
 })
-export class FornecedorComponent implements OnInit {
+export class VenderComponent {
     private menus: MenuItem[];
     fornecedores: SelectItem[];
     operacao: SelectItem[];
