@@ -14,13 +14,12 @@ var app = express()
   .use(function (req, res, next) {
       if (req.header('x-forwarded-proto') == 'http') {
         res.redirect('https://' + 'localhost:3000' + req.url)
-        //res.redirect('https://' + 'ecbanespa.herokuapp.com' + req.url)
         return
       }
       next()
   });
 mongoose.connect('localhost:27017/admfinanca');
-//mongoose.connect('mongodb://admfinancamongodb:pwadmfinancamongodb@ds133388.mlab.com:33388/admfinanca');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
