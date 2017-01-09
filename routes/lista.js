@@ -115,4 +115,18 @@ router.get('/item/:label', function(req, res, next) {
   })
 })
 
+router.get('/produto', function(req, res, next) {
+  Produto.find({}, function(err, doc){
+      if (err) {
+        return res.status(404).json({
+          title: 'Um erro ocorreu',
+          obj: err
+        });
+      }
+      res.status(200).json({
+        obj: doc
+      });
+  })
+})
+
 module.exports = router;

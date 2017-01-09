@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
-import { FornecedorService } from './../fornecedor/fornecedor.service';
+import { VenderService } from './vender.service';
 import { Message, MenuItem } from 'primeng/primeng';
 
 @Component({
@@ -50,8 +50,8 @@ export class VenderComponent {
     checkError:  Boolean;
     msgs: Message[] = [];
 
-    fornecedoresList: any[] = [];
-    searchFornecedorList: any[] = [];
+    clienteList: any[] = [];
+    searchClienteList: any[] = [];
 
     operacaoList: any[] = [];
     searchOperacaoList: any[] = [];
@@ -65,27 +65,9 @@ export class VenderComponent {
     transportadoraList: any[] = [];
     searchTransportadoraList: any[] = [];
     
-    //ok: any;
-    //mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
-    //<input [textMask]="{mask: mask}" [(ngModel)]="myModel" type="text"/>
-
-    //<input [(ngModel)]="moneyText" [(moneyModel)]="moneyValue" mask-money />
-
     constructor(private _router: Router,
-        private fornecedorService: FornecedorService,
-    ){
-        /*const numberMask = createNumberMask({
-            prefix: 'R$ ',
-            suffix: '',
-            includeThousandsSeparator: true,
-            thousandsSeparatorSymbol: '.',
-            allowDecimal: false,
-            decimalSymbol: ',',
-            decimalLimit: 2,
-            requireDecimal: false,
-            allowNegative: false,
-        })*/
-    }
+        private venderService: VenderService,
+    ){}
 
     onlyNumber(event){
         var lista = [48,49,50,51,52,53,54,55,56,57];
@@ -153,15 +135,14 @@ export class VenderComponent {
         }
     }
 
-    searchFornecedor(event) {
-         this.searchFornecedorList = []
+    searchCliente(event) {
+         this.searchClienteList = []
 
-        for (let j = 0; j < this.fornecedoresList.length; j++) {
+        for (let j = 0; j < this.clienteList.length; j++) {
             try{
-                if (this.fornecedoresList[j].match(event.query)) {
-                    this.searchFornecedorList.push(this.fornecedoresList[j])
+                if (this.clienteList[j].match(event.query)) {
+                    this.searchClienteList.push(this.clienteList[j])
                 }
-                //console.log(this.searchFornecedorList)
             }catch(e){}
         }
     }
@@ -218,7 +199,7 @@ export class VenderComponent {
         }, 100)
     }
 
-    salvar(
+    /*salvar(
             selectedFornecedor,
             valueEmissao,
             selectedOperacao,
@@ -304,7 +285,7 @@ export class VenderComponent {
 
             if(this.verify == true) {
                 this.showSucesso();
-                this.fornecedorService.postFornecedores(
+                this.venderService.postFornecedores(
                     selectedFornecedor,
                     valueEmissao,
                     selectedOperacao,
@@ -352,7 +333,7 @@ export class VenderComponent {
             }
 
 
-    }
+    }*/
 
     showError() {
         this.msgs = [];
@@ -391,7 +372,7 @@ export class VenderComponent {
         this.sum = 0;
         this.subtracao = 0.00;
 
-        this.fornecedorService.getItem("Produto")
+        this.venderService.getItemProduto()
             .subscribe(
                 data => {
                     //this.produto = data;
@@ -404,12 +385,12 @@ export class VenderComponent {
                 }                
             );
 
-        this.fornecedorService.getItem("Fornecedores")
+        this.venderService.getItem("Cliente")
             .subscribe(
                 data => {
                     //this.fornecedores = data;
                     for(let i = 0; i < data[0].length; i++) {
-                        this.fornecedoresList.push(data[0][i].label);
+                        this.clienteList.push(data[0][i].label);
                     }
                 },
                 error => {
@@ -417,7 +398,7 @@ export class VenderComponent {
                 }                
             );
 
-        this.fornecedorService.getItem("Operação")
+        this.venderService.getItem("Operação")
             .subscribe(
                 data => {
                     //this.operacao = data;
@@ -430,7 +411,7 @@ export class VenderComponent {
                 }                
             );
 
-        this.fornecedorService.getItem("Categoria")
+        this.venderService.getItem("Categoria")
             .subscribe(
                 data => {
                     //this.categoria = data;
@@ -443,7 +424,7 @@ export class VenderComponent {
                 }                
             );
 
-        this.fornecedorService.getItem("Transportadora")
+        this.venderService.getItem("Transportadora")
             .subscribe(
                 data => {
                     //this.transportadora = data;
@@ -497,10 +478,7 @@ export class VenderComponent {
         this.menus = [
             {
                 label: 'Comprar Produto',
-            },
-            {
-                label: 'Vender Produto',
-                routerLink: ['/vender']
+                routerLink: ['/fornecedor']
             },
             {
                 label: 'Despesas',
@@ -573,41 +551,18 @@ export class VenderComponent {
         if(item.trim() != ""){
             var lista = item.split(";");
             var listaApoio = [];
-            this.fornecedorService.postItem(label, lista)
+            this.venderService.postItem(label, lista)
                 .subscribe(
                     data => {
-                        this.fornecedorService.getItem(data)
+                        this.venderService.getItem(data)
                             .subscribe(
                                 data => {
                                     for(let i = 0; i < data[0].length; i++) {
                                         listaApoio.push(data[0][i].label);
-                                    }
-
-                                    if(data[1] == "Fornecedores") {
-                                        this.fornecedoresList.splice(0, this.fornecedoresList.length);
-                                        for(let i = 0; i < listaApoio.length; i++) {
-                                            this.fornecedoresList.push(listaApoio[i]);
-                                        }
-                                    }else if(data[1] == "Operação") {
-                                        this.operacaoList.splice(0, this.operacaoList.length);
-                                        for(let i = 0; i < listaApoio.length; i++) {
-                                            this.operacaoList.push(listaApoio[i]);
-                                        }
-                                    }else if(data[1] == "Categoria") {
-                                        this.categoriaList.splice(0, this.categoriaList.length);
-                                        for(let i = 0; i < listaApoio.length; i++) {
-                                            this.categoriaList.push(listaApoio[i]);
-                                        }
-                                    }else if(data[1] == "Produto") {
-                                        this.produtoList.splice(0, this.produtoList.length);
-                                        for(let i = 0; i < listaApoio.length; i++) {
-                                            this.produtoList.push(listaApoio[i]);
-                                        }
-                                    }else if(data[1] == "Transportadora") {
-                                        this.transportadoraList.splice(0, this.transportadoraList.length);
-                                        for(let i = 0; i < listaApoio.length; i++) {
-                                            this.transportadoraList.push(listaApoio[i]);
-                                        }
+                                    }                                   
+                                    this.clienteList.splice(0, this.clienteList.length);
+                                    for(let i = 0; i < listaApoio.length; i++) {
+                                        this.clienteList.push(listaApoio[i]);
                                     }
                                     listaApoio = [];
                                 },

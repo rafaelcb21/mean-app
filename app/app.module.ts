@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { routing } from './routes';
 import { FornecedorComponent } from './fornecedor/fornecedor.component';
 import { FornecedorService } from './fornecedor/fornecedor.service';
+import { VenderService } from './vender/vender.service';
 import { LoginComponent } from './login/login.component';
 import { VenderComponent } from './vender/vender.component';
 import { 
@@ -56,6 +57,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
   ],
   providers: [
     FornecedorService,
+    VenderService,
     {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
