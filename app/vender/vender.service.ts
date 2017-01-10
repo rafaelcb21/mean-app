@@ -69,11 +69,72 @@ export class VenderService {
             .catch(error => Observable.throw(error.json()));
     }
 
+    getItemProdutoQuantidade(produto) {
+        return this._http.get(Config.URL_SITE + 'lista/produtoQuantidade?produto='+produto)
+            .map(response => {
+                 const data = response.json().obj;
+                 const docs = response.json().objs;
+                 var precos = [];
+                 for (let i = 0; i < docs.length; i++) {
+                    var preco = docs[i].val[0];
+                    precos.push(preco)
+                }
+                var sum = precos.reduce((a, b) => a + b, 0);
+                var preco_medio = sum/data;
+                return [data, preco_medio];
+            })
+            .catch(error => Observable.throw(error.json()));
+    }
+
     postItem(label, lista) {
         const body = JSON.stringify({label: label, lista: lista});
         const header = new Headers({'Content-Type': 'application/json'});
         return this._http.post(Config.URL_SITE + 'lista/item', body, {headers: header})
             .map(response => response.json().label)
+            .catch(error => Observable.throw(error.json()));
+    }
+
+    postVenda(
+        selectedCliente,
+        valueEmissao,
+        selectedOperacao,
+        selectedCategoria,
+        serie,
+        venda,
+        selectedProduto,
+        pm,
+        quantidade,
+        margem,
+        selectedTransportadora,
+        frete,
+        valorPgto,
+        vencimento,
+        datePgto,
+        proporcaoList,
+        soma
+    ) {
+        const body = JSON.stringify({
+            selectedFornecedor: selectedCliente,
+            valueEmissao: valueEmissao,
+            selectedOperacao: selectedOperacao,
+            selectedCategoria: selectedCategoria,
+            serie: serie,
+            venda: venda,
+            selectedProduto: selectedProduto,
+            pm: pm,
+            quantidade: quantidade,
+            margem: margem,
+            selectedTransportadora: selectedTransportadora,
+            frete: frete,
+            valorPgto: valorPgto,
+            vencimento: vencimento,
+            datePgto: datePgto,
+            proporcaoList: proporcaoList,
+            soma: soma
+        });
+        const header = new Headers({'Content-Type': 'application/json'});
+        return this._http.post(Config.URL_SITE + 'lista/venda', body, {headers: header})
+            .map(response => response.json().msg)
             .catch(error => Observable.throw(error.json()));
     }
 }

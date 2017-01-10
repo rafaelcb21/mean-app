@@ -36,22 +36,53 @@
             <div class="display">
                 <button (click)="addProduto()" pButton type="button" label="Produto" iconPos="left" icon="fa-plus-circle"></button>
             </div>
+            <div class="display margin">
+                <div class="field">
+                    <input pInputText placeholder="Produto" disabled/>
+                </div>
+                <div class="field">
+                    <input pInputText placeholder="Custo Médio" disabled/>
+                </div>
+                <div class="field">
+                    <input pInputText placeholder="Quantidade" disabled/>
+                </div>
+                <div class="field">
+                    <input pInputText placeholder="Margem %" disabled/>
+                </div>
+                <div class="field">
+                    <input pInputText placeholder="Valor da Venda" disabled/>
+                </div>
+                <!--div class="field">
+                    <input pInputText placeholder="Total" disabled/>
+                </div-->
+            </div>
             <div *ngFor="let num of items; let i=index">
                 <div class="display margin">
                     <div class="field">
-                        <p-autoComplete [(ngModel)]="selectedProduto[num]" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
+                        <p-autoComplete [(ngModel)]="selectedProduto[num]" (ngModelChange)="onChange($event, num)" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
+                    </div>
+                    <div class="field">
+                        <input
+                            disabled
+                            pInputText
+                            currencyMask
+                            [(ngModel)]="pm[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
                     </div>
                     <div class="field">
                         <input (keypress)="onlyNumber($event)" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
                     </div>
-
                     <div class="field">
-                        <input
-                            pInputText
-                            currencyMask                    
-                            [(ngModel)]="valor[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                        <input type="text" pInputText [(ngModel)]="margem[num]" style="width:195px"/>
+                        <p-slider [(ngModel)]="margem[num]" [style]="{'width':'205px'}"></p-slider>
                     </div>
                     <div class="field">
+                        <input
+                            disabled
+                            pInputText
+                            currencyMask                    
+                            [(ngModel)]="((margem[num]/100)+1)*pm[num]*quantidade[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                    </div>
+                    <!--div class="field">
                         <input
                             type="text" 
                             pInputText
@@ -60,7 +91,7 @@
                             disabled                    
                             [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
                         />
-                    </div>
+                    </div-->
                     <div class="field icon-display">
                         <div>
                             <i class="fa fa-times" (click)="remove(i)" style="color:red"></i>
@@ -105,11 +136,21 @@
     </div>
 
     <div class="margin">
-        <p-fieldset legend="Dias do Pagamento">
+        <p-fieldset legend="Dias de Recebimento">
             <div class="display">
-                <button (click)="addPagamento()" pButton type="button" label="Pagamento" iconPos="left" icon="fa-plus-circle"></button>
+                <button (click)="addPagamento()" pButton type="button" label="Recebimento" iconPos="left" icon="fa-plus-circle"></button>
             </div>
-
+            <div class="display margin">
+                <div class="field">
+                    <input pInputText placeholder="Valor" disabled/>
+                </div>
+                <div class="field">
+                    <input pInputText placeholder="Vencimento" disabled/>
+                </div>
+                <div class="field">
+                    <input pInputText placeholder="Recebimento" disabled/>
+                </div>
+            </div>
             <div *ngFor="let _num of itemsPgto; let i=index">
                 <div class="display margin">
                     <div class="field">
@@ -117,6 +158,9 @@
                             pInputText
                             currencyMask
                             [(ngModel)]="valorPgto[_num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                    </div>
+                    <div div class="field">
+                        <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="vencimento[_num]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
                     </div>
                     <div div class="field">
                         <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="datePgto[_num]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
@@ -154,20 +198,21 @@
         <div class="field paragrafo">
             <button
                 (click)="salvar(
-                            selectedFornecedor,
+                            selectedCliente,
                             valueEmissao,
                             selectedOperacao,
                             selectedCategoria,
                             serie,
-                            nf,
-                            compra,
+                            venda,
                             selectedProduto,
+                            pm,
                             quantidade,
-                            valor,
+                            margem,
                             selectedTransportadora,
                             frete,
                             sum,
                             valorPgto,
+                            vencimento,
                             datePgto,
                             subtracao
                         )"

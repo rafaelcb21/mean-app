@@ -129,4 +129,30 @@ router.get('/produto', function(req, res, next) {
   })
 })
 
+router.get('/produtoQuantidade', function(req, res, next) {
+  var produto = req.query.produto;
+  Produto.count({produto: produto}, function(err, doc){
+      if (err) {
+        return res.status(404).json({
+          title: 'Um erro ocorreu',
+          obj: err
+        });
+      }
+      Produto.find({produto: produto}, function(erro, docs){
+          if (erro) {
+            return res.status(404).json({
+              title: 'Um erro ocorreu',
+              obj: erro
+            });
+          }
+          res.status(200).json({
+            obj: doc,
+            objs: docs 
+          });
+      })
+      //res.status(200).json({
+      //  obj: doc
+      //});
+  })
+})
 module.exports = router;

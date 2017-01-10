@@ -16,25 +16,27 @@ export class VenderComponent {
     categoria: SelectItem[];
     produto: SelectItem[];
     transportadora: SelectItem[];
-    selectedFornecedor: string;
+    selectedCliente: string;
     selectedOperacao: string;
     selectedCategoria: string;
     selectedTransportadora: string;
     valueEmissao: Date;
     serie: Number;
     nf: Number;
-    compra: Number;
+    venda: Number;
     label: string;
     item: string;
     items = [];
     quantidade = [];
     valor = [];
+    pm = [];
     valorEdit = [];
     selectedProduto = [];
     total = [];
     itemsPgto = [];
     valorPgto = [];
     datePgto = [];
+    vencimento = [];
     frete: any;
     sum: any;
     sumPgto: any;
@@ -49,6 +51,7 @@ export class VenderComponent {
     check: Boolean;
     checkError:  Boolean;
     msgs: Message[] = [];
+    margem = [];
 
     clienteList: any[] = [];
     searchClienteList: any[] = [];
@@ -103,16 +106,19 @@ export class VenderComponent {
     somar() {
         this.ll = []
         for(let i = 0;  i < this.quantidade.length; i++) {
-            var x = parseFloat(this.quantidade[i])*parseFloat(this.valor[i])
+            var x = ((parseFloat(this.margem[i])/100)+1) * parseFloat(this.pm[i]) * parseFloat(this.quantidade[i])
             this.ll.push(x)
         }
         this.sum = this.ll.reduce((a, b) => a + b, 0) + this.frete;
-        return this.sum
+        var resultado = Math.round(this.sum * 100) / 100;
+        return resultado;
     }
 
     verificar() {
-        this.sumPgto = this.valorPgto.reduce((a, b) => a + b, 0)
+        this.sumPgto = this.valorPgto.reduce((a, b) => a + b, 0);
         this.subtracao = this.somar() - this.sumPgto;
+        var y = this.somar();
+
         if(this.subtracao == 0){
             this.check = true;
             this.checkError = false;
@@ -199,27 +205,28 @@ export class VenderComponent {
         }, 100)
     }
 
-    /*salvar(
-            selectedFornecedor,
+    salvar(
+            selectedCliente,
             valueEmissao,
             selectedOperacao,
             selectedCategoria,
             serie,
-            nf,
-            compra,
+            venda,
             selectedProduto,
+            pm,
             quantidade,
-            valor,
+            margem,
             selectedTransportadora,
             frete,
             sum,
             valorPgto,
+            vencimento,
             datePgto,
             subtracao
         ) {
             var listaVerify = [];
-            if(selectedFornecedor == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(this.fornecedoresList.indexOf(selectedFornecedor) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+            if(selectedCliente == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
+            if(this.clienteList.indexOf(selectedCliente) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
 
             if(valueEmissao == undefined || valueEmissao == null) {listaVerify.push(false)}else{listaVerify.push(true)}
             
@@ -230,8 +237,7 @@ export class VenderComponent {
             if(this.categoriaList.indexOf(selectedCategoria) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
 
             if(serie == undefined || serie == "") {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(nf == undefined || nf == "") {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(compra == undefined || compra == "") {listaVerify.push(false)}else{listaVerify.push(true)}
+            if(venda == undefined || venda == "") {listaVerify.push(false)}else{listaVerify.push(true)}
 
             if(selectedProduto.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
             for (let j = 0; j < selectedProduto.length; j++) {
@@ -241,11 +247,14 @@ export class VenderComponent {
                 }else{listaVerify.push(true)}
             }
 
+            if(pm.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+            if(pm.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+
             if(quantidade.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
             if(quantidade.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-            if(valor.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(valor.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+            if(margem.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+            if(margem.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
             
             if(frete > 0) {
                 if( (selectedTransportadora == undefined) || 
@@ -263,6 +272,9 @@ export class VenderComponent {
 
             if((valorPgto.indexOf("") != -1) || (valorPgto.indexOf(0) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
             if(valorPgto.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+
+            if((vencimento.indexOf("") != -1) || (vencimento.indexOf(null) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
+            if(vencimento.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
 
             if((datePgto.indexOf("") != -1) || (datePgto.indexOf(null) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
             if(datePgto.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
@@ -285,41 +297,43 @@ export class VenderComponent {
 
             if(this.verify == true) {
                 this.showSucesso();
-                this.venderService.postFornecedores(
-                    selectedFornecedor,
+                this.venderService.postVenda(
+                    selectedCliente,
                     valueEmissao,
                     selectedOperacao,
                     selectedCategoria,
                     serie,
-                    nf,
-                    compra,
+                    venda,
                     selectedProduto,
+                    pm,
                     quantidade,
-                    valor,
+                    margem,
                     selectedTransportadora,
                     frete,
                     valorPgto,
+                    vencimento,
                     datePgto,
                     proporcaoList,
                     soma
                 ).subscribe(
                     data => {
-                        this.selectedFornecedor = "";
+                        this.selectedCliente = "";
                         this.valueEmissao = undefined;
                         this.selectedOperacao = "";
                         this.selectedCategoria = "";
                         this.serie = undefined;
-                        this.nf = undefined;
-                        this.compra = undefined;
+                        this.venda = undefined;
                         this.items = [];
                         this.selectedProduto.splice(0, this.selectedProduto.length);
+                        this.pm.splice(0, this.pm.length);
                         this.quantidade.splice(0, this.quantidade.length);
-                        this.valor.splice(0, this.valor.length);
+                        this.margem.splice(0, this.margem.length);
                         this.selectedTransportadora = "";
                         this.frete = 0;
                         this.sum = 0;
                         this.itemsPgto.splice(0, this.itemsPgto.length);
                         this.valorPgto.splice(0, this.valorPgto.length);
+                        this.vencimento.splice(0, this.datePgto.length);
                         this.datePgto.splice(0, this.datePgto.length);
                         this.subtracao = 0;
                         this.check = undefined;
@@ -333,7 +347,7 @@ export class VenderComponent {
             }
 
 
-    }*/
+    }
 
     showError() {
         this.msgs = [];
@@ -492,16 +506,34 @@ export class VenderComponent {
         ];
     }
 
+    onChange(produto, num){
+        this.venderService.getItemProdutoQuantidade(produto)
+            .subscribe(
+                data => {                    
+                    if(data[0] != 0){
+                        this.quantidade[num] = data[0];
+                        this.pm[num] = data[1];
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+    }
+
     addProduto() {
         if(this.items.length == 0) {
             this.items.push("0");
             this.quantidade.push("");
-            this.valor.push("");
+            this.margem.push("");
+            this.pm.push("");
             this.selectedProduto.push("");            
         }else{
             this.items.push(String(this.items.length));
             this.quantidade.push("");
-            this.valor.push("");
+            this.margem.push("");
+            this.pm.push("");
             this.selectedProduto.push("");
         }
         
@@ -511,11 +543,13 @@ export class VenderComponent {
         if(this.itemsPgto.length == 0) {
             this.itemsPgto.push("0");
             this.valorPgto.push("");
-            this.datePgto.push("");          
+            this.datePgto.push("");   
+            this.vencimento.push("");       
         }else{
             this.itemsPgto.push(String(this.itemsPgto.length));
             this.valorPgto.push("");
             this.datePgto.push("");
+            this.vencimento.push("");
         }
         
     }
@@ -527,8 +561,9 @@ export class VenderComponent {
         }
         this.items.splice(0, tamanho);
         this.quantidade.splice(x, 1);
-        this.valor.splice(x, 1);
         this.selectedProduto.splice(x, 1);
+        this.margem.splice(x, 1);
+        this.pm.splice(x, 1);
     }
 
     removePgto(x) {
@@ -539,6 +574,7 @@ export class VenderComponent {
         this.itemsPgto.splice(0, tamanho);
         this.valorPgto.splice(x, 1);
         this.datePgto.splice(x, 1);
+        this.vencimento.splice(x, 1);
     }
 
     selectEdit(event, lista, overlaypanel) {
