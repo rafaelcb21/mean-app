@@ -114,7 +114,7 @@ export class VenderService {
         soma
     ) {
         const body = JSON.stringify({
-            selectedFornecedor: selectedCliente,
+            selectedCliente: selectedCliente,
             valueEmissao: valueEmissao,
             selectedOperacao: selectedOperacao,
             selectedCategoria: selectedCategoria,

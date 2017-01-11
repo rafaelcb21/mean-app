@@ -90,16 +90,14 @@ export class VenderComponent {
         this.pp = [];
         this.proporcao = [];
         for(let i = 0;  i < this.quantidade.length; i++) {
-            var x = parseFloat(this.quantidade[i])*parseFloat(this.valor[i])
+            var x = ((parseFloat(this.margem[i])/100)+1) * parseFloat(this.pm[i]) * parseFloat(this.quantidade[i])
             this.pp.push(x)
         }
         this.sum = this.pp.reduce((a, b) => a + b, 0) + this.frete;
-
         for(let i = 0;  i < this.pp.length; i++) {
             var y = parseFloat(this.pp[i])/this.sum;
             this.proporcao.push(y);
         }
-
         return this.proporcao;
     }
 
@@ -116,7 +114,8 @@ export class VenderComponent {
 
     verificar() {
         this.sumPgto = this.valorPgto.reduce((a, b) => a + b, 0);
-        this.subtracao = this.somar() - this.sumPgto;
+        var sumPgtoRound = Math.round(this.sumPgto * 100) / 100;
+        this.subtracao = this.somar() - sumPgtoRound;
         var y = this.somar();
 
         if(this.subtracao == 0){
