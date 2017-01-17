@@ -32,7 +32,8 @@ export class FornecedorService {
         valorPgto,
         datePgto,
         proporcaoList,
-        soma
+        soma,
+        hash
     ) {
         const body = JSON.stringify({
             selectedFornecedor: selectedFornecedor,
@@ -50,7 +51,8 @@ export class FornecedorService {
             valorPgto: valorPgto,
             datePgto: datePgto,
             proporcaoList: proporcaoList,
-            soma: soma
+            soma: soma,
+            hash: hash
         });
         const header = new Headers({'Content-Type': 'application/json'});
         return this._http.post(Config.URL_SITE + 'lista/fornecedores', body, {headers: header})

@@ -4,6 +4,8 @@ import { SelectItem } from 'primeng/primeng';
 import { VenderService } from './vender.service';
 import { Message, MenuItem } from 'primeng/primeng';
 
+declare var sha256: any;
+
 @Component({
     selector: '<vender></vender>',
     templateUrl: './js/app/vender/vender.component.html',
@@ -71,6 +73,17 @@ export class VenderComponent {
     constructor(private _router: Router,
         private venderService: VenderService,
     ){}
+
+    randomString(length, chars) {
+        var mask = '';
+        if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
+        if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if (chars.indexOf('#') > -1) mask += '0123456789';
+        if (chars.indexOf('!') > -1) mask += '~`!@#$%^&*()_+-={}[]:";\'<>?,./|\\';
+        var result = '';
+        for (var i = length; i > 0; --i) result += mask[Math.round(Math.random() * (mask.length - 1))];
+        return result;
+    }
 
     onlyNumber(event){
         var lista = [48,49,50,51,52,53,54,55,56,57];
@@ -293,6 +306,8 @@ export class VenderComponent {
 
             var soma = this.somar();
             var proporcaoList = this.proporcional();
+            var hashString = this.randomString(32, '#aA!');
+            var pwSHA256 = sha256(hashString);
 
             if(this.verify == true) {
                 this.showSucesso();
@@ -313,7 +328,8 @@ export class VenderComponent {
                     vencimento,
                     datePgto,
                     proporcaoList,
-                    soma
+                    soma,
+                    pwSHA256
                 ).subscribe(
                     data => {
                         this.selectedCliente = "";

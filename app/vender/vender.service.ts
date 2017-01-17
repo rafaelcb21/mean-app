@@ -111,7 +111,8 @@ export class VenderService {
         vencimento,
         datePgto,
         proporcaoList,
-        soma
+        soma,
+        hash
     ) {
         const body = JSON.stringify({
             selectedCliente: selectedCliente,
@@ -130,7 +131,8 @@ export class VenderService {
             vencimento: vencimento,
             datePgto: datePgto,
             proporcaoList: proporcaoList,
-            soma: soma
+            soma: soma,
+            hash: hash
         });
         const header = new Headers({'Content-Type': 'application/json'});
         return this._http.post(Config.URL_SITE + 'lista/venda', body, {headers: header})

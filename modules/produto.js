@@ -18,6 +18,7 @@ var schema = new Schema({
     dataParc: {type: Array},
     parcFrete: {type: Array},
     vendido: {type: Boolean, default: false},
+    hash: {type: String}
 });
 
 schema.plugin(timestamps());

@@ -39,6 +39,7 @@ router.post('/fornecedores', function(req, res, next) {
   var datePgto = req.body.datePgto; //lista
   var proporcaoList = req.body.proporcaoList; //lista
   var soma = req.body.soma;
+  var hash = req.body.hash;
 
   var list1 = [];
   var list2 = [];
@@ -85,7 +86,8 @@ router.post('/fornecedores', function(req, res, next) {
         prop: prop,
         parc: parc,
         dataParc: dataParc,
-        parcFrete: list3
+        parcFrete: list3,
+        hash: hash
       })
       product.save(function(err, result) {})          
     }      
@@ -175,6 +177,7 @@ router.post('/venda', function(req, res, next) {
   var datePgto = req.body.datePgto; //lista
   var proporcaoList = req.body.proporcaoList; //lista
   var soma = req.body.soma;
+  var hash = req.body.hash;
 
   var list1 = [];
   var list2 = [];
@@ -228,7 +231,8 @@ router.post('/venda', function(req, res, next) {
         parc: parc,
         vencimento: vencimento,
         dataParc: dataParc,
-        parcFrete: list3
+        parcFrete: list3,
+        hash: hash
       })
       sell.save(function(err, result) {})          
     }      
