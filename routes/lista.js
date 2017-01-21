@@ -3,6 +3,7 @@ var router = express.Router();
 var Lista = require('../modules/lista');
 var Produto = require('../modules/produto');
 var Venda = require('../modules/venda');
+var async = require('async');
 
 /* GET home page. */
 router.post('/item', function(req, res, next) {
@@ -157,6 +158,30 @@ router.get('/produtoQuantidade', function(req, res, next) {
       //  obj: doc
       //});
   })
+})
+
+router.post('/qtdProdutos', function(req, res, next) {
+  var selectedProduto = req.body.selectedProduto; //lista
+  var quantidade = req.body.quantidade; //lista
+  var lista = [];
+  var check = "true";
+  var contar = function (item, doneCallback) {
+    var query = Produto.count({produto: item}).exec();
+    query.then(function (doc) {
+      return doneCallback(null, doc);
+    });  
+  };  
+  async.map(selectedProduto, contar, function (err, results) {
+    for(let i = 0; i < results.length; i++) {
+      if(quantidade[i] > results[i]) {
+        check = "false";
+        break;
+      }      
+    }
+    res.status(200).json({
+      check: check
+    })
+  });
 })
 
 router.post('/venda', function(req, res, next) {  

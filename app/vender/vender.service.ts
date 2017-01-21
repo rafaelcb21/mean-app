@@ -45,6 +45,17 @@ export class VenderService {
         return out;
     } 
 
+    verificarQtd(selectedProduto, quantidade){
+        const body = JSON.stringify({selectedProduto: selectedProduto, quantidade: quantidade});
+        const header = new Headers({'Content-Type': 'application/json'});
+        return this._http.post(Config.URL_SITE + 'lista/qtdProdutos', body, {headers: header})
+            .map(response => {
+                var isTrueSet = (response.json().check === 'true');
+                return isTrueSet
+            })
+            .catch(error => Observable.throw(error.json()));
+    }
+
     getItemProduto() {
         return this._http.get(Config.URL_SITE + 'lista/produto')
             .map(response => {

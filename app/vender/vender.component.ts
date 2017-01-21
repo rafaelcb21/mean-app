@@ -236,132 +236,144 @@ export class VenderComponent {
             datePgto,
             subtracao
         ) {
-            var listaVerify = [];
-            if(selectedCliente == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(this.clienteList.indexOf(selectedCliente) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-            if(valueEmissao == undefined || valueEmissao == null) {listaVerify.push(false)}else{listaVerify.push(true)}
-            
-            if(selectedOperacao == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(this.operacaoList.indexOf(selectedOperacao) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+            this.venderService.verificarQtd(selectedProduto, quantidade).subscribe(
+                bool =>  {
+                    var listaVerify = [];
+                    listaVerify.push(bool);
 
-            if(selectedCategoria == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(this.categoriaList.indexOf(selectedCategoria) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(selectedCliente == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(this.clienteList.indexOf(selectedCliente) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-            if(serie == undefined || serie == "") {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(venda == undefined || venda == "") {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(valueEmissao == undefined || valueEmissao == null) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    
+                    if(selectedOperacao == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(this.operacaoList.indexOf(selectedOperacao) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-            if(selectedProduto.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-            for (let j = 0; j < selectedProduto.length; j++) {
-                if (this.produtoList.indexOf(selectedProduto[j]) == -1) {
-                    listaVerify.push(false);
-                    break;
-                }else{listaVerify.push(true)}
-            }
+                    if(selectedCategoria == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(this.categoriaList.indexOf(selectedCategoria) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-            if(pm.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(pm.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    //if(serie == undefined || serie == "") {listaVerify.push(false)}else{listaVerify.push(true)}
+                    //if(venda == undefined || venda == "") {listaVerify.push(false)}else{listaVerify.push(true)}
 
-            if(quantidade.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(quantidade.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(selectedProduto.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    for (let j = 0; j < selectedProduto.length; j++) {
+                        if (this.produtoList.indexOf(selectedProduto[j]) == -1) {
+                            listaVerify.push(false);
+                            break;
+                        }else{listaVerify.push(true)}
+                    }
 
-            if(margem.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(margem.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-            
-            if(frete > 0) {
-                if( (selectedTransportadora == undefined) || 
-                    (selectedTransportadora == "") || 
-                    (this.transportadoraList.indexOf(selectedTransportadora) == -1)) {
-                        listaVerify.push(false)
-                    }else{listaVerify.push(true)}
-            }else{
-                selectedTransportadora = "";
-                listaVerify.push(true)
-            }
+                    if(pm.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(pm.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-            var num = parseInt(sum) || 0;
-            //if(num == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(quantidade.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(quantidade.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-            if((valorPgto.indexOf("") != -1) || (valorPgto.indexOf(0) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(valorPgto.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
-
-            if((vencimento.indexOf("") != -1) || (vencimento.indexOf(null) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(vencimento.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
-
-            if((datePgto.indexOf("") != -1) || (datePgto.indexOf(null) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(datePgto.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
-
-            var somatorio = this.verificar();
-            var z = this.toFixed(somatorio);
-
-            if(z.toFixed(2) != 0.00) {listaVerify.push(false)}else{listaVerify.push(true)}
-
-            if(listaVerify.indexOf(false) == -1){
-                this.verify = true;
-            }else{
-                this.verify = false
-            }
-
-            listaVerify = [];
-
-            var soma = this.somar();
-            var proporcaoList = this.proporcional();
-            var hashString = this.randomString(32, '#aA!');
-            var pwSHA256 = sha256(hashString);
-
-            if(this.verify == true) {
-                this.showSucesso();
-                this.venderService.postVenda(
-                    selectedCliente,
-                    valueEmissao,
-                    selectedOperacao,
-                    selectedCategoria,
-                    serie,
-                    venda,
-                    selectedProduto,
-                    pm,
-                    quantidade,
-                    margem,
-                    selectedTransportadora,
-                    frete,
-                    valorPgto,
-                    vencimento,
-                    datePgto,
-                    proporcaoList,
-                    soma,
-                    pwSHA256
-                ).subscribe(
-                    data => {
-                        this.selectedCliente = "";
-                        this.valueEmissao = undefined;
-                        this.selectedOperacao = "";
-                        this.selectedCategoria = "";
-                        this.serie = undefined;
-                        this.venda = undefined;
-                        this.items = [];
-                        this.selectedProduto.splice(0, this.selectedProduto.length);
-                        this.pm.splice(0, this.pm.length);
-                        this.quantidade.splice(0, this.quantidade.length);
-                        this.margem.splice(0, this.margem.length);
-                        this.selectedTransportadora = "";
-                        this.frete = 0;
-                        this.sum = 0;
-                        this.itemsPgto.splice(0, this.itemsPgto.length);
-                        this.valorPgto.splice(0, this.valorPgto.length);
-                        this.vencimento.splice(0, this.datePgto.length);
-                        this.datePgto.splice(0, this.datePgto.length);
-                        this.subtracao = 0;
-                        this.check = undefined;
-                    },
-                    error => {
-                        console.log(error)
-                    }                
-                );
-            }else{
-                this.showError();
-            }
+                    if(margem.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(margem.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
 
 
+                    //this.venderService.verificarQtd(selectedProduto, quantidade).subscribe(
+                    //     data => this.venderService.checkQtd = data,
+                    //     error => console.log(error)
+                    //)
+                
+                    if(frete > 0) {
+                        if( (selectedTransportadora == undefined) || 
+                            (selectedTransportadora == "") || 
+                            (this.transportadoraList.indexOf(selectedTransportadora) == -1)) {
+                                listaVerify.push(false)
+                            }else{listaVerify.push(true)}
+                    }else{
+                        selectedTransportadora = "";
+                        listaVerify.push(true)
+                    }
+
+                    var num = parseInt(sum) || 0;
+                    //if(num == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+
+                    if((valorPgto.indexOf("") != -1) || (valorPgto.indexOf(0) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(valorPgto.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+
+                    if((vencimento.indexOf("") != -1) || (vencimento.indexOf(null) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(vencimento.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+
+                    if((datePgto.indexOf("") != -1) || (datePgto.indexOf(null) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(datePgto.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+
+                    var somatorio = this.verificar();
+                    var z = this.toFixed(somatorio);
+
+                    if(z.toFixed(2) != 0.00) {listaVerify.push(false)}else{listaVerify.push(true)}
+
+                    if(listaVerify.indexOf(false) == -1){
+                        this.verify = true;
+                    }else{
+                        this.verify = false
+                    }
+
+                    listaVerify = [];
+
+                    var soma = this.somar();
+                    var proporcaoList = this.proporcional();
+                    var hashString = this.randomString(32, '#aA!');
+                    var pwSHA256 = sha256(hashString);
+
+                    if(this.verify == true) {
+                        this.showSucesso();
+                        this.venderService.postVenda(
+                            selectedCliente,
+                            valueEmissao,
+                            selectedOperacao,
+                            selectedCategoria,
+                            serie,
+                            venda,
+                            selectedProduto,
+                            pm,
+                            quantidade,
+                            margem,
+                            selectedTransportadora,
+                            frete,
+                            valorPgto,
+                            vencimento,
+                            datePgto,
+                            proporcaoList,
+                            soma,
+                            pwSHA256
+                        ).subscribe(
+                            data => {
+                                this.selectedCliente = "";
+                                this.valueEmissao = undefined;
+                                this.selectedOperacao = "";
+                                this.selectedCategoria = "";
+                                this.serie = undefined;
+                                this.venda = undefined;
+                                this.items = [];
+                                this.selectedProduto.splice(0, this.selectedProduto.length);
+                                this.pm.splice(0, this.pm.length);
+                                this.quantidade.splice(0, this.quantidade.length);
+                                this.margem.splice(0, this.margem.length);
+                                this.selectedTransportadora = "";
+                                this.frete = 0;
+                                this.sum = 0;
+                                this.itemsPgto.splice(0, this.itemsPgto.length);
+                                this.valorPgto.splice(0, this.valorPgto.length);
+                                this.vencimento.splice(0, this.datePgto.length);
+                                this.datePgto.splice(0, this.datePgto.length);
+                                this.subtracao = 0;
+                                this.check = undefined;
+                            },
+                            error => {
+                                console.log(error)
+                            }                
+                        );
+                    }else{
+                        this.showError();
+                    }
+                },
+                    error => console.log(error)
+                )          
     }
 
     showError() {

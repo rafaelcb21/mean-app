@@ -141,10 +141,29 @@ export class FornecedorComponent implements OnInit {
         return this.sum
     }
 
+    arredondar(x) {
+        if (Math.abs(x) < 1.0) {
+            var e = parseInt(x.toString().split('e-')[1]);
+            if (e) {
+              x *= Math.pow(10,e-1);
+              x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
+            }
+        } else {
+        var e = parseInt(x.toString().split('+')[1]);
+        if (e > 20) {
+            e -= 20;
+            x /= Math.pow(10,e);
+            x += (new Array(e+1)).join('0');
+        }
+      }
+      return x;
+    }
+
     verificar() {
         this.sumPgto = this.valorPgto.reduce((a, b) => a + b, 0)
         this.subtracao = this.somar() - this.sumPgto;
-        if(this.subtracao == 0){
+        var z = this.arredondar(this.subtracao);
+        if(parseFloat(z).toFixed(2) == "0.00"){
             this.check = true;
             this.checkError = false;
         }else{
@@ -261,9 +280,9 @@ export class FornecedorComponent implements OnInit {
             if(selectedCategoria == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
             if(this.categoriaList.indexOf(selectedCategoria) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-            if(serie == undefined || serie == "") {listaVerify.push(false)}else{listaVerify.push(true)}
+            //if(serie == undefined || serie == "") {listaVerify.push(false)}else{listaVerify.push(true)}
             //if(nf == undefined || nf == "") {listaVerify.push(true)}else{listaVerify.push(true)}
-            if(compra == undefined || compra == "") {listaVerify.push(false)}else{listaVerify.push(true)}
+            //if(compra == undefined || compra == "") {listaVerify.push(false)}else{listaVerify.push(true)}
 
             if(selectedProduto.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
             for (let j = 0; j < selectedProduto.length; j++) {

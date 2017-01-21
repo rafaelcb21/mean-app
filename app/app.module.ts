@@ -21,6 +21,7 @@ import {
   GrowlModule,
   ContextMenuModule,
   SliderModule,
+  PanelModule,
   MenuModule } from 'primeng/primeng';
 import { TextMaskModule } from 'angular2-text-mask';
 //import { MoneyMaskDirective } from './mask/money-mask.directive';
@@ -54,6 +55,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     ContextMenuModule,
     MenuModule,
     SliderModule,
+    PanelModule,
 //    CurrencyMaskModule,
 //    MoneyMaskModule,
   ],

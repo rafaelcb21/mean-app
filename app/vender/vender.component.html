@@ -1,225 +1,227 @@
 <p-contextMenu [global]="true" [model]="menus"></p-contextMenu>
 <div class="container back">
-    <div class="margin">
-        <p-fieldset legend="Cabeçalho"> 
-            <div class="display">
-                <div class="field">
-                    <p-autoComplete [(ngModel)]="selectedCliente" [suggestions]="searchClienteList" (completeMethod)="searchCliente($event)" placeholder="Cliente"></p-autoComplete>
-                </div>
-                <div class="field icon-display">
-                    <div>
-                        <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Cliente', op)"></i>
+    <p-panel header="Vender Produto">
+        <div class="margin">
+            <p-fieldset legend="Cabeçalho"> 
+                <div class="display">
+                    <div class="field">
+                        <p-autoComplete [(ngModel)]="selectedCliente" [suggestions]="searchClienteList" (completeMethod)="searchCliente($event)" placeholder="Cliente"></p-autoComplete>
+                    </div>
+                    <div class="field icon-display">
+                        <div>
+                            <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Cliente', op)"></i>
+                        </div>
+                    </div>
+                    <div div class="field">
+                        <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="valueEmissao" dateFormat="dd/mm/yy" placeholder="Data Emissão"></p-calendar>
+                    </div>
+                    <div class="field">
+                        <p-autoComplete (onDropdownClick)="operacaoDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedOperacao" [suggestions]="searchOperacaoList" (completeMethod)="searchOperacao($event)" placeholder="Operação"></p-autoComplete>
+                    </div>
+                    <div class="field" style="margin-left: 33px;">
+                        <p-autoComplete (onDropdownClick)="categoriaDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedCategoria" [suggestions]="searchCategoriaList" (completeMethod)="searchCategoria($event)" placeholder="Categoria"></p-autoComplete>
                     </div>
                 </div>
-                <div div class="field">
-                    <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="valueEmissao" dateFormat="dd/mm/yy" placeholder="Data Emissão"></p-calendar>
-                </div>
-                <div class="field">
-                    <p-autoComplete (onDropdownClick)="operacaoDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedOperacao" [suggestions]="searchOperacaoList" (completeMethod)="searchOperacao($event)" placeholder="Operação"></p-autoComplete>
-                </div>
-                <div class="field">
-                    <p-autoComplete (onDropdownClick)="categoriaDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedCategoria" [suggestions]="searchCategoriaList" (completeMethod)="searchCategoria($event)" placeholder="Categoria"></p-autoComplete>
-                </div>
-            </div>
-            <div class="display margin">
-                <div class="field">
-                    <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="serie" placeholder="Série"/>
-                </div>
-                <div class="field">
-                    <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="venda" placeholder="Número da Venda" style="margin-left: 34px;"/>
-                </div>
-            </div>
-        </p-fieldset>
-    </div>
-    <div class="margin">
-        <p-fieldset legend="Produtos">   
-            <div class="display">
-                <button (click)="addProduto()" pButton type="button" label="Produto" iconPos="left" icon="fa-plus-circle"></button>
-            </div>
-            <div class="display margin">
-                <div class="field">
-                    <input pInputText placeholder="Produto" disabled/>
-                </div>
-                <div class="field">
-                    <input pInputText placeholder="Custo Médio" disabled/>
-                </div>
-                <div class="field">
-                    <input pInputText placeholder="Quantidade" disabled/>
-                </div>
-                <div class="field">
-                    <input pInputText placeholder="Margem %" disabled/>
-                </div>
-                <div class="field">
-                    <input pInputText placeholder="Valor da Venda" disabled/>
-                </div>
-                <!--div class="field">
-                    <input pInputText placeholder="Total" disabled/>
-                </div-->
-            </div>
-            <div *ngFor="let num of items; let i=index">
                 <div class="display margin">
                     <div class="field">
-                        <p-autoComplete [(ngModel)]="selectedProduto[num]" (ngModelChange)="onChange($event, num)" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
+                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="serie" placeholder="Série"/>
                     </div>
                     <div class="field">
-                        <input
-                            disabled
-                            pInputText
-                            currencyMask
-                            [(ngModel)]="pm[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="venda" placeholder="Número da Venda" style="margin-left: 34px;"/>
+                    </div>
+                </div>
+            </p-fieldset>
+        </div>
+        <div class="margin">
+            <p-fieldset legend="Produtos">   
+                <div class="display">
+                    <button (click)="addProduto()" pButton type="button" label="Produto" iconPos="left" icon="fa-plus-circle"></button>
+                </div>
+                <div class="display margin">
+                    <div class="field">
+                        <input pInputText placeholder="Produto" disabled/>
                     </div>
                     <div class="field">
-                        <input (keypress)="onlyNumber($event)" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
+                        <input pInputText placeholder="Custo Médio" disabled/>
                     </div>
                     <div class="field">
-                        <input type="text" pInputText [(ngModel)]="margem[num]" style="width:195px"/>
-                        <p-slider [(ngModel)]="margem[num]" [style]="{'width':'205px'}"></p-slider>
+                        <input pInputText placeholder="Quantidade" disabled/>
                     </div>
                     <div class="field">
-                        <input
-                            disabled
-                            pInputText
-                            currencyMask                    
-                            [(ngModel)]="((margem[num]/100)+1)*pm[num]*quantidade[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                        <input pInputText placeholder="Margem %" disabled/>
+                    </div>
+                    <div class="field">
+                        <input pInputText placeholder="Valor da Venda" disabled/>
                     </div>
                     <!--div class="field">
-                        <input
-                            type="text" 
-                            pInputText
-                            currencyMask
-                            [(ngModel)]="quantidade[num]*valor[num]" 
-                            disabled                    
-                            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                        />
+                        <input pInputText placeholder="Total" disabled/>
                     </div-->
-                    <div class="field icon-display">
-                        <div>
-                            <i class="fa fa-times" (click)="remove(i)" style="color:red"></i>
+                </div>
+                <div *ngFor="let num of items; let i=index">
+                    <div class="display margin">
+                        <div class="field">
+                            <p-autoComplete [(ngModel)]="selectedProduto[num]" (ngModelChange)="onChange($event, num)" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
+                        </div>
+                        <div class="field">
+                            <input
+                                disabled
+                                pInputText
+                                currencyMask
+                                [(ngModel)]="pm[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                        </div>
+                        <div class="field">
+                            <input (keypress)="onlyNumber($event)" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
+                        </div>
+                        <div class="field">
+                            <input type="text" pInputText [(ngModel)]="margem[num]" style="width:205px"/>
+                            <p-slider [(ngModel)]="margem[num]" [style]="{'width':'205px'}"></p-slider>
+                        </div>
+                        <div class="field">
+                            <input
+                                disabled
+                                pInputText
+                                currencyMask                    
+                                [(ngModel)]="((margem[num]/100)+1)*pm[num]*quantidade[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                        </div>
+                        <!--div class="field">
+                            <input
+                                type="text" 
+                                pInputText
+                                currencyMask
+                                [(ngModel)]="quantidade[num]*valor[num]" 
+                                disabled                    
+                                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                            />
+                        </div-->
+                        <div class="field icon-display">
+                            <div>
+                                <i class="fa fa-times" (click)="remove(i)" style="color:red"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </p-fieldset>
-    </div>
-
-    <div class="margin">
-        <p-fieldset legend="Frete"> 
-            <div class="display">
-                <div class="field">
-                    <p-autoComplete [(ngModel)]="selectedTransportadora" [suggestions]="searchTransportadoraList" (completeMethod)="searchTransportadora($event)" placeholder="Transportadora"></p-autoComplete>
-                </div>
-                <div class="field icon-display" (click)="selectEdit($event, 'Transportadora', op)">
-                    <div>
-                        <i class="fa fa-plus-circle"></i>
-                    </div>
-                </div>
-                <div class="field">
-                    <input type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                        pInputText [(ngModel)]="frete" placeholder="Frete"/>
-                </div>
-            </div>
-        </p-fieldset>
-    </div>
-
-    <div class="display margin">
-        <div class="field paragrafo">
-            <button (click)="somar()" pButton type="button" label="Somar" iconPos="left" icon="fa-check"></button>
+            </p-fieldset>
         </div>
-        <input
-            type="text" 
-            pInputText
-            currencyMask
-            [(ngModel)]="sum" 
-            disabled                    
-            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-        />
-    </div>
 
-    <div class="margin">
-        <p-fieldset legend="Dias de Recebimento">
-            <div class="display">
-                <button (click)="addPagamento()" pButton type="button" label="Recebimento" iconPos="left" icon="fa-plus-circle"></button>
-            </div>
-            <div class="display margin">
-                <div class="field">
-                    <input pInputText placeholder="Valor" disabled/>
-                </div>
-                <div class="field">
-                    <input pInputText placeholder="Vencimento" disabled/>
-                </div>
-                <div class="field">
-                    <input pInputText placeholder="Recebimento" disabled/>
-                </div>
-            </div>
-            <div *ngFor="let _num of itemsPgto; let i=index">
-                <div class="display margin">
+        <div class="margin">
+            <p-fieldset legend="Frete"> 
+                <div class="display">
                     <div class="field">
-                        <input
-                            pInputText
-                            currencyMask
-                            [(ngModel)]="valorPgto[_num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                        <p-autoComplete [(ngModel)]="selectedTransportadora" [suggestions]="searchTransportadoraList" (completeMethod)="searchTransportadora($event)" placeholder="Transportadora"></p-autoComplete>
                     </div>
-                    <div div class="field">
-                        <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="vencimento[_num]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
-                    </div>
-                    <div div class="field">
-                        <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="datePgto[_num]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
-                    </div>
-                    <div class="field icon-display">
+                    <div class="field icon-display" (click)="selectEdit($event, 'Transportadora', op)">
                         <div>
-                            <i class="fa fa-times" (click)="removePgto(i)" style="color:red"></i>
+                            <i class="fa fa-plus-circle"></i>
                         </div>
                     </div>
+                    <div class="field">
+                        <input type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                            pInputText [(ngModel)]="frete" placeholder="Frete"/>
+                    </div>
                 </div>
-            </div>
-        </p-fieldset>
-    </div>
-    <div class="display margin">
-        <div class="field paragrafo">
-            <button (click)="verificar()" pButton type="button" label="Verificar Pagamentos" iconPos="left" icon="fa-check"></button>
+            </p-fieldset>
         </div>
-        <div class="field">
+
+        <div class="display margin">
+            <div class="field paragrafo">
+                <button (click)="somar()" pButton type="button" label="Somar" iconPos="left" icon="fa-check"></button>
+            </div>
             <input
                 type="text" 
                 pInputText
                 currencyMask
-                [(ngModel)]="subtracao" 
+                [(ngModel)]="sum" 
                 disabled                    
                 [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
             />
         </div>
-        <div>
-            <i class="fa fa-check fa-lg" style="margin-top: 6px;color:green" aria-hidden="true" *ngIf="check"></i>
-            <i class="fa fa-times fa-lg" style="margin-top: 6px;color:red" aria-hidden="true" *ngIf="checkError"></i>
+
+        <div class="margin">
+            <p-fieldset legend="Dias de Recebimento">
+                <div class="display">
+                    <button (click)="addPagamento()" pButton type="button" label="Recebimento" iconPos="left" icon="fa-plus-circle"></button>
+                </div>
+                <div class="display margin">
+                    <div class="field">
+                        <input pInputText placeholder="Valor" disabled/>
+                    </div>
+                    <div class="field">
+                        <input pInputText placeholder="Vencimento" disabled/>
+                    </div>
+                    <div class="field">
+                        <input pInputText placeholder="Recebimento" disabled/>
+                    </div>
+                </div>
+                <div *ngFor="let _num of itemsPgto; let i=index">
+                    <div class="display margin">
+                        <div class="field">
+                            <input
+                                pInputText
+                                currencyMask
+                                [(ngModel)]="valorPgto[_num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                        </div>
+                        <div div class="field">
+                            <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="vencimento[_num]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
+                        </div>
+                        <div div class="field">
+                            <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="datePgto[_num]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
+                        </div>
+                        <div class="field icon-display">
+                            <div>
+                                <i class="fa fa-times" (click)="removePgto(i)" style="color:red"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-fieldset>
         </div>
-        <p-growl [value]="msgs"></p-growl>
-    </div>
-    <div class="display margin">
-        <div class="field paragrafo">
-            <button
-                (click)="salvar(
-                            selectedCliente,
-                            valueEmissao,
-                            selectedOperacao,
-                            selectedCategoria,
-                            serie,
-                            venda,
-                            selectedProduto,
-                            pm,
-                            quantidade,
-                            margem,
-                            selectedTransportadora,
-                            frete,
-                            sum,
-                            valorPgto,
-                            vencimento,
-                            datePgto,
-                            subtracao
-                        )"
-                pButton type="button" label="Salvar" style="color:#fff;background:green;border-color:green">
-            </button>
+        <div class="display margin">
+            <div class="field paragrafo">
+                <button (click)="verificar()" pButton type="button" label="Verificar Pagamentos" iconPos="left" icon="fa-check"></button>
+            </div>
+            <div class="field">
+                <input
+                    type="text" 
+                    pInputText
+                    currencyMask
+                    [(ngModel)]="subtracao" 
+                    disabled                    
+                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                />
+            </div>
+            <div>
+                <i class="fa fa-check fa-lg" style="margin-top: 6px;color:green" aria-hidden="true" *ngIf="check"></i>
+                <i class="fa fa-times fa-lg" style="margin-top: 6px;color:red" aria-hidden="true" *ngIf="checkError"></i>
+            </div>
+            <p-growl [value]="msgs"></p-growl>
         </div>
-    </div>
+        <div class="display margin">
+            <div class="field paragrafo">
+                <button
+                    (click)="salvar(
+                                selectedCliente,
+                                valueEmissao,
+                                selectedOperacao,
+                                selectedCategoria,
+                                serie,
+                                venda,
+                                selectedProduto,
+                                pm,
+                                quantidade,
+                                margem,
+                                selectedTransportadora,
+                                frete,
+                                sum,
+                                valorPgto,
+                                vencimento,
+                                datePgto,
+                                subtracao
+                            )"
+                    pButton type="button" label="Salvar" style="color:#fff;background:green;border-color:green;margin-bottom:12px;margin-top:5px">
+                </button>
+            </div>
+        </div>
+    </p-panel>
 </div>
 
 <p-overlayPanel #op>
