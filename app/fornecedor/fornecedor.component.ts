@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { FornecedorService } from './fornecedor.service';
 import { Message, MenuItem } from 'primeng/primeng';
+import { VenderService } from '../vender/vender.service';
 
 declare var sha256: any;
 
@@ -30,6 +31,7 @@ export class FornecedorComponent implements OnInit {
     item: string;
     items = [];
     quantidade = [];
+    quantidadeAtual = [];
     valor = [];
     valorEdit = [];
     selectedProduto = [];
@@ -42,6 +44,8 @@ export class FornecedorComponent implements OnInit {
     sumPgto: any;
     ll = [];
     pp = [];
+    pm = [];
+    pmNovo = [];
     proporcao = [];
     subtracao: any;
     text: string;    
@@ -75,6 +79,7 @@ export class FornecedorComponent implements OnInit {
 
     constructor(private _router: Router,
         private fornecedorService: FornecedorService,
+        private venderService: VenderService
     ){
         /*const numberMask = createNumberMask({
             prefix: 'R$ ',
@@ -87,6 +92,135 @@ export class FornecedorComponent implements OnInit {
             requireDecimal: false,
             allowNegative: false,
         })*/
+    }
+
+    ngOnInit() {
+        //this.items.push("0");
+        //this.quantidade.push("");
+        //this.valor.push("");
+        //this.selectedProduto.push("");
+        this.frete = 0;
+        this.sum = 0;
+        this.subtracao = 0.00;
+
+        this.fornecedorService.getItem("Produto")
+            .subscribe(
+                data => {
+                    //this.produto = data;
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.produtoList.push(data[0][i].label);
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+        this.fornecedorService.getItem("Fornecedores")
+            .subscribe(
+                data => {
+                    //this.fornecedores = data;
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.fornecedoresList.push(data[0][i].label);
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+        this.fornecedorService.getItem("Operação")
+            .subscribe(
+                data => {
+                    //this.operacao = data;
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.operacaoList.push(data[0][i].label);
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+        this.fornecedorService.getItem("Categoria")
+            .subscribe(
+                data => {
+                    //this.categoria = data;
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.categoriaList.push(data[0][i].label);
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+        this.fornecedorService.getItem("Transportadora")
+            .subscribe(
+                data => {
+                    //this.transportadora = data;
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.transportadoraList.push(data[0][i].label);
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+        this.addProduto();
+        this.addPagamento();
+
+        this.br = {
+            //data
+            closeText: "Pronto",
+        	prevText: "<Ant",
+        	nextText: "Pro>",
+        	currentText: "Hoje",
+        	monthNames: [ "janeiro","fevereiro","março","abril","maio","junho",
+        	"julho","agosto","setembro","outubro","novembro","dezembro" ],
+        	monthNamesShort: [ "jan","fev","mar","abr","mai","jun",
+        	"jul","ago","set","out","nov","dez" ],
+        	dayNames: [ "domingo","segunda","terça","quarta","quinta","sexta","sábado" ],
+        	dayNamesShort: [ "dom","seg","ter","qua","qui","sex","sáb" ],
+        	dayNamesMin: [ "D","S","T","Q","Q","S","S" ],
+        	weekHeader: "Sm",
+        	dateFormat: "dd/mm/yy",
+        	firstDay: 1,
+        	isRTL: false,
+        	showMonthAfterYear: false,
+        	yearSuffix: "",
+
+            //tempo
+            timeOnlyTitle: 'Escolher horário',
+    		timeText: 'Hora',
+    		hourText: 'Horas',
+    		minuteText: 'Minutos',
+    		secondText: 'Segundos',
+    		millisecText: 'Milisegundos',
+    		microsecText: 'Microsegundos',
+    		timezoneText: 'Fuso horario',
+    		timeFormat: 'HH:mm',
+    		timeSuffix: '',
+    		amNames: ['a.m.', 'AM', 'A'],
+    		pmNames: ['p.m.', 'PM', 'P'],
+        };
+
+        this.menus = [
+            {
+                label: 'Vender Produto',
+                routerLink: ['/vender']
+            },
+            {
+                label: 'Despesas',
+            },
+            {
+                label: 'Editar Lista',
+            },
+            {
+                label: 'Fluxo de Caixa',
+            }
+        ];
     }
 
     randomString(length, chars) {
@@ -385,8 +519,6 @@ export class FornecedorComponent implements OnInit {
             }else{
                 this.showError();
             }
-
-
     }
 
     showError() {
@@ -417,133 +549,25 @@ export class FornecedorComponent implements OnInit {
       return x;
     }
 
-    ngOnInit() {
-        //this.items.push("0");
-        //this.quantidade.push("");
-        //this.valor.push("");
-        //this.selectedProduto.push("");
-        this.frete = 0;
-        this.sum = 0;
-        this.subtracao = 0.00;
-
-        this.fornecedorService.getItem("Produto")
+    onChange(produto, num){
+        this.venderService.getItemProdutoQuantidade(produto)
             .subscribe(
-                data => {
-                    //this.produto = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.produtoList.push(data[0][i].label);
+                data => {                    
+                    if(data[0] != 0){
+                        this.quantidadeAtual[num] = data[0];
+                        this.pm[num] = data[1];
                     }
                 },
                 error => {
                     console.log(error)
                 }                
             );
-
-        this.fornecedorService.getItem("Fornecedores")
-            .subscribe(
-                data => {
-                    //this.fornecedores = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.fornecedoresList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.fornecedorService.getItem("Operação")
-            .subscribe(
-                data => {
-                    //this.operacao = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.operacaoList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.fornecedorService.getItem("Categoria")
-            .subscribe(
-                data => {
-                    //this.categoria = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.categoriaList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.fornecedorService.getItem("Transportadora")
-            .subscribe(
-                data => {
-                    //this.transportadora = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.transportadoraList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.addProduto();
-        this.addPagamento();
-
-        this.br = {
-            //data
-            closeText: "Pronto",
-        	prevText: "<Ant",
-        	nextText: "Pro>",
-        	currentText: "Hoje",
-        	monthNames: [ "janeiro","fevereiro","março","abril","maio","junho",
-        	"julho","agosto","setembro","outubro","novembro","dezembro" ],
-        	monthNamesShort: [ "jan","fev","mar","abr","mai","jun",
-        	"jul","ago","set","out","nov","dez" ],
-        	dayNames: [ "domingo","segunda","terça","quarta","quinta","sexta","sábado" ],
-        	dayNamesShort: [ "dom","seg","ter","qua","qui","sex","sáb" ],
-        	dayNamesMin: [ "D","S","T","Q","Q","S","S" ],
-        	weekHeader: "Sm",
-        	dateFormat: "dd/mm/yy",
-        	firstDay: 1,
-        	isRTL: false,
-        	showMonthAfterYear: false,
-        	yearSuffix: "",
-
-            //tempo
-            timeOnlyTitle: 'Escolher horário',
-    		timeText: 'Hora',
-    		hourText: 'Horas',
-    		minuteText: 'Minutos',
-    		secondText: 'Segundos',
-    		millisecText: 'Milisegundos',
-    		microsecText: 'Microsegundos',
-    		timezoneText: 'Fuso horario',
-    		timeFormat: 'HH:mm',
-    		timeSuffix: '',
-    		amNames: ['a.m.', 'AM', 'A'],
-    		pmNames: ['p.m.', 'PM', 'P'],
-        };
-
-        this.menus = [
-            {
-                label: 'Vender Produto',
-                routerLink: ['/vender']
-            },
-            {
-                label: 'Despesas',
-            },
-            {
-                label: 'Editar Lista',
-            },
-            {
-                label: 'Fluxo de Caixa',
-            }
-        ];
+    }
+    onChangeCM(valor, num){
+        var numerador = ((this.quantidadeAtual[num]*this.pm[num])+(this.quantidade[num]*valor));
+        var dividendo = (parseInt(this.quantidadeAtual[num])+parseInt(this.quantidade[num]));
+        var pmNew = numerador / dividendo;
+        this.pmNovo[num] = pmNew;
     }
 
     addProduto() {
@@ -551,12 +575,18 @@ export class FornecedorComponent implements OnInit {
             this.items.push("0");
             this.quantidade.push("");
             this.valor.push("");
-            this.selectedProduto.push("");            
+            this.pm.push("");
+            this.selectedProduto.push("");
+            this.pmNovo.push("");
+            this.quantidadeAtual.push("");
         }else{
             this.items.push(String(this.items.length));
             this.quantidade.push("");
             this.valor.push("");
+            this.pm.push("");
             this.selectedProduto.push("");
+            this.pmNovo.push("");
+            this.quantidadeAtual.push("");
         }
         
     }
@@ -583,6 +613,9 @@ export class FornecedorComponent implements OnInit {
         this.quantidade.splice(x, 1);
         this.valor.splice(x, 1);
         this.selectedProduto.splice(x, 1);
+        this.pm.splice(x, 1);
+        this.pmNovo.splice(x, 1);
+        this.quantidadeAtual.splice(x, 1);
     }
 
     removePgto(x) {

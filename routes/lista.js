@@ -154,9 +154,6 @@ router.get('/produtoQuantidade', function(req, res, next) {
             objs: docs 
           });
       })
-      //res.status(200).json({
-      //  obj: doc
-      //});
   })
 })
 

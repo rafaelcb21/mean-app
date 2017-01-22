@@ -56,7 +56,7 @@
                 <div *ngFor="let num of items; let i=index">
                     <div class="display margin">
                         <div class="field">
-                            <p-autoComplete [(ngModel)]="selectedProduto[num]" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
+                            <p-autoComplete (ngModelChange)="onChange($event, num)" [(ngModel)]="selectedProduto[num]" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
                             <!--p-dropdown [options]="produto" [(ngModel)]="selectedProduto[num]"></p-dropdown-->
                         </div>
                         <div class="field icon-display">
@@ -64,18 +64,47 @@
                                 <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Produto', op)"></i>
                             </div>
                         </div>
+                        
                         <div class="field">
-                            <input (keypress)="onlyNumber($event)" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
+                            <input (keypress)="onlyNumber($event)" style="width: 80px" disabled pInputText [(ngModel)]="quantidadeAtual[num]" placeholder="Qtd Atual"/>
+                        </div>
+                        <div class="field">
+                            <input 
+                                (keypress)="onlyNumber($event)"
+                                style="width: 150px"
+                                disabled
+                                pInputText
+                                currencyMask
+                                [(ngModel)]="pm[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                                placeholder="CM Atual"/>
+                        </div>
+
+                        <div class="field">
+                            <input (keypress)="onlyNumber($event)" style="width: 80px" pInputText [(ngModel)]="quantidade[num]" placeholder="Qtd"/>
+                        </div>
+                        <br>
+
+                        <div class="field">
+                            <input
+                                (keypress)="onlyNumber($event)"
+                                style="width: 150px"
+                                pInputText
+                                currencyMask
+                                (ngModelChange)="onChangeCM($event, num)"
+                                [(ngModel)]="valor[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                        </div>
+                        
+                        <div class="field">
+                            <input (keypress)="onlyNumber($event)" style="width: 150px" disabled pInputText
+                            currencyMask
+                            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                            [(ngModel)]="pmNovo[num]"
+                            placeholder="Novo CM"/>
                         </div>
 
                         <div class="field">
                             <input
-                                pInputText
-                                currencyMask                    
-                                [(ngModel)]="valor[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
-                        </div>
-                        <div class="field">
-                            <input
+                                style="width: 150px"
                                 type="text" 
                                 pInputText
                                 currencyMask

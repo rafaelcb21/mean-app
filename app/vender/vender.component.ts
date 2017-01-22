@@ -74,6 +74,135 @@ export class VenderComponent {
         private venderService: VenderService,
     ){}
 
+    ngOnInit() {
+        //this.items.push("0");
+        //this.quantidade.push("");
+        //this.valor.push("");
+        //this.selectedProduto.push("");
+        this.frete = 0;
+        this.sum = 0;
+        this.subtracao = 0.00;
+
+        this.venderService.getItemProduto()
+            .subscribe(
+                data => {
+                    //this.produto = data;
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.produtoList.push(data[0][i].label);
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+        this.venderService.getItem("Cliente")
+            .subscribe(
+                data => {
+                    //this.fornecedores = data;
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.clienteList.push(data[0][i].label);
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+        this.venderService.getItem("Operação")
+            .subscribe(
+                data => {
+                    //this.operacao = data;
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.operacaoList.push(data[0][i].label);
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+        this.venderService.getItem("Categoria")
+            .subscribe(
+                data => {
+                    //this.categoria = data;
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.categoriaList.push(data[0][i].label);
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+        this.venderService.getItem("Transportadora")
+            .subscribe(
+                data => {
+                    //this.transportadora = data;
+                    for(let i = 0; i < data[0].length; i++) {
+                        this.transportadoraList.push(data[0][i].label);
+                    }
+                },
+                error => {
+                    console.log(error)
+                }                
+            );
+
+        this.addProduto();
+        this.addPagamento();
+
+        this.br = {
+            //data
+            closeText: "Pronto",
+        	prevText: "<Ant",
+        	nextText: "Pro>",
+        	currentText: "Hoje",
+        	monthNames: [ "janeiro","fevereiro","março","abril","maio","junho",
+        	"julho","agosto","setembro","outubro","novembro","dezembro" ],
+        	monthNamesShort: [ "jan","fev","mar","abr","mai","jun",
+        	"jul","ago","set","out","nov","dez" ],
+        	dayNames: [ "domingo","segunda","terça","quarta","quinta","sexta","sábado" ],
+        	dayNamesShort: [ "dom","seg","ter","qua","qui","sex","sáb" ],
+        	dayNamesMin: [ "D","S","T","Q","Q","S","S" ],
+        	weekHeader: "Sm",
+        	dateFormat: "dd/mm/yy",
+        	firstDay: 1,
+        	isRTL: false,
+        	showMonthAfterYear: false,
+        	yearSuffix: "",
+
+            //tempo
+            timeOnlyTitle: 'Escolher horário',
+    		timeText: 'Hora',
+    		hourText: 'Horas',
+    		minuteText: 'Minutos',
+    		secondText: 'Segundos',
+    		millisecText: 'Milisegundos',
+    		microsecText: 'Microsegundos',
+    		timezoneText: 'Fuso horario',
+    		timeFormat: 'HH:mm',
+    		timeSuffix: '',
+    		amNames: ['a.m.', 'AM', 'A'],
+    		pmNames: ['p.m.', 'PM', 'P'],
+        };
+
+        this.menus = [
+            {
+                label: 'Comprar Produto',
+                routerLink: ['/fornecedor']
+            },
+            {
+                label: 'Despesas',
+            },
+            {
+                label: 'Editar Lista',
+            },
+            {
+                label: 'Fluxo de Caixa',
+            }
+        ];
+    }
+    
     randomString(length, chars) {
         var mask = '';
         if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
@@ -415,135 +544,6 @@ export class VenderComponent {
         }
       }
       return x;
-    }
-
-    ngOnInit() {
-        //this.items.push("0");
-        //this.quantidade.push("");
-        //this.valor.push("");
-        //this.selectedProduto.push("");
-        this.frete = 0;
-        this.sum = 0;
-        this.subtracao = 0.00;
-
-        this.venderService.getItemProduto()
-            .subscribe(
-                data => {
-                    //this.produto = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.produtoList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.venderService.getItem("Cliente")
-            .subscribe(
-                data => {
-                    //this.fornecedores = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.clienteList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.venderService.getItem("Operação")
-            .subscribe(
-                data => {
-                    //this.operacao = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.operacaoList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.venderService.getItem("Categoria")
-            .subscribe(
-                data => {
-                    //this.categoria = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.categoriaList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.venderService.getItem("Transportadora")
-            .subscribe(
-                data => {
-                    //this.transportadora = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.transportadoraList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.addProduto();
-        this.addPagamento();
-
-        this.br = {
-            //data
-            closeText: "Pronto",
-        	prevText: "<Ant",
-        	nextText: "Pro>",
-        	currentText: "Hoje",
-        	monthNames: [ "janeiro","fevereiro","março","abril","maio","junho",
-        	"julho","agosto","setembro","outubro","novembro","dezembro" ],
-        	monthNamesShort: [ "jan","fev","mar","abr","mai","jun",
-        	"jul","ago","set","out","nov","dez" ],
-        	dayNames: [ "domingo","segunda","terça","quarta","quinta","sexta","sábado" ],
-        	dayNamesShort: [ "dom","seg","ter","qua","qui","sex","sáb" ],
-        	dayNamesMin: [ "D","S","T","Q","Q","S","S" ],
-        	weekHeader: "Sm",
-        	dateFormat: "dd/mm/yy",
-        	firstDay: 1,
-        	isRTL: false,
-        	showMonthAfterYear: false,
-        	yearSuffix: "",
-
-            //tempo
-            timeOnlyTitle: 'Escolher horário',
-    		timeText: 'Hora',
-    		hourText: 'Horas',
-    		minuteText: 'Minutos',
-    		secondText: 'Segundos',
-    		millisecText: 'Milisegundos',
-    		microsecText: 'Microsegundos',
-    		timezoneText: 'Fuso horario',
-    		timeFormat: 'HH:mm',
-    		timeSuffix: '',
-    		amNames: ['a.m.', 'AM', 'A'],
-    		pmNames: ['p.m.', 'PM', 'P'],
-        };
-
-        this.menus = [
-            {
-                label: 'Comprar Produto',
-                routerLink: ['/fornecedor']
-            },
-            {
-                label: 'Despesas',
-            },
-            {
-                label: 'Editar Lista',
-            },
-            {
-                label: 'Fluxo de Caixa',
-            }
-        ];
     }
 
     onChange(produto, num){
