@@ -86,7 +86,7 @@ export class VenderService {
                  const data = response.json().obj;
                  const docs = response.json().objs;
                  var precos = [];
-                 for (let i = 0; i < docs.length; i++) {
+                 for (let i = 0; i < docs.length; i++) {         
                     var preco = docs[i].val[0];
                     precos.push(preco)
                 }

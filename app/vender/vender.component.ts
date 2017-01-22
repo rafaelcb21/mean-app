@@ -363,7 +363,20 @@ export class VenderComponent {
                                 this.datePgto.splice(0, this.datePgto.length);
                                 this.subtracao = 0;
                                 this.check = undefined;
+
+                                this.produtoList.splice(0, this.produtoList.length);
+                                this.venderService.getItemProduto()
+                                    .subscribe(
+                                        data => {
+                                            for(let i = 0; i < data[0].length; i++) {
+                                                this.produtoList.push(data[0][i].label);
+                                            }
+                                        },
+                                        error => {
+                                            console.log(error)
+                                });
                             },
+
                             error => {
                                 console.log(error)
                             }                

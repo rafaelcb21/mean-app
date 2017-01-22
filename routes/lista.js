@@ -120,7 +120,7 @@ router.get('/item/:label', function(req, res, next) {
 })
 
 router.get('/produto', function(req, res, next) {
-  Produto.find({}, function(err, doc){
+  Produto.find({vendido: false}, function(err, doc){
       if (err) {
         return res.status(404).json({
           title: 'Um erro ocorreu',
@@ -135,14 +135,14 @@ router.get('/produto', function(req, res, next) {
 
 router.get('/produtoQuantidade', function(req, res, next) {
   var produto = req.query.produto;
-  Produto.count({produto: produto}, function(err, doc){
+  Produto.count({produto: produto, vendido: false}, function(err, doc){
       if (err) {
         return res.status(404).json({
           title: 'Um erro ocorreu',
           obj: err
         });
       }
-      Produto.find({produto: produto}, function(erro, docs){
+      Produto.find({produto: produto, vendido: false}, function(erro, docs){
           if (erro) {
             return res.status(404).json({
               title: 'Um erro ocorreu',
@@ -262,6 +262,23 @@ router.post('/venda', function(req, res, next) {
       sell.save(function(err, result) {})          
     }      
   }
+
+
+  for (let i = 0; i < quantidade.length; i++) {
+    var query = Produto.find({produto: selectedProduto[i], vendido: false}).limit(quantidade[i]).exec();
+    query.then(function (doc) {
+      for (let j = 0; j < doc.length; j++) {
+        Produto.update({ _id: doc[j]._id }, { $set: { vendido: true }}, function(e, r){
+          if(e){
+            console.log(e)
+          }else{
+            console.log(r)
+          }
+        });
+      }      
+    });
+  }
+
   res.status(201).json({
     msg: "sucesso"
   })
