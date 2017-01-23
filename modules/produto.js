@@ -16,6 +16,7 @@ var schema = new Schema({
     prop: {type: Array},
     parc: {type: Array},
     dataParc: {type: Array},
+    transportadora: {type: String},
     parcFrete: {type: Array},
     vendido: {type: Boolean, default: false},
     hash: {type: String}

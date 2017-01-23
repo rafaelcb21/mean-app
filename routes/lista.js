@@ -73,6 +73,7 @@ router.post('/fornecedores', function(req, res, next) {
       var parc = list2[i];
       var dataParc = datePgto;
 
+
       var product = new Produto({
         fornecedor: selectedFornecedor,
         emissao: valueEmissao,
@@ -86,11 +87,13 @@ router.post('/fornecedores', function(req, res, next) {
         val: val,
         prop: prop,
         parc: parc,
+        transportadora: selectedTransportadora,
         dataParc: dataParc,
         parcFrete: list3,
         hash: hash
       })
-      product.save(function(err, result) {})          
+      console.log(product)
+      product.save(function(err, result) {})
     }      
   }
   res.status(201).json({

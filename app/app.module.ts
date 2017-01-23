@@ -10,6 +10,9 @@ import { FornecedorService } from './fornecedor/fornecedor.service';
 import { VenderService } from './vender/vender.service';
 import { LoginComponent } from './login/login.component';
 import { VenderComponent } from './vender/vender.component';
+import { CaixaComponent } from './fluxodecaixa/fluxodecaixa.component';
+import { CaixaService } from './fluxodecaixa/fluxodecaixa.service';
+
 import { 
   DropdownModule,
   CalendarModule,
@@ -35,6 +38,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     FornecedorComponent,
     LoginComponent,
     VenderComponent,
+    CaixaComponent,
     //MoneyMaskDirective, 
     CurrencyMaskDirective],
   imports: [
@@ -62,6 +66,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
   providers: [
     FornecedorService,
     VenderService,
+    CaixaService,
     {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]

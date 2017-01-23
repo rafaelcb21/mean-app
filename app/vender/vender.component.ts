@@ -199,6 +199,7 @@ export class VenderComponent {
             },
             {
                 label: 'Fluxo de Caixa',
+                routerLink: ['/fluxodecaixa']
             }
         ];
     }

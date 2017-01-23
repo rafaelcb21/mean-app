@@ -219,6 +219,7 @@ export class FornecedorComponent implements OnInit {
             },
             {
                 label: 'Fluxo de Caixa',
+                routerLink: ['/fluxodecaixa']
             }
         ];
     }
@@ -556,6 +557,12 @@ export class FornecedorComponent implements OnInit {
                     if(data[0] != 0){
                         this.quantidadeAtual[num] = data[0];
                         this.pm[num] = data[1];
+                    }else{
+                        this.quantidadeAtual[num] = "";
+                        this.pm[num] = "";
+                        this.pmNovo[num] = "";
+                        this.quantidade[num] = "";
+                        this.valor[num] = "";
                     }
                 },
                 error => {
