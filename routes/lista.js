@@ -3,6 +3,7 @@ var router = express.Router();
 var Lista = require('../modules/lista');
 var Produto = require('../modules/produto');
 var Venda = require('../modules/venda');
+var Fluxo = require('../modules/fluxodecaixa');
 var async = require('async');
 var SHA256 = require("crypto-js/sha256");
 var crypto = require("crypto");
@@ -102,8 +103,19 @@ router.post('/fornecedores', function(req, res, next) {
         hash: hash
       })
       product.save(function(err, result) {})
-    }      
+    }
   }
+
+  for (let i = 0; i < valorPgto.length; i++) {
+    var fluxo = new Fluxo({
+        dataParc: dataParc[i],
+        fornecedor: selectedFornecedor,
+        valorPgto: valorPgto[i],
+        hash: hash
+      })
+    fluxo.save(function(err, result) {})
+  }
+
   res.status(201).json({
     msg: "sucesso"
   })
