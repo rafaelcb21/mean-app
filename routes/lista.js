@@ -4,6 +4,8 @@ var Lista = require('../modules/lista');
 var Produto = require('../modules/produto');
 var Venda = require('../modules/venda');
 var async = require('async');
+var SHA256 = require("crypto-js/sha256");
+var crypto = require("crypto");
 
 /* GET home page. */
 router.post('/item', function(req, res, next) {
@@ -44,11 +46,18 @@ router.post('/fornecedores', function(req, res, next) {
 
   var list1 = [];
   var list2 = [];
-  var list3 = [];
+  //var list3 = [];
+  var list4 = [];
 
   var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);
-  var freteByProduto = frete / quantidadeTotal;
-  var parcelaUnidadeFrete = parseFloat(freteByProduto) / valorPgto.length;
+  //var freteByProduto = frete / quantidadeTotal;
+  //var parcelaUnidadeFrete = parseFloat(freteByProduto) / valorPgto.length;
+
+  for(let i = 0; i < valorPgto.length; i++) {
+    var freteporProduto = (((valorPgto[i] / soma) * frete) / quantidadeTotal);
+    list4.push(freteporProduto)
+
+  }
 
   for (let i = 0; i < proporcaoList.length; i++) {
     for (let j = 0; j < valorPgto.length; j++) {
@@ -59,9 +68,9 @@ router.post('/fornecedores', function(req, res, next) {
     list1 = [];
   }
 
-  for (let j = 0; j < valorPgto.length; j++) {
-      list3.push(parcelaUnidadeFrete);
-  }
+  //for (let j = 0; j < valorPgto.length; j++) {
+  //    list3.push(parcelaUnidadeFrete);
+  //}
 
   for (let i = 0; i < quantidade.length; i++) {
     for (let j = 0; j < quantidade[i]; j++) {
@@ -89,10 +98,9 @@ router.post('/fornecedores', function(req, res, next) {
         parc: parc,
         transportadora: selectedTransportadora,
         dataParc: dataParc,
-        parcFrete: list3,
+        parcFrete: list4,
         hash: hash
       })
-      console.log(product)
       product.save(function(err, result) {})
     }      
   }
@@ -208,6 +216,7 @@ router.post('/venda', function(req, res, next) {
   var list2 = [];
   var list3 = [];
   var valor = [];
+  var listHash = [];
 
   var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);
   var freteByProduto = frete / quantidadeTotal;
@@ -240,6 +249,9 @@ router.post('/venda', function(req, res, next) {
       var parc = list2[i];
       var dataParc = datePgto;
 
+      stringRandom = crypto.randomBytes(32).toString('hex');
+      var hashId = SHA256(stringRandom).toString();
+
       var sell = new Venda({
         cliente: selectedCliente,
         emissao: valueEmissao,
@@ -257,18 +269,19 @@ router.post('/venda', function(req, res, next) {
         vencimento: vencimento,
         dataParc: dataParc,
         parcFrete: list3,
-        hash: hash
+        hash: hash,
+        hashId: hashId
       })
-      sell.save(function(err, result) {})          
+      sell.save(function(err, result) {});
+      listHash.push(hashId)
     }      
   }
-
 
   for (let i = 0; i < quantidade.length; i++) {
     var query = Produto.find({produto: selectedProduto[i], vendido: false}).limit(quantidade[i]).exec();
     query.then(function (doc) {
       for (let j = 0; j < doc.length; j++) {
-        Produto.update({ _id: doc[j]._id }, { $set: { vendido: true }}, function(e, r){
+        Produto.update({ _id: doc[j]._id }, { $set: { vendido: true, hashId: listHash[j] }}, function(e, r){
           if(e){
             console.log(e)
           }else{
@@ -283,4 +296,70 @@ router.post('/venda', function(req, res, next) {
     msg: "sucesso"
   })
 })
+
+router.get('/fc', function(req, res, next) {
+  var linha = [];
+  var lista = []
+
+  var parcelasSoma = function sumByIndex(arr) {
+    return arr.map( (item, idx) => {
+        return arr.reduce( (prev, curr) => prev + curr[idx] , 0 )
+    })
+  }
+
+  /*var alinhar = function transpose(a) {
+    return Object.keys(a[0]).map(
+      function (c) { return a.map(function (r) { return r[c]; }); }
+    );
+  }*/
+
+  var alinhar = function transpose(a) {
+    return a[0].map(function (_, c) { return a.map(function (r) { return r[c]; }); });
+  }
+
+  Produto.aggregate([
+      { "$group": 
+        { "_id": "$hash", 
+          "fornecedor": { "$addToSet": "$fornecedor" },
+          "parc": { "$push": "$parc" },
+          "dataParc": { "$first": "$dataParc" },
+          "parcFrete": { "$push": "$parcFrete" } 
+        }
+      }
+    ], function(err, compra){
+
+        for(let i = 0; i < compra.length; i++) {
+          ll2 = [];
+          var ll = compra[i].parc.concat(compra[i].parcFrete);
+          var x = compra[i].parc[0].length;
+          var somado = parcelasSoma(ll);
+          var resultado = somado.slice(0, x); //valor das parcelas
+
+          for(let j = 0; j < x; j++) {
+            ll2.push(compra[i].fornecedor[0]) //fornecedor
+          }
+          linha.push([compra[i].dataParc, "", ll2, resultado])
+        }
+
+        try{
+          for(let s = 0; s < x; s++) {
+            var line = alinhar(linha[s]);
+            for(let u = 0; u < line.length; u++) {
+              lista.push(line[u])
+            }
+            
+          }
+        }catch(err) {}
+        console.log(lista)
+
+        /*Venda.find({}, function(erro, venda){
+          
+          res.status(200).json({
+            compra: compra,
+            venda: venda
+          });
+      })*/
+  })
+})
+
 module.exports = router;

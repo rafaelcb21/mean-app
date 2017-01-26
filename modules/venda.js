@@ -19,7 +19,8 @@ var schema = new Schema({
     vencimento: {type: Array},
     dataParc: {type: Array},
     parcFrete: {type: Array},
-    hash: {type: String}
+    hash: {type: String},
+    hashId: {type: String}
 });
 
 schema.plugin(timestamps());

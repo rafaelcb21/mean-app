@@ -19,7 +19,8 @@ var schema = new Schema({
     transportadora: {type: String},
     parcFrete: {type: Array},
     vendido: {type: Boolean, default: false},
-    hash: {type: String}
+    hash: {type: String},
+    hashId: {type: String}
 });
 
 schema.plugin(timestamps());

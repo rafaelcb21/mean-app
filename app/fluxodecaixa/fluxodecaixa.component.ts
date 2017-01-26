@@ -33,8 +33,13 @@ export class CaixaComponent implements OnInit {
             },
             {
                 label: 'Editar Lista',
-            },
+            },  
         ];
+
+        this.caixaService.fc().subscribe(
+            data => console.log(data),
+            error => console.log(error)
+        )
     }
 
 }
