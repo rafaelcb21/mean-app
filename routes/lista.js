@@ -313,17 +313,41 @@ router.get('/fc', function(req, res, next) {
   var linha = [];
   var lista = []
 
-  var parcelasSoma = function sumByIndex(arr) {
-    return arr.map( (item, idx) => {
-        return arr.reduce( (prev, curr) => prev + curr[idx] , 0 )
-    })
-  }
+  Fluxo.aggregate([
+      {
+        "$group":{
+          "_id":{
+            "year":{ "$year":"$dataParc" },
+            "month":{ "$month":"$dataParc" },
+            "day":{ "$dayOfMonth":"$dataParc" }
+          },
+          "value":{ "$sum":"$valorPgto" }
+        }
+      }
+    ], function(err, compra){      
+        Fluxo.find({}, function(erro, linhas_compra){
+          res.status(200).json({
+                  linhas_compra: linhas_compra,
+                  compra: compra
+            });
+          }
+        )
+      }
+   )
+
+  
 
   /*var alinhar = function transpose(a) {
     return Object.keys(a[0]).map(
       function (c) { return a.map(function (r) { return r[c]; }); }
     );
   }*/
+
+  /*var parcelasSoma = function sumByIndex(arr) {
+    return arr.map( (item, idx) => {
+        return arr.reduce( (prev, curr) => prev + curr[idx] , 0 )
+    })
+  }  
 
   var alinhar = function transpose(a) {
     return a[0].map(function (_, c) { return a.map(function (r) { return r[c]; }); });
@@ -362,7 +386,7 @@ router.get('/fc', function(req, res, next) {
             
           }
         }catch(err) {}
-        console.log(lista)
+        console.log(lista)*/
 
         /*Venda.find({}, function(erro, venda){
           
@@ -371,7 +395,7 @@ router.get('/fc', function(req, res, next) {
             venda: venda
           });
       })*/
-  })
+  //})
 })
 
 module.exports = router;

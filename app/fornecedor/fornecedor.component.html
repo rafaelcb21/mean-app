@@ -71,7 +71,7 @@
                         <div class="field">
                             <input 
                                 (keypress)="onlyNumber($event)"
-                                style="width: 150px"
+                                style="width: 130px"
                                 disabled
                                 pInputText
                                 currencyMask
@@ -87,7 +87,7 @@
                         <div class="field">
                             <input
                                 (keypress)="onlyNumber($event)"
-                                style="width: 150px"
+                                style="width: 130px"
                                 pInputText
                                 currencyMask
                                 (ngModelChange)="onChangeCM($event, num)"
@@ -95,7 +95,7 @@
                         </div>
                         
                         <div class="field">
-                            <input (keypress)="onlyNumber($event)" style="width: 150px" disabled pInputText
+                            <input (keypress)="onlyNumber($event)" style="width: 130px" disabled pInputText
                             currencyMask
                             [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
                             [(ngModel)]="pmNovo[num]"
