@@ -14,6 +14,8 @@ export class CaixaService {
                 const saldo_diaria = response.json().compra;
                 const linha = response.json().linhas_compra;
                 var saldoLista = [];
+                var onlySaldo = [];
+                var saldoAcumulado = [];
                 var linhaCompra = [];
                 var diaEdit: string;
                 var mesEdit: string;
@@ -29,6 +31,19 @@ export class CaixaService {
                     var data = ano + "-" + mesEdit + "-" + diaEdit;
                     var saldo = saldo_diaria[i].value;
                     saldoLista.push([data, saldo]);
+                    
+                }
+
+                saldoLista.sort();
+
+                for(let i = 0; i < saldoLista.length; i++) {                    
+                    onlySaldo.push(saldoLista[i][1]);
+                }
+
+                onlySaldo.reduce(function(a,b,i) { return saldoAcumulado[i] = a+b; },0);
+                
+                for(let i = 0; i < saldoAcumulado.length; i++) {
+                    saldoLista[i].push(saldoAcumulado[i]);
                 }
 
                 for(let i = 0; i < linha.length; i++) {
@@ -41,29 +56,55 @@ export class CaixaService {
 
                 for(let i = 0; i < linhaCompra.length; i++) {
                     var dataLinha = linhaCompra[i][0];
+
                     for(let j = 0; j < saldoLista.length; j++) {
-                        if(dataLinha == saldoLista[j][0]) {
-                            linhaCompra[i].push(saldoLista[j][1])
+                        var dataSaldoAcumulado = saldoLista[j][0];
+                        var saldoDoDia = saldoLista[j][1];
+                        var valorAcumulado = saldoLista[j][2];
+
+                        if(dataLinha == dataSaldoAcumulado) {
+                            linhaCompra[i].push(saldoDoDia)
+                            linhaCompra[i].push(valorAcumulado)
                         }
                     }
-                }
+                }         
 
                 var ll = linhaCompra.sort();
-                var ll2 = []
+                var ll2 = [];
 
                 for(let i = 0; i < ll.length-1; i++) {
-                    if(ll[i][0] == ll[i+1][0]) {
-                        ll2.push([ll[i][0], ll[i][1], ll[i][2], ll[i][3], ll[i][4], ""])
-                    }else if(ll[i][0] != ll[i+1][0]){
-                        ll2.push(ll[i])
+                    var dataAtual = ll[i][0];
+                    var dataNext = ll[i+1][0];
+                    var hashAtual = ll[i][1];
+                    var vencimentoAtual = ll[i][2];
+                    var fornencedorAtual = ll[i][3];
+                    var valorCompraAtual = ll[i][4];
+
+                    if(dataAtual == dataNext) {
+                        ll2.push([dataAtual, hashAtual, vencimentoAtual, fornencedorAtual, valorCompraAtual, "", ""])
+                    }else if(dataAtual != dataNext){
+                        var linhaSemAlterar = ll[i];
+                        ll2.push(linhaSemAlterar);
                     }
                 }
 
-                ll2.push(ll[ll.length-1])
+                ll2.push(ll[ll.length-1]); //ultimo valor da tabela ll2
 
-                console.log(saldoLista)
-                console.log(linhaCompra.sort())
-                console.log(ll2)
+                var dataObject = [];
+                for(let i = 0; i < ll2.length; i++) {
+                    var dict = {}
+                    dict["order"] = i;
+                    dict["data"] = ll2[i][0];
+                    dict["hash"] = ll2[i][1];
+                    dict["vencimento"] = ll2[i][2];
+                    dict["nome"] = ll2[i][3];
+                    dict["valor"] = ll2[i][4];
+                    dict["saldo"] = ll2[i][5];
+                    dict["acumulado"] = ll2[i][6];
+                    dataObject.push(dict);                  
+                }
+
+                return {"data": dataObject}
 
             })
             .catch(error => Observable.throw(error.json()));

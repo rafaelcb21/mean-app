@@ -1,6 +1,14 @@
 <!--p-contextMenu [global]="true" [model]="menus"></p-contextMenu-->
 <div class="container back">
     <p-panel header="Fluxo de Caixa">
-        <h1>FLuxo de Caixa</h1>
+        <p-dataTable [value]="fluxodecaixa" sortField="order">
+            <!--p-column field="order" header="Ordem"></p-column-->
+            <p-column field="data" header="Data"></p-column>
+            <p-column field="vencimento" header="Vencimento"></p-column>
+            <p-column field="nome" header="Nome"></p-column>
+            <p-column field="valor" header="Valor R$"></p-column>
+            <p-column field="saldo" header="Saldo Diário R$"></p-column>
+            <p-column field="acumulado" header="Saldo Acumulado R$"></p-column>
+        </p-dataTable>
     </p-panel>
 </div>

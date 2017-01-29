@@ -25,12 +25,15 @@ import {
   ContextMenuModule,
   SliderModule,
   PanelModule,
-  MenuModule } from 'primeng/primeng';
+  MenuModule,
+  DataTableModule,
+  SharedModule } from 'primeng/primeng';
+
 import { TextMaskModule } from 'angular2-text-mask';
-//import { MoneyMaskDirective } from './mask/money-mask.directive';
 import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.directive';
 //import { CurrencyMaskModule } from "ng2-currency-mask";
 //import { MoneyMaskModule } from 'ng2-money-mask';
+//import { MoneyMaskDirective } from './mask/money-mask.directive';
 
 @NgModule({
   declarations: [
@@ -60,6 +63,8 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     MenuModule,
     SliderModule,
     PanelModule,
+    DataTableModule,
+    SharedModule,
 //    CurrencyMaskModule,
 //    MoneyMaskModule,
   ],

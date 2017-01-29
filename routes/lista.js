@@ -110,7 +110,7 @@ router.post('/fornecedores', function(req, res, next) {
     var fluxo = new Fluxo({
         dataParc: dataParc[i],
         fornecedor: selectedFornecedor,
-        valorPgto: valorPgto[i],
+        valorPgto: -1*valorPgto[i],
         hash: hash
       })
     fluxo.save(function(err, result) {})

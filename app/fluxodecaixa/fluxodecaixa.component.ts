@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { CaixaService } from './fluxodecaixa.service';
+import { FluxoDeCaixa } from './fluxodecaixa';
 import { Message, MenuItem } from 'primeng/primeng';
 import { VenderService } from '../vender/vender.service';
 
@@ -12,6 +13,7 @@ import { VenderService } from '../vender/vender.service';
 })
 export class CaixaComponent implements OnInit {
     private menus: MenuItem[];
+    fluxodecaixa: FluxoDeCaixa[];
 
     constructor(private _router: Router,
         private caixaService: CaixaService,
@@ -37,7 +39,7 @@ export class CaixaComponent implements OnInit {
         ];
 
         this.caixaService.fc().subscribe(
-            data => console.log(data),
+            data => {this.fluxodecaixa = data.data; console.log(this.fluxodecaixa)},
             error => console.log(error)
         )
     }
