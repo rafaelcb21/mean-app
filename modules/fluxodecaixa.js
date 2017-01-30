@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 var schema = new Schema({
     dataParc: {type: Date},
+    dataVencimento: {type: Date},
     fornecedor: {type: String},
     valorPgto: {type: Number},
     hash: {type: String}

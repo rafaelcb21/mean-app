@@ -49,9 +49,14 @@ export class CaixaService {
                 for(let i = 0; i < linha.length; i++) {
                     var hash = linha[i].hash;
                     var dataParc = linha[i].dataParc.slice(0, 10);
+                    if(linha[i].dataVencimento != null) {
+                        var venc = linha[i].dataVencimento.slice(0, 10);
+                    }else{
+                        venc=""
+                    }                    
                     var fornecedor = linha[i].fornecedor;
                     var valor = linha[i].valorPgto;
-                    linhaCompra.push([dataParc, hash, "", fornecedor, valor]);
+                    linhaCompra.push([dataParc, hash, venc, fornecedor, valor]);
                 }
 
                 for(let i = 0; i < linhaCompra.length; i++) {
@@ -70,6 +75,7 @@ export class CaixaService {
                 }         
 
                 var ll = linhaCompra.sort();
+
                 var ll2 = [];
 
                 for(let i = 0; i < ll.length-1; i++) {

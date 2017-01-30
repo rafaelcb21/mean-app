@@ -143,10 +143,10 @@
                 </div>
                 <div class="display margin">
                     <div class="field">
-                        <input pInputText placeholder="Valor" disabled/>
+                        <input pInputText placeholder="Vencimento" disabled/>
                     </div>
                     <div class="field">
-                        <input pInputText placeholder="Vencimento" disabled/>
+                        <input pInputText placeholder="Data Recebimento" disabled/>
                     </div>
                     <div class="field">
                         <input pInputText placeholder="Recebimento" disabled/>
@@ -154,17 +154,17 @@
                 </div>
                 <div *ngFor="let _num of itemsPgto; let i=index">
                     <div class="display margin">
-                        <div class="field">
-                            <input
-                                pInputText
-                                currencyMask
-                                [(ngModel)]="valorPgto[_num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
-                        </div>
                         <div div class="field">
                             <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="vencimento[_num]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
                         </div>
                         <div div class="field">
                             <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="datePgto[_num]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
+                        </div>
+                        <div class="field">
+                            <input
+                                pInputText
+                                currencyMask
+                                [(ngModel)]="valorPgto[_num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
                         </div>
                         <div class="field icon-display">
                             <div>

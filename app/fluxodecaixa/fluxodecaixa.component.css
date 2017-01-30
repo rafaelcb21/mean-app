@@ -67,10 +67,13 @@ i:hover {
     margin-left:10px
 }
 
-fa-times {
+.redNumber {
     color: red;
 }
 
+.ponteiro{
+    cursor: pointer;
+}
 span.ui-menuitem-icon{  
     margin-right: 10px;
 }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { LocationStrategy, HashLocationStrategy, CommonModule } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -12,6 +12,7 @@ import { LoginComponent } from './login/login.component';
 import { VenderComponent } from './vender/vender.component';
 import { CaixaComponent } from './fluxodecaixa/fluxodecaixa.component';
 import { CaixaService } from './fluxodecaixa/fluxodecaixa.service';
+import { NumberBrasil } from './fluxodecaixa/fluxodecaixa.pipe';
 
 import { 
   DropdownModule,
@@ -42,6 +43,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     LoginComponent,
     VenderComponent,
     CaixaComponent,
+    NumberBrasil,
     //MoneyMaskDirective, 
     CurrencyMaskDirective],
   imports: [
@@ -72,7 +74,8 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     FornecedorService,
     VenderService,
     CaixaService,
-    {provide: LocationStrategy, useClass: HashLocationStrategy}
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
+    {provide: LOCALE_ID, useValue: "pt-BR"},
   ],
   bootstrap: [AppComponent]
 })

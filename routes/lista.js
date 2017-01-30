@@ -109,6 +109,7 @@ router.post('/fornecedores', function(req, res, next) {
   for (let i = 0; i < valorPgto.length; i++) {
     var fluxo = new Fluxo({
         dataParc: dataParc[i],
+        dataVencimento: "",
         fornecedor: selectedFornecedor,
         valorPgto: -1*valorPgto[i],
         hash: hash
@@ -231,8 +232,13 @@ router.post('/venda', function(req, res, next) {
   var listHash = [];
 
   var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);
-  var freteByProduto = frete / quantidadeTotal;
-  var parcelaUnidadeFrete = parseFloat(freteByProduto) / valorPgto.length;
+  //var freteByProduto = frete / quantidadeTotal;
+  //var parcelaUnidadeFrete = parseFloat(freteByProduto) / valorPgto.length;
+
+  for(let i = 0; i < valorPgto.length; i++) {
+    var freteporProduto = (((valorPgto[i] / soma) * frete) / quantidadeTotal);
+    list3.push(freteporProduto);
+  }
 
   for (let i = 0; i < proporcaoList.length; i++) {
     for (let j = 0; j < valorPgto.length; j++) {
@@ -243,11 +249,11 @@ router.post('/venda', function(req, res, next) {
     list1 = [];
   }
 
-  for (let j = 0; j < valorPgto.length; j++) {
-      var x = ((parseFloat(margem[j])/100)+1) * parseFloat(pm[j]) * parseFloat(quantidade[j]);
-      valor.push(x);
-      list3.push(parcelaUnidadeFrete);
-  }
+  //for (let j = 0; j < valorPgto.length; j++) {
+  //    var x = ((parseFloat(margem[j])/100)+1) * parseFloat(pm[j]) * parseFloat(quantidade[j]);
+  //    valor.push(x);
+  //    list3.push(parcelaUnidadeFrete);
+  //}
 
   for (let i = 0; i < quantidade.length; i++) {
     for (let j = 0; j < quantidade[i]; j++) {
@@ -302,6 +308,18 @@ router.post('/venda', function(req, res, next) {
         });
       }      
     });
+  }
+
+
+  for (let i = 0; i < valorPgto.length; i++) {
+    var fluxo = new Fluxo({
+        dataParc: dataParc[i],
+        dataVencimento: vencimento[i],
+        fornecedor: selectedCliente,
+        valorPgto: valorPgto[i],
+        hash: hash
+      })
+    fluxo.save(function(err, result) {})
   }
 
   res.status(201).json({
