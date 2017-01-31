@@ -13,6 +13,8 @@ import { VenderComponent } from './vender/vender.component';
 import { CaixaComponent } from './fluxodecaixa/fluxodecaixa.component';
 import { CaixaService } from './fluxodecaixa/fluxodecaixa.service';
 import { NumberBrasil } from './fluxodecaixa/fluxodecaixa.pipe';
+import { DespesasReceitasComponent } from './despesasreceitas/despesasreceitas.component';
+import { DespesasReceitasService } from './despesasreceitas/despesasreceitas.service';
 
 import { 
   DropdownModule,
@@ -28,6 +30,7 @@ import {
   PanelModule,
   MenuModule,
   DataTableModule,
+  CheckboxModule,
   SharedModule } from 'primeng/primeng';
 
 import { TextMaskModule } from 'angular2-text-mask';
@@ -44,6 +47,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     VenderComponent,
     CaixaComponent,
     NumberBrasil,
+    DespesasReceitasComponent,
     //MoneyMaskDirective, 
     CurrencyMaskDirective],
   imports: [
@@ -67,6 +71,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     PanelModule,
     DataTableModule,
     SharedModule,
+    CheckboxModule,
 //    CurrencyMaskModule,
 //    MoneyMaskModule,
   ],
@@ -74,6 +79,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     FornecedorService,
     VenderService,
     CaixaService,
+    DespesasReceitasService,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     {provide: LOCALE_ID, useValue: "pt-BR"},
   ],

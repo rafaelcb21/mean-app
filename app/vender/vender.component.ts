@@ -192,14 +192,15 @@ export class VenderComponent {
                 routerLink: ['/fornecedor']
             },
             {
-                label: 'Despesas',
-            },
-            {
-                label: 'Editar Lista',
+                label: 'Despesas e Receitas',
+                routerLink: ['/despesasreceitas']
             },
             {
                 label: 'Fluxo de Caixa',
                 routerLink: ['/fluxodecaixa']
+            },
+            {
+                label: 'Editar Lista',
             }
         ];
     }

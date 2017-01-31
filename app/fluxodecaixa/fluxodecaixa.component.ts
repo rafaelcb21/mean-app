@@ -31,7 +31,8 @@ export class CaixaComponent implements OnInit {
                 routerLink: ['/vender']
             },
             {
-                label: 'Despesas',
+                label: 'Despesas e Receitas',
+                routerLink: ['/despesasreceitas']
             },
             {
                 label: 'Editar Lista',

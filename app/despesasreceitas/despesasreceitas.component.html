@@ -1,0 +1,76 @@
+<p-contextMenu [global]="true" [model]="menus"></p-contextMenu>
+<div class="container back">
+    <p-panel header="Despesas e Receitas">
+        <div class="margin">
+            <p-fieldset legend="Cabeçalho"> 
+                <div class="display margin">
+                    <div class="field">
+                        <input type="text" pInputText [(ngModel)]="descricao" placeholder="Descrição"/>
+                    </div>
+                    <div class="field">
+                        <p-autoComplete (onDropdownClick)="categoriaDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedCategoria" [suggestions]="searchCategoriaList" (completeMethod)="searchCategoria($event)" placeholder="Categoria"></p-autoComplete>
+                    </div>
+                </div>
+            </p-fieldset>
+        </div>
+        <div class="margin">
+            <p-fieldset legend="Despesas / Receitas">   
+                <div class="display margin">
+                    <div class="field">
+                        <p-dropdown [options]="despesaOUreceita" [(ngModel)]="tipo"></p-dropdown>
+                    </div> 
+                    <div class="field">
+                        <input
+                            pInputText
+                            currencyMask
+                            [(ngModel)]="valor" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                    </div>
+                    <div div class="field">
+                        <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="dataDespesaReceita" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
+                    </div>
+                </div>
+            </p-fieldset>
+        </div>
+        <div class="margin">
+            <p-fieldset legend="Repetir">
+                <div class="display">
+                   <p-checkbox [(ngModel)]="repetir" binary="true" label="Repetir"></p-checkbox>
+                </div>
+                <div class="display margin">
+                    <div class="field">
+                        <p-dropdown [disabled]="!repetir" [options]="fixaOUparcelada" [(ngModel)]="fixaparcelada"></p-dropdown>
+                    </div>                    
+                </div>               
+                <div class="display margin">
+                    <div class="field" *ngIf="((fixaparcelada === 'parcelada' || fixaparcelada === 'fixa') && repetir == true)">
+                        <p-dropdown [options]="periodos" [(ngModel)]="periodo"></p-dropdown>
+                    </div>
+                    <div class="field" *ngIf="((fixaparcelada === 'parcelada') && repetir == true)">
+                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="parcela" placeholder="Parcelas"/>
+                    </div>
+                </div>
+            </p-fieldset>
+        </div>
+        <div class="display margin">
+            <p-growl [value]="msgs"></p-growl>
+        </div>
+        <div class="display margin">
+            <div class="field paragrafo">
+                <button
+                    (click)="salvar(
+                                descricao,
+                                selectedCategoria,
+                                tipo,
+                                valor,
+                                dataDespesaReceita,
+                                repetir,
+                                fixaparcelada,
+                                periodo,
+                                parcela
+                            )"
+                    pButton type="button" label="Salvar" style="color:#fff;background:green;border-color:green;margin-bottom:12px;margin-top:5px">
+                </button>
+            </div>
+        </div>
+    </p-panel>
+</div>

@@ -212,14 +212,15 @@ export class FornecedorComponent implements OnInit {
                 routerLink: ['/vender']
             },
             {
-                label: 'Despesas',
-            },
-            {
-                label: 'Editar Lista',
+                label: 'Despesas e Receitas',
+                routerLink: ['/despesasreceitas']
             },
             {
                 label: 'Fluxo de Caixa',
                 routerLink: ['/fluxodecaixa']
+            },
+            {
+                label: 'Editar Lista',
             }
         ];
     }
