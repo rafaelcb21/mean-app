@@ -4,9 +4,11 @@ var Lista = require('../modules/lista');
 var Produto = require('../modules/produto');
 var Venda = require('../modules/venda');
 var Fluxo = require('../modules/fluxodecaixa');
+var DespRec = require('../modules/despesasreceitas');
 var async = require('async');
 var SHA256 = require("crypto-js/sha256");
 var crypto = require("crypto");
+var moment = require('moment');
 
 /* GET home page. */
 router.post('/item', function(req, res, next) {
@@ -351,26 +353,9 @@ router.get('/fc', function(req, res, next) {
           }
         )
       }
-   )
+   )  
 
-  
-
-  /*var alinhar = function transpose(a) {
-    return Object.keys(a[0]).map(
-      function (c) { return a.map(function (r) { return r[c]; }); }
-    );
-  }*/
-
-  /*var parcelasSoma = function sumByIndex(arr) {
-    return arr.map( (item, idx) => {
-        return arr.reduce( (prev, curr) => prev + curr[idx] , 0 )
-    })
-  }  
-
-  var alinhar = function transpose(a) {
-    return a[0].map(function (_, c) { return a.map(function (r) { return r[c]; }); });
-  }
-
+  /*
   Produto.aggregate([
       { "$group": 
         { "_id": "$hash", 
@@ -380,40 +365,91 @@ router.get('/fc', function(req, res, next) {
           "parcFrete": { "$push": "$parcFrete" } 
         }
       }
-    ], function(err, compra){
+    ], function(err, compra){})
+  })*/
 
-        for(let i = 0; i < compra.length; i++) {
-          ll2 = [];
-          var ll = compra[i].parc.concat(compra[i].parcFrete);
-          var x = compra[i].parc[0].length;
-          var somado = parcelasSoma(ll);
-          var resultado = somado.slice(0, x); //valor das parcelas
+})
 
-          for(let j = 0; j < x; j++) {
-            ll2.push(compra[i].fornecedor[0]) //fornecedor
-          }
-          linha.push([compra[i].dataParc, "", ll2, resultado])
-        }
+router.post('/despesas-receitas', function(req, res, next) {
+  var descricao = req.body.descricao;
+  var selectedCategoria = req.body.selectedCategoria;
+  var tipo = req.body.tipo;
+  var valor = req.body.valor;
+  var dataDespesaReceita = req.body.dataDespesaReceita;
+  var repetir = req.body.repetir;
+  var fixaparcelada = req.body.fixaparcelada;
+  var periodo = req.body.periodo;
+  var parcela = req.body.parcela;
+  var hash = req.body.hash;
 
-        try{
-          for(let s = 0; s < x; s++) {
-            var line = alinhar(linha[s]);
-            for(let u = 0; u < line.length; u++) {
-              lista.push(line[u])
-            }
-            
-          }
-        }catch(err) {}
-        console.log(lista)*/
+  var valorPagto = 0;
 
-        /*Venda.find({}, function(erro, venda){
-          
-          res.status(200).json({
-            compra: compra,
-            venda: venda
-          });
-      })*/
-  //})
+  if(tipo == "despesa") { valorPagto = -1 * valor }else{ valorPagto = valor }
+
+  var dp = new DespRec({
+    descricao: descricao,
+    selectedCategoria: selectedCategoria,
+    tipo: tipo,
+    valor: valorPagto,
+    dataDespesaReceita: dataDespesaReceita,
+    repetir: repetir,
+    fixaparcelada: fixaparcelada,
+    periodo: periodo,
+    parcela: parcela,
+    hash: hash
+  })
+  
+  dp.save(function(err, result) {})
+
+  if(repetir){
+    if(fixaparcelada == "fixa"){
+      if(periodo == 'diário'){
+        var x = moment(dataDespesaReceita).add(1, 'days');
+
+      }else if(periodo == 'semanal'){
+        var x = moment(dataDespesaReceita).add(1, 'week');
+
+      }else if(periodo == 'quinzenal'){
+        var x = moment(dataDespesaReceita).add(15, 'days');
+
+      }else if(periodo == 'mensal'){
+        var x = moment(dataDespesaReceita).add(1, 'months');
+
+      }else if(periodo == 'bimestral'){
+        var x = moment(dataDespesaReceita).add(2, 'months');
+
+        console.log(x)
+
+      }else if(periodo == 'trimestral'){
+        var x = moment(dataDespesaReceita).add(3, 'months');
+        console.log(x)
+         
+      }else if(periodo == 'semestral'){
+        var x = moment(dataDespesaReceita).add(6, 'months');
+        console.log(x)
+
+      }else if(periodo == 'anual'){
+        var x = moment(dataDespesaReceita).add(1, 'years');
+      }
+      
+
+
+    }
+  }
+
+  var fluxo = new Fluxo({
+      dataParc: dataDespesaReceita,
+      dataVencimento: "",
+      fornecedor: descricao,
+      valorPgto: valorPagto,
+      hash: hash
+    })
+    
+  fluxo.save(function(err, result) {})
+
+  res.status(201).json({
+    msg: "sucesso"
+  })
 })
 
 module.exports = router;

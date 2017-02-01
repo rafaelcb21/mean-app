@@ -39,7 +39,8 @@ export class DespesasReceitasService {
             repetir,
             fixaparcelada,
             periodo,
-            parcela
+            parcela,
+            hash
         ) {
         const body = JSON.stringify({
             descricao: descricao,
@@ -50,10 +51,11 @@ export class DespesasReceitasService {
             repetir: repetir,
             fixaparcelada: fixaparcelada,
             periodo: periodo,
-            parcela: parcela
+            parcela: parcela,
+            hash: hash
         });
         const header = new Headers({'Content-Type': 'application/json'});
-        return this._http.post(Config.URL_SITE + 'lista/naotemainda', body, {headers: header})
+        return this._http.post(Config.URL_SITE + 'lista/despesas-receitas', body, {headers: header})
             .map(response => response.json().label)
             .catch(error => Observable.throw(error.json()));
         }

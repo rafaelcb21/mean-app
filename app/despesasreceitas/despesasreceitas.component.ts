@@ -4,6 +4,8 @@ import { SelectItem } from 'primeng/primeng';
 import { Message, MenuItem } from 'primeng/primeng';
 import { DespesasReceitasService } from './despesasreceitas.service'
 
+declare var sha256: any;
+
 @Component({
     selector: '<despesasreceitas></despesasreceitas>',
     templateUrl: './js/app/despesasreceitas/despesasreceitas.component.html',
@@ -54,7 +56,7 @@ export class DespesasReceitasComponent implements OnInit {
             {label:'Semanal', value:'semanal'},
             {label:'Quinzenal', value:'quinzenal'},
             {label:'Mensal', value:'mensal'},
-            {label:'Bimestral', value:'bimestralixa'},
+            {label:'Bimestral', value:'bimestral'},
             {label:'Trimestral', value:'trimestral'},
             {label:'Semestral', value:'semestral'},
             {label:'Anual', value:'anual'},
@@ -161,6 +163,17 @@ export class DespesasReceitasComponent implements OnInit {
         return false
     }
 
+    randomString(length, chars) {
+        var mask = '';
+        if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
+        if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if (chars.indexOf('#') > -1) mask += '0123456789';
+        if (chars.indexOf('!') > -1) mask += '~`!@#$%^&*()_+-={}[]:";\'<>?,./|\\';
+        var result = '';
+        for (var i = length; i > 0; --i) result += mask[Math.round(Math.random() * (mask.length - 1))];
+        return result;
+    }
+
      salvar(
             descricao,
             selectedCategoria,
@@ -206,6 +219,8 @@ export class DespesasReceitasComponent implements OnInit {
 
             listaVerify = [];
          
+            var hashString = this.randomString(32, '#aA!');
+            var pwSHA256 = sha256(hashString);
 
             if(this.verify == true) {
                 this.showSucesso();
@@ -219,7 +234,8 @@ export class DespesasReceitasComponent implements OnInit {
                     repetir,
                     fixaparcelada,
                     periodo,
-                    parcela
+                    parcela,
+                    pwSHA256
                 ).subscribe(
                     data => {
                         this.descricao = undefined;
