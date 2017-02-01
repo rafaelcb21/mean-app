@@ -40,7 +40,7 @@ export class CaixaComponent implements OnInit {
         ];
 
         this.caixaService.fc().subscribe(
-            data => {this.fluxodecaixa = data.data; console.log(this.fluxodecaixa)},
+            data => {this.fluxodecaixa = data.data;},
             error => console.log(error)
         )
     }

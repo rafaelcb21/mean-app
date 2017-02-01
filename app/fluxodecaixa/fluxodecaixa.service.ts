@@ -3,6 +3,7 @@ import { Http, Headers } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/Rx';
 import { Config } from '../config';
+import * as moment from 'moment';
 
 @Injectable()
 export class CaixaService {
@@ -95,8 +96,21 @@ export class CaixaService {
                 }
 
                 ll2.push(ll[ll.length-1]); //ultimo valor da tabela ll2
+                var dataAgora = moment().format("YYYY-MM");
+                //console.log(dataAgora+"-01")
+
+                for(let i = 0; i < ll2.length; i++) {
+                    var p = ll2[i].indexOf(dataAgora+"-01")
+                    if(p != -1){
+                        console.log(i)
+                        break
+                    }
+                    
+                    //console.log(p)
+                }
 
                 var dataObject = [];
+                //console.log(ll2)
                 for(let i = 0; i < ll2.length; i++) {
                     var dict = {}
                     dict["order"] = i;

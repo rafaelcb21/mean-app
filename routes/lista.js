@@ -404,48 +404,355 @@ router.post('/despesas-receitas', function(req, res, next) {
   if(repetir){
     if(fixaparcelada == "fixa"){
       if(periodo == 'diário'){
-        var x = moment(dataDespesaReceita).add(1, 'days');
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < 180; i++){
+          var dateNew = moment(dataDespesaReceita).add(i, 'days'); //6 meses
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
 
       }else if(periodo == 'semanal'){
-        var x = moment(dataDespesaReceita).add(1, 'week');
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < 48; i++){
+          var dateNew = moment(dataDespesaReceita).add(i*7, 'days'); // 1 ano
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
 
       }else if(periodo == 'quinzenal'){
-        var x = moment(dataDespesaReceita).add(15, 'days');
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < 50; i++){
+          var dateNew = moment(dataDespesaReceita).add(i*15, 'days'); //2 anos
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
 
       }else if(periodo == 'mensal'){
-        var x = moment(dataDespesaReceita).add(1, 'months');
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < 60; i++){
+          var dateNew = moment(dataDespesaReceita).add(i, 'months'); //5 anos
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
 
       }else if(periodo == 'bimestral'){
-        var x = moment(dataDespesaReceita).add(2, 'months');
-
-        console.log(x)
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < 30; i++){
+          var dateNew = moment(dataDespesaReceita).add(i*2, 'months'); //5 anos
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
 
       }else if(periodo == 'trimestral'){
-        var x = moment(dataDespesaReceita).add(3, 'months');
-        console.log(x)
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < 20; i++){
+          var dateNew = moment(dataDespesaReceita).add(i*3, 'months'); //5 anos
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
          
       }else if(periodo == 'semestral'){
-        var x = moment(dataDespesaReceita).add(6, 'months');
-        console.log(x)
+          var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < 10; i++){
+          var dateNew = moment(dataDespesaReceita).add(i*6, 'months'); //5 anos
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
 
       }else if(periodo == 'anual'){
-        var x = moment(dataDespesaReceita).add(1, 'years');
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })          
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < 5; i++){
+          var dateNew = moment(dataDespesaReceita).add(i, 'years'); //5 anos
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })          
+          fluxo.save(function(err, result) {})
+        }
       }
       
+    /*PARCELADA*/
 
+    }else if(fixaparcelada=="parcelada"){
+      if(periodo == 'diário'){
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < parcela; i++){
+          var dateNew = moment(dataDespesaReceita).add(i, 'days');
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
+      }else if(periodo == 'semanal'){
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })          
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < parcela; i++){
+          var dateNew = moment(dataDespesaReceita).add(i*7, 'days');
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })          
+          fluxo.save(function(err, result) {})
+        }
+      }else if(periodo == 'quinzenal'){
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < parcela; i++){
+          var dateNew = moment(dataDespesaReceita).add(i*15, 'days');
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
 
+      }else if(periodo == 'mensal'){
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < parcela; i++){
+          var dateNew = moment(dataDespesaReceita).add(i, 'months');
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
+
+      }else if(periodo == 'bimestral'){
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < parcela; i++){
+          var dateNew = moment(dataDespesaReceita).add(i*2, 'months');
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
+
+      }else if(periodo == 'trimestral'){
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < parcela; i++){
+          var dateNew = moment(dataDespesaReceita).add(i*3, 'months');
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
+         
+      }else if(periodo == 'semestral'){
+          var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < parcela; i++){
+          var dateNew = moment(dataDespesaReceita).add(i*6, 'months');
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })
+          fluxo.save(function(err, result) {})
+        }
+
+      }else if(periodo == 'anual'){
+        var fluxo = new Fluxo({
+            dataParc: dataDespesaReceita,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })          
+          fluxo.save(function(err, result) {})
+        for(let i = 1; i < parcela; i++){
+          var dateNew = moment(dataDespesaReceita).add(i, 'years');
+          var fluxo = new Fluxo({
+            dataParc: dateNew,
+            dataVencimento: "",
+            fornecedor: descricao,
+            valorPgto: valorPagto,
+            hash: hash
+          })          
+          fluxo.save(function(err, result) {})
+        }
+      }
     }
+  }else{
+    var fluxo = new Fluxo({
+        dataParc: dataDespesaReceita,
+        dataVencimento: "",
+        fornecedor: descricao,
+        valorPgto: valorPagto,
+        hash: hash
+      })
+      
+    fluxo.save(function(err, result) {})
   }
-
-  var fluxo = new Fluxo({
-      dataParc: dataDespesaReceita,
-      dataVencimento: "",
-      fornecedor: descricao,
-      valorPgto: valorPagto,
-      hash: hash
-    })
-    
-  fluxo.save(function(err, result) {})
 
   res.status(201).json({
     msg: "sucesso"
