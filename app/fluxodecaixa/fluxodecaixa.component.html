@@ -1,39 +1,63 @@
 <p-contextMenu [global]="true" [model]="menus"></p-contextMenu>
 <div class="container back">
     <p-panel header="Fluxo de Caixa">
-        <p-dataTable [value]="fluxodecaixa" sortField="order">
-            <!--p-column field="order" header="Ordem"></p-column-->
-            <p-column field="data" header="Data Pagto/Receb">
-                <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
-                    <span>{{fluxodecaixa[col.field] | numerobrasil:"date"}}</span>
-                </template>
-            </p-column>
-            <p-column field="vencimento" header="Vencimento do Receb">
-                <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
-                    <span>{{fluxodecaixa[col.field] | numerobrasil:"date"}}</span>
-                </template>
-            </p-column>
-            <p-column field="nome" header="Nome">
-                <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
-                    <div title={{fluxodecaixa[col.field]}} style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ fluxodecaixa[col.field] }}</div>
-                </template>                
-            </p-column>
-            <p-column field="valor" header="Valor">
-                 <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
-                    <span [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
-                </template>
-            </p-column>
-            <p-column field="saldo" header="Saldo Diário">
-                 <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
-                    <span [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
-                </template>
-            </p-column>
-            <p-column field="acumulado" header="Saldo Acumulado">
-                 <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
-                    <span [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
-                </template>
-            </p-column>
-        </p-dataTable>
+        <div class="margin">
+            <div class="display">
+                <div class="field">
+                    <p-dropdown [options]="filtroDropdown" [(ngModel)]="escolha">
+                        <template let-periodo pTemplate="item">
+                            <div class="ui-helper-clearfix">
+                                <div (click)="filtro(periodo.value)">{{periodo.label}}</div>
+                            </div>
+                        </template>
+                    </p-dropdown>
+                </div>
+                <div class="field">
+                    <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="dataInicio" dateFormat="dd/mm/yy" placeholder="Data de Inicio"></p-calendar>
+                </div>
+                <div class="field">
+                    <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="dataFim" dateFormat="dd/mm/yy" placeholder="Data Fim"></p-calendar>
+                </div>
+                <div class="field">
+                    <button pButton type="button" icon="fa fa-search" iconPos="left" (click)="periodoBusca(dataInicio, dataFim)"></button>
+                </div>
+            </div>
+        </div>
+        <div class="margin">
+            <p-dataTable [value]="fluxodecaixa" sortField="order">
+                <!--p-column field="order" header="Ordem"></p-column-->
+                <p-column field="data" header="Data Pagto/Receb">
+                    <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
+                        <span>{{fluxodecaixa[col.field] | numerobrasil:"date"}}</span>
+                    </template>
+                </p-column>
+                <p-column field="vencimento" header="Vencimento do Receb">
+                    <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
+                        <span>{{fluxodecaixa[col.field] | numerobrasil:"date"}}</span>
+                    </template>
+                </p-column>
+                <p-column field="nome" header="Nome">
+                    <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
+                        <div title={{fluxodecaixa[col.field]}} style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ fluxodecaixa[col.field] }}</div>
+                    </template>                
+                </p-column>
+                <p-column field="valor" header="Valor">
+                    <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
+                        <span [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
+                    </template>
+                </p-column>
+                <p-column field="saldo" header="Saldo Diário">
+                    <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
+                        <span [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
+                    </template>
+                </p-column>
+                <p-column field="acumulado" header="Saldo Acumulado">
+                    <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
+                        <span [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
+                    </template>
+                </p-column>
+            </p-dataTable>
+        </div>
     </p-panel>
 
     

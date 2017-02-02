@@ -5,6 +5,7 @@ import { CaixaService } from './fluxodecaixa.service';
 import { FluxoDeCaixa } from './fluxodecaixa';
 import { Message, MenuItem } from 'primeng/primeng';
 import { VenderService } from '../vender/vender.service';
+import * as moment from 'moment';
 
 @Component({
     selector: '<fluxodecaixa></fluxodecaixa>',
@@ -14,6 +15,8 @@ import { VenderService } from '../vender/vender.service';
 export class CaixaComponent implements OnInit {
     private menus: MenuItem[];
     fluxodecaixa: FluxoDeCaixa[];
+    filtroDropdown: SelectItem[];
+    br: any;
 
     constructor(private _router: Router,
         private caixaService: CaixaService,
@@ -36,13 +39,99 @@ export class CaixaComponent implements OnInit {
             },
             {
                 label: 'Editar Lista',
-            },  
+            },
         ];
 
+        this.br = {
+            //data
+            closeText: "Pronto",
+        	prevText: "<Ant",
+        	nextText: "Pro>",
+        	currentText: "Hoje",
+        	monthNames: [ "janeiro","fevereiro","março","abril","maio","junho",
+        	"julho","agosto","setembro","outubro","novembro","dezembro" ],
+        	monthNamesShort: [ "jan","fev","mar","abr","mai","jun",
+        	"jul","ago","set","out","nov","dez" ],
+        	dayNames: [ "domingo","segunda","terça","quarta","quinta","sexta","sábado" ],
+        	dayNamesShort: [ "dom","seg","ter","qua","qui","sex","sáb" ],
+        	dayNamesMin: [ "D","S","T","Q","Q","S","S" ],
+        	weekHeader: "Sm",
+        	dateFormat: "dd/mm/yy",
+        	firstDay: 1,
+        	isRTL: false,
+        	showMonthAfterYear: false,
+        	yearSuffix: "",
+
+            //tempo
+            timeOnlyTitle: 'Escolher horário',
+    		timeText: 'Hora',
+    		hourText: 'Horas',
+    		minuteText: 'Minutos',
+    		secondText: 'Segundos',
+    		millisecText: 'Milisegundos',
+    		microsecText: 'Microsegundos',
+    		timezoneText: 'Fuso horario',
+    		timeFormat: 'HH:mm',
+    		timeSuffix: '',
+    		amNames: ['a.m.', 'AM', 'A'],
+    		pmNames: ['p.m.', 'PM', 'P'],
+        };
+
         this.caixaService.fc().subscribe(
-            data => {this.fluxodecaixa = data.data;},
+            data => {
+                this.fluxodecaixa = data.data;
+            },
             error => console.log(error)
         )
+
+        this.filtroDropdown = this.caixaService.filter;
+    }
+
+    onlyDate(event) {
+        return false
+    }
+
+    filtro(period) {
+        var mesSearch = [];
+
+        if(period == null){
+            return null;
+        }
+
+        if(period == "todos"){
+            return this.fluxodecaixa = this.caixaService.dataObject;
+        }
+
+        for(let i = 0; i < this.caixaService.dataObject.length; i++) {
+            var anoMes = this.caixaService.dataObject[i].data.substring(0,7);
+            if( anoMes == period){
+                mesSearch.push(this.caixaService.dataObject[i])
+            }                    
+        }
+        return this.fluxodecaixa = mesSearch;
+    }
+
+    periodoBusca(dataInicio, dataFim) {
+        var mesSearch = [];
+
+        if(dataInicio == undefined || dataInicio == undefined || dataFim == undefined || dataFim == undefined) {
+            return null
+        }
+
+        var inicio = moment(dataInicio).format("YYYY-MM-DD");
+        var fim = moment(dataFim).format("YYYY-MM-DD");
+
+        if(dataInicio > dataFim){
+            return null
+        }
+
+        for(let i = 0; i < this.caixaService.dataObject.length; i++) {
+            var anoMesDia = this.caixaService.dataObject[i].data;
+            if( anoMesDia >= inicio && anoMesDia <= fim){
+                mesSearch.push(this.caixaService.dataObject[i])
+            }                    
+        }
+        return this.fluxodecaixa = mesSearch;
     }
 
 }

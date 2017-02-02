@@ -7,6 +7,12 @@ import * as moment from 'moment';
 
 @Injectable()
 export class CaixaService {
+
+    dataObject = [];
+    filter = [
+        {label:'Escolha o Periodo', value:null},
+        {label:'Todos', value:'todos'}
+    ];
     constructor(private _http: Http) {}
 
     fc(){
@@ -76,7 +82,6 @@ export class CaixaService {
                 }         
 
                 var ll = linhaCompra.sort();
-
                 var ll2 = [];
 
                 for(let i = 0; i < ll.length-1; i++) {
@@ -96,21 +101,9 @@ export class CaixaService {
                 }
 
                 ll2.push(ll[ll.length-1]); //ultimo valor da tabela ll2
+                
                 var dataAgora = moment().format("YYYY-MM");
-                //console.log(dataAgora+"-01")
-
-                for(let i = 0; i < ll2.length; i++) {
-                    var p = ll2[i].indexOf(dataAgora+"-01")
-                    if(p != -1){
-                        console.log(i)
-                        break
-                    }
-                    
-                    //console.log(p)
-                }
-
-                var dataObject = [];
-                //console.log(ll2)
+                
                 for(let i = 0; i < ll2.length; i++) {
                     var dict = {}
                     dict["order"] = i;
@@ -121,11 +114,46 @@ export class CaixaService {
                     dict["valor"] = ll2[i][4];
                     dict["saldo"] = ll2[i][5];
                     dict["acumulado"] = ll2[i][6];
-                    dataObject.push(dict);                  
+                    this.dataObject.push(dict);
                 }
 
-                return {"data": dataObject}
+                var mesSearch = [];
+                var lista = [];
+                var mesNome: string;
+                var anoNum: string;
+                
+                for(let i = 0; i < this.dataObject.length; i++) {
+                    var anoMes = this.dataObject[i].data.substring(0,7);
+                    if( anoMes == dataAgora){
+                        mesSearch.push(this.dataObject[i])
+                    }                    
+                    lista.push(anoMes)
+                }
 
+                var unique = lista.filter(function(elem, index, self) {
+                    return index == self.indexOf(elem);
+                })
+
+                for(let i = 0; i < unique.length; i++) {
+                    var mesFiltro = unique[i].substring(5,7);
+                    anoNum = unique[i].substring(0,4);
+
+                    if(mesFiltro == "01"){mesNome = "Janeiro"}
+                    if(mesFiltro == "02"){mesNome = "Fevereiro"}
+                    if(mesFiltro == "03"){mesNome = "Março"}
+                    if(mesFiltro == "04"){mesNome = "Abril"}
+                    if(mesFiltro == "05"){mesNome = "Maio"}
+                    if(mesFiltro == "06"){mesNome = "Junho"}
+                    if(mesFiltro == "07"){mesNome = "Julho"}
+                    if(mesFiltro == "08"){mesNome = "Agosto"}
+                    if(mesFiltro == "09"){mesNome = "Setembro"}
+                    if(mesFiltro == "10"){mesNome = "Outubro"}
+                    if(mesFiltro == "11"){mesNome = "Novembro"}
+                    if(mesFiltro == "12"){mesNome = "Dezembro"}
+
+                    this.filter.push({label: mesNome+" - "+anoNum, value: unique[i]})
+                }
+                return {"data": mesSearch}
             })
             .catch(error => Observable.throw(error.json()));
     }
