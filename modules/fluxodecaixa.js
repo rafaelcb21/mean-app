@@ -7,7 +7,8 @@ var schema = new Schema({
     dataVencimento: {type: Date},
     fornecedor: {type: String},
     valorPgto: {type: Number},
-    hash: {type: String}
+    hash: {type: String},
+    tabela: {type: String}
 });
 
 schema.plugin(timestamps());

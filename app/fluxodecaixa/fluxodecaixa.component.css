@@ -37,6 +37,9 @@
   }
 }
 
+.id-width {
+    width: 49px;
+}
 label {
     font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
     font-size: 1em;

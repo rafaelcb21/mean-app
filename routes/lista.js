@@ -114,7 +114,8 @@ router.post('/fornecedores', function(req, res, next) {
         dataVencimento: "",
         fornecedor: selectedFornecedor,
         valorPgto: -1*valorPgto[i],
-        hash: hash
+        hash: hash,
+        tabela: "compra"
       })
     fluxo.save(function(err, result) {})
   }
@@ -319,7 +320,8 @@ router.post('/venda', function(req, res, next) {
         dataVencimento: vencimento[i],
         fornecedor: selectedCliente,
         valorPgto: valorPgto[i],
-        hash: hash
+        hash: hash,
+        tabela: "venda"
       })
     fluxo.save(function(err, result) {})
   }
@@ -409,7 +411,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < 180; i++){
@@ -419,7 +422,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -430,7 +434,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < 48; i++){
@@ -440,7 +445,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -451,7 +457,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < 50; i++){
@@ -461,7 +468,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -472,7 +480,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < 60; i++){
@@ -482,7 +491,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -493,7 +503,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < 30; i++){
@@ -503,7 +514,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -514,7 +526,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < 20; i++){
@@ -524,7 +537,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -535,7 +549,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < 10; i++){
@@ -545,7 +560,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -556,7 +572,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })          
           fluxo.save(function(err, result) {})
         for(let i = 1; i < 5; i++){
@@ -566,7 +583,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })          
           fluxo.save(function(err, result) {})
         }
@@ -581,7 +599,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < parcela; i++){
@@ -591,7 +610,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -601,7 +621,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })          
           fluxo.save(function(err, result) {})
         for(let i = 1; i < parcela; i++){
@@ -611,7 +632,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })          
           fluxo.save(function(err, result) {})
         }
@@ -621,7 +643,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < parcela; i++){
@@ -631,7 +654,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -642,7 +666,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < parcela; i++){
@@ -652,7 +677,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -663,7 +689,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < parcela; i++){
@@ -673,7 +700,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -684,7 +712,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < parcela; i++){
@@ -694,7 +723,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -705,7 +735,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         for(let i = 1; i < parcela; i++){
@@ -715,7 +746,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })
           fluxo.save(function(err, result) {})
         }
@@ -726,7 +758,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })          
           fluxo.save(function(err, result) {})
         for(let i = 1; i < parcela; i++){
@@ -736,7 +769,8 @@ router.post('/despesas-receitas', function(req, res, next) {
             dataVencimento: "",
             fornecedor: descricao,
             valorPgto: valorPagto,
-            hash: hash
+            hash: hash,
+            tabela: "dr"
           })          
           fluxo.save(function(err, result) {})
         }
@@ -748,7 +782,8 @@ router.post('/despesas-receitas', function(req, res, next) {
         dataVencimento: "",
         fornecedor: descricao,
         valorPgto: valorPagto,
-        hash: hash
+        hash: hash,
+        tabela: "dr"
       })
       
     fluxo.save(function(err, result) {})
@@ -759,4 +794,18 @@ router.post('/despesas-receitas', function(req, res, next) {
   })
 })
 
+router.get('/editar/:hash/:tabela', function(req, res, next) {
+  var hash = req.params.hash;
+  var tabela = req.params.tabela;
+  console.log(hash)
+  console.log(tabela)
+  if(tabela=="compra"){
+    Produto.find({hash: hash},function(err, doc){
+      console.log(doc)
+      res.status(200).json({
+        obj: doc
+      });
+    })
+  }
+})
 module.exports = router;

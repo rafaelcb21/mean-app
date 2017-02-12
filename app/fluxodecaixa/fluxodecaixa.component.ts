@@ -134,4 +134,12 @@ export class CaixaComponent implements OnInit {
         return this.fluxodecaixa = mesSearch;
     }
 
+    editar(hash, tabela){
+        this.caixaService.editar(hash, tabela).subscribe(
+            data => {
+                
+            },
+            error => console.log(error)
+        )
+    }
 }

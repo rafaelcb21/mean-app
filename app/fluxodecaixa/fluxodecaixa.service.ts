@@ -56,6 +56,7 @@ export class CaixaService {
                 for(let i = 0; i < linha.length; i++) {
                     var hash = linha[i].hash;
                     var dataParc = linha[i].dataParc.slice(0, 10);
+                    var tabela = linha[i].tabela;
                     if(linha[i].dataVencimento != null) {
                         var venc = linha[i].dataVencimento.slice(0, 10);
                     }else{
@@ -63,9 +64,9 @@ export class CaixaService {
                     }                    
                     var fornecedor = linha[i].fornecedor;
                     var valor = linha[i].valorPgto;
-                    linhaCompra.push([dataParc, hash, venc, fornecedor, valor]);
+                    linhaCompra.push([dataParc, hash, venc, fornecedor, valor, tabela]);
                 }
-
+                
                 for(let i = 0; i < linhaCompra.length; i++) {
                     var dataLinha = linhaCompra[i][0];
 
@@ -80,10 +81,10 @@ export class CaixaService {
                         }
                     }
                 }         
-
+                
                 var ll = linhaCompra.sort();
+                
                 var ll2 = [];
-
                 for(let i = 0; i < ll.length-1; i++) {
                     var dataAtual = ll[i][0];
                     var dataNext = ll[i+1][0];
@@ -91,17 +92,17 @@ export class CaixaService {
                     var vencimentoAtual = ll[i][2];
                     var fornencedorAtual = ll[i][3];
                     var valorCompraAtual = ll[i][4];
+                    var tabelaAtual = ll[i][5];
 
                     if(dataAtual == dataNext) {
-                        ll2.push([dataAtual, hashAtual, vencimentoAtual, fornencedorAtual, valorCompraAtual, "", ""])
+                        ll2.push([dataAtual, hashAtual, vencimentoAtual, fornencedorAtual, valorCompraAtual, "", "", tabelaAtual])
                     }else if(dataAtual != dataNext){
                         var linhaSemAlterar = ll[i];
                         ll2.push(linhaSemAlterar);
                     }
                 }
-
-                ll2.push(ll[ll.length-1]); //ultimo valor da tabela ll2
                 
+                ll2.push(ll[ll.length-1]); //ultimo valor da tabela ll2
                 var dataAgora = moment().format("YYYY-MM");
                 
                 for(let i = 0; i < ll2.length; i++) {
@@ -112,16 +113,20 @@ export class CaixaService {
                     dict["vencimento"] = ll2[i][2];
                     dict["nome"] = ll2[i][3];
                     dict["valor"] = ll2[i][4];
-                    dict["saldo"] = ll2[i][5];
-                    dict["acumulado"] = ll2[i][6];
+                    dict["tabela"] = ll2[i][5];
+                    dict["saldo"] = ll2[i][6];
+                    dict["acumulado"] = ll2[i][7];
                     this.dataObject.push(dict);
                 }
-
+                
                 var mesSearch = [];
                 var lista = [];
                 var mesNome: string;
                 var anoNum: string;
                 
+                /** Irá gerar this.filter uma lista dos meses que compoe o fluxo de CaixaService
+                 * que será usada no dropdown "Escolha o período"
+                */
                 for(let i = 0; i < this.dataObject.length; i++) {
                     var anoMes = this.dataObject[i].data.substring(0,7);
                     if( anoMes == dataAgora){
@@ -153,9 +158,97 @@ export class CaixaService {
 
                     this.filter.push({label: mesNome+" - "+anoNum, value: unique[i]})
                 }
-                return {"data": mesSearch}
+                return {"data": this.dataObject}
             })
             .catch(error => Observable.throw(error.json()));
     }
 
+    editar(hash, tabela){
+        return this._http.get(Config.URL_SITE + 'lista/editar/'+hash+'/'+tabela)
+            .map(response => { 
+                const obj = response.json().obj;
+                console.log(obj)
+
+                var fornecedor = obj[0].fornecedor;
+                var emissao = obj[0].emissao.substring(0,10);
+                var operacao = obj[0].operacao;
+                var categoria = obj[0].categoria;
+                var serie = obj[0].serie;
+                var nf = obj[0].nf;
+                var compra = obj[0].compra;
+                var transportadora = obj[0].transportadora;
+                var dataParc = obj[0].dataParc;
+
+                var cabecalho = [fornecedor, emissao, operacao, categoria, serie, nf, compra]; //cabeçalho               
+
+                var ll = [];
+                var ll2 = [];
+                var ll3 = [];
+                var parcelasArredondada = [];
+
+                for(let i = 0; i < obj.length; i++){
+                    var produto = obj[i].produto[0];
+                    var qtd = obj[i].qtd[0];
+                    var val = obj[i].val[0];
+                    var soma = parseFloat(qtd) * val;
+                    ll.push(produto+";"+qtd+";"+String(val)+";"+String(soma));                    
+                }
+
+                var produtos = ll.filter(function(elem, index, self) { //produtos
+                    return index == self.indexOf(elem);
+                })
+
+                for(let i = 0; i < obj.length; i++){
+                    for(let j = 0; j < obj[i].parcFrete.length; j++){
+                        var parcFrete = obj[i].parcFrete[j];
+                        ll2.push(parcFrete)
+                    }
+                    ll3.push(obj[i].parc) //sera usado para calcular cada parcela
+                    ll3.push(obj[i].parcFrete)  
+                }
+
+                var parcFreteTotal = ll2.reduce((a, b) => a + b, 0);
+                var frete = [transportadora, parcFreteTotal]; //frete
+
+                var matrix = function sumByIndex(arr) {
+                    return arr.map( (item, idx) => {
+                        return arr.reduce( (prev, curr) => prev + curr[idx] , 0 )
+                    })
+                }
+
+                var parcelas = matrix(ll3);
+
+                var parcelasLista = parcelas.slice(0,dataParc.length);
+
+                for(let i = 0; i < parcelasLista.length; i++){
+                        var z = this.arredondar(parcelasLista[i]);
+                        var x = parseFloat(z).toFixed(2); //string
+                        parcelasArredondada.push(x)
+                }
+
+
+
+
+            }
+        )
+            .catch(error => Observable.throw(error.json()));
+    }
+
+    arredondar(x) {
+        if (Math.abs(x) < 1.0) {
+            var e = parseInt(x.toString().split('e-')[1]);
+            if (e) {
+              x *= Math.pow(10,e-1);
+              x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
+            }
+        } else {
+        var e = parseInt(x.toString().split('+')[1]);
+        if (e > 20) {
+            e -= 20;
+            x /= Math.pow(10,e);
+            x += (new Array(e+1)).join('0');
+        }
+      }
+      return x;
+    }
 }

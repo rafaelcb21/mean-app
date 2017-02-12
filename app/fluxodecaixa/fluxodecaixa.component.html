@@ -1,4 +1,4 @@
-<p-contextMenu [global]="true" [model]="menus"></p-contextMenu>
+<!--p-contextMenu [global]="true" [model]="menus"></p-contextMenu-->
 <div class="container back">
     <p-panel header="Fluxo de Caixa">
         <div class="margin">
@@ -56,9 +56,12 @@
                         <span [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
                     </template>
                 </p-column>
+                <p-column field="hash" [style]="{'width':'49px','text-align':'center'}">
+                    <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
+                        <button pButton type="button" icon="fa fa-pencil" iconPos="left" (click)="editar(fluxodecaixa[col.field], fluxodecaixa.tabela)"></button>
+                    </template>
+                </p-column>
             </p-dataTable>
         </div>
     </p-panel>
-
-    
 </div>
