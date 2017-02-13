@@ -289,6 +289,7 @@ router.post('/venda', function(req, res, next) {
         parc: parc,
         vencimento: vencimento,
         dataParc: dataParc,
+        transportadora: selectedTransportadora,
         parcFrete: list3,
         hash: hash,
         hashId: hashId
@@ -797,10 +798,15 @@ router.post('/despesas-receitas', function(req, res, next) {
 router.get('/editar/:hash/:tabela', function(req, res, next) {
   var hash = req.params.hash;
   var tabela = req.params.tabela;
-
   //venda, dr
   if(tabela=="compra"){
     Produto.find({hash: hash},function(err, doc){
+      res.status(200).json({
+        obj: doc
+      });
+    })
+  }else if(tabela=="venda"){
+    Venda.find({hash: hash},function(err, doc){
       res.status(200).json({
         obj: doc
       });

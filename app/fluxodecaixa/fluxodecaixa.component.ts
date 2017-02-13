@@ -20,15 +20,18 @@ export class CaixaComponent implements OnInit {
     display: boolean = false;
 
     fornecedor: string;
+    cliente: string;
     emissao: string;
     operacao: string;
     categoria: string;
     serie: string;
     nf: string;
     compra: string;
+    venda: string;
     produtos = [];
     transportadora: string;
     frete: string;
+    tabela: string;
     parcelas = [];
 
 
@@ -156,20 +159,39 @@ export class CaixaComponent implements OnInit {
     }
 
     showDialog(hash, tabela) {
-        this.display = true;
+        
         this.caixaService.editar(hash, tabela).subscribe(
             data => {
-                this.fornecedor = data.fornecedor,
-                this.emissao = data.emissao,
-                this.operacao = data.operacao,
-                this.categoria = data.categoria,
-                this.serie = data.serie,
-                this.nf = data.nf,
-                this.compra = data.compra
-                this.produtos = data.produtos, //lista
-                this.transportadora = data.transportadora,
-                this.frete = data.frete,
-                this.parcelas = data.parcelas //lista
+                if(tabela == "compra"){
+                    this.tabela = tabela;
+                    this.display = true;
+                    this.fornecedor = data.fornecedor,
+                    this.emissao = data.emissao,
+                    this.operacao = data.operacao,
+                    this.categoria = data.categoria,
+                    this.serie = data.serie,
+                    this.nf = data.nf,
+                    this.compra = data.compra
+                    this.produtos = data.produtos, //lista
+                    this.transportadora = data.transportadora,
+                    this.frete = data.frete,
+                    this.parcelas = data.parcelas //lista
+                }
+                if(tabela == "venda"){
+                    this.tabela = tabela;
+                    this.display = true;
+                    this.cliente = data.cliente,
+                    this.emissao = data.emissao,
+                    this.operacao = data.operacao,
+                    this.categoria = data.categoria,
+                    this.serie = data.serie,
+                    this.venda = data.venda,
+                    this.produtos = data.produtos, //lista
+                    this.transportadora = data.transportadora,
+                    this.frete = data.frete,
+                    this.parcelas = data.parcelas //lista
+                }
+                
             },
             error => console.log(error)
         )

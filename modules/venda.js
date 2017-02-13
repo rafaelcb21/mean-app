@@ -18,6 +18,7 @@ var schema = new Schema({
     parc: {type: Array},
     vencimento: {type: Array},
     dataParc: {type: Array},
+    transportadora: {type: String},
     parcFrete: {type: Array},
     hash: {type: String},
     hashId: {type: String}

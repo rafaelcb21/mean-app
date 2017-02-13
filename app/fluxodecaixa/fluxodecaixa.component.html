@@ -38,7 +38,7 @@
                 </p-column>
                 <p-column field="nome" header="Nome">
                     <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
-                        <div title={{fluxodecaixa[col.field]}} style="overflow: hidden; text-overflow: ellipsis; white-field: nowrap;">{{ fluxodecaixa[col.field] }}</div>
+                        <div title={{fluxodecaixa[col.field]}} style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ fluxodecaixa[col.field] }}</div>
                     </template>                
                 </p-column>
                 <p-column field="valor" header="Valor">
@@ -56,7 +56,7 @@
                         <span [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
                     </template>
                 </p-column>
-                <p-column field="hash" [style]="{'width':'89px','text-align':'center'}">
+                <p-column field="hash" [style]="{'width':'110px','text-align':'center'}">
                     <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
                         <button pButton type="button" icon="fa fa-search" iconPos="left" (click)="showDialog(fluxodecaixa[col.field], fluxodecaixa.tabela)"></button>
                         <button pButton type="button" icon="fa fa-pencil" iconPos="left" (click)="editar(fluxodecaixa[col.field], fluxodecaixa.tabela)"></button>                        
@@ -69,7 +69,8 @@
 
 <p-dialog [(visible)]="display" modal="modal" responsive="true" width="702">
     <div class="layout2">
-        <div class="field2 margin2"><b>Fornecedor:</b> {{fornecedor}}</div>
+        <div *ngIf="tabela=='compra'" class="field2 margin2"><b>Fornecedor:</b> {{fornecedor}}</div>
+        <div *ngIf="tabela=='venda'" class="field2 margin2"><b>Cliente:</b> {{cliente}}</div>
         <div class="field2 margin2"><b>Data de Emissão:</b> {{emissao | numerobrasil:"date"}}</div>
     </div>
     <div class="layout2">
@@ -78,20 +79,32 @@
     </div>
     <div class="layout2">
         <div class="field2 margin2"><b>Nº de Série:</b> {{serie}}</div>
-        <div class="field2 margin2"><b>Nota Fiscal:</b> {{nf}}</div>
-        <div class="field2 margin2"><b>Nº da Compra:</b> {{compra}}</div>
+        <div *ngIf="tabela=='compra'" class="field2 margin2"><b>Nota Fiscal:</b> {{nf}}</div>
+        <div *ngIf="tabela=='compra'"class="field2 margin2"><b>Nº da Compra:</b> {{compra}}</div>
+        <div *ngIf="tabela=='venda'"class="field2 margin2"><b>Nº da Venda:</b> {{venda}}</div>
     </div>
     <div class="margin2">====================================================================</div>
     <div *ngFor="let p of produtos" >
         <div class="field2 margin2"><b>Produto:</b></div>
         <div class="field2">{{p[0]}}</div>
-        <div class="layout2">
+        <div *ngIf="tabela=='compra'" class="layout2">
             <div class="field2">=></div>
             <div class="field2">{{p[1]}}</div>
             <div class="field2">*</div>
             <div class="field2">{{p[2] | numerobrasil:"money" }}</div>
             <div class="field2">=</div>
             <div class="field2">{{p[3] | numerobrasil:"money" }}</div>
+        </div>
+
+        <div *ngIf="tabela=='venda'" class="layout2">
+            <div class="field2">=></div>
+            <div class="field2">{{p[1]| numerobrasil:"money" }}</div>
+            <div class="field2">*</div>
+            <div class="field2">{{p[2]}}</div>
+            <div class="field2">*</div>
+            <div class="field2">{{p[3]}}</div>
+            <div class="field2">=</div>
+            <div class="field2">{{p[4] | numerobrasil:"money" }}</div>
         </div>
     </div>
     <div class="margin2">====================================================================</div>
@@ -103,7 +116,9 @@
     <div class="field2 margin2"><b>Parcelas:</b></div>
     <div *ngFor="let pa of parcelas"  class="layout2">
         <div class="field2 margin2">{{pa[0] | numerobrasil:"date"}}</div>
-        <div class="field2 margin2">{{pa[1] | numerobrasil:"money"}}</div>
+        <div *ngIf="tabela=='compra'" class="field2 margin2">{{pa[1] | numerobrasil:"money"}}</div>
+        <div *ngIf="tabela=='venda'" class="field2 margin2">{{pa[1] | numerobrasil:"date"}}</div>
+        <div *ngIf="tabela=='venda'" class="field2 margin2">{{pa[2] | numerobrasil:"money"}}</div>
     </div>
 </p-dialog>
 

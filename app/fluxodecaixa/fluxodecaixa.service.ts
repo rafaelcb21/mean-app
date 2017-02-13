@@ -166,100 +166,192 @@ export class CaixaService {
 
     editar(hash, tabela){
         return this._http.get(Config.URL_SITE + 'lista/editar/'+hash+'/'+tabela)
-            .map(response => { 
-                const obj = response.json().obj;
-                var documento = {};
+            .map(response => {
+                if(tabela=="compra"){
+                    const obj = response.json().obj;
+                    var documento = {};
 
-                var fornecedor = obj[0].fornecedor;
-                var emissao = obj[0].emissao.substring(0,10);
-                var operacao = obj[0].operacao;
-                var categoria = obj[0].categoria;
+                    var fornecedor = obj[0].fornecedor;
+                    var emissao = obj[0].emissao.substring(0,10);
+                    var operacao = obj[0].operacao;
+                    var categoria = obj[0].categoria;
 
-                var serie = obj[0].serie;
-                var nf = obj[0].nf;
-                var compra = obj[0].compra;
+                    var serie = obj[0].serie;
+                    var nf = obj[0].nf;
+                    var compra = obj[0].compra;
 
-                if(serie == undefined || serie == "" || serie == null) { serie = ""}
-                if(nf == undefined || nf == "" || nf == null) { nf = ""}
-                if(compra == undefined || compra == "" || nf == null) { compra = ""}
-                
-                var transportadora = obj[0].transportadora;
-                var dataParc = obj[0].dataParc;
+                    if(serie == undefined || serie == "" || serie == null) { serie = ""}
+                    if(nf == undefined || nf == "" || nf == null) { nf = ""}
+                    if(compra == undefined || compra == "" || compra == null) { compra = ""}
+                    
+                    var transportadora = obj[0].transportadora;
+                    var dataParc = obj[0].dataParc;
 
-                var cabecalho = [fornecedor, emissao, operacao, categoria, serie, nf, compra]; //cabeçalho               
+                    var cabecalho = [fornecedor, emissao, operacao, categoria, serie, nf, compra]; //cabeçalho
 
-                var ll = [];
-                var ll2 = [];
-                var ll3 = [];
-                var listProdutos = [];
-                var parcelasArredondada = [];
-                var parcelasTotal = [];
+                    var ll = [];
+                    var ll2 = [];
+                    var ll3 = [];
+                    var listProdutos = [];
+                    var parcelasArredondada = [];
+                    var parcelasTotal = [];
 
-                for(let i = 0; i < obj.length; i++){
-                    var produto = obj[i].produto[0];
-                    var qtd = obj[i].qtd[0];
-                    var val = obj[i].val[0];
-                    var soma = parseFloat(qtd) * val;
-                    ll.push(produto+";"+qtd+";"+String(val)+";"+String(soma));                    
-                }
-
-                var produtos = ll.filter(function(elem, index, self) { //produtos
-                    return index == self.indexOf(elem);
-                })
-                
-                for(let i = 0; i < produtos.length; i++){
-                    var y = produtos[i].split(";");
-                    listProdutos.push(y);
-                }                
-                
-                for(let i = 0; i < obj.length; i++){
-                    for(let j = 0; j < obj[i].parcFrete.length; j++){
-                        var parcFrete = obj[i].parcFrete[j];
-                        ll2.push(parcFrete)
+                    for(let i = 0; i < obj.length; i++){
+                        var produto = obj[i].produto[0];
+                        var qtd = obj[i].qtd[0];
+                        var val = obj[i].val[0];
+                        var soma = parseFloat(qtd) * val;
+                        ll.push(produto+";"+qtd+";"+String(val)+";"+String(soma));                    
                     }
-                    ll3.push(obj[i].parc) //sera usado para calcular cada parcela
-                    ll3.push(obj[i].parcFrete)  
-                }
 
-                var parcFreteTotal = ll2.reduce((a, b) => a + b, 0);
-                var frete = [transportadora, parcFreteTotal]; //frete
-
-                var matrix = function sumByIndex(arr) {
-                    return arr.map( (item, idx) => {
-                        return arr.reduce( (prev, curr) => prev + curr[idx] , 0 )
+                    var produtos = ll.filter(function(elem, index, self) { //produtos
+                        return index == self.indexOf(elem);
                     })
+                    
+                    for(let i = 0; i < produtos.length; i++){
+                        var y = produtos[i].split(";");
+                        listProdutos.push(y);
+                    }                
+                    
+                    for(let i = 0; i < obj.length; i++){
+                        for(let j = 0; j < obj[i].parcFrete.length; j++){
+                            var parcFrete = obj[i].parcFrete[j];
+                            ll2.push(parcFrete)
+                        }
+                        ll3.push(obj[i].parc) //sera usado para calcular cada parcela
+                        ll3.push(obj[i].parcFrete)  
+                    }
+
+                    var parcFreteTotal = ll2.reduce((a, b) => a + b, 0);
+                    var frete = [transportadora, parcFreteTotal]; //frete
+
+                    var matrix = function sumByIndex(arr) {
+                        return arr.map( (item, idx) => {
+                            return arr.reduce( (prev, curr) => prev + curr[idx] , 0 )
+                        })
+                    }
+
+                    var parcelas = matrix(ll3);
+
+                    var parcelasLista = parcelas.slice(0,dataParc.length);
+
+                    for(let i = 0; i < parcelasLista.length; i++){
+                            var z = this.arredondar(parcelasLista[i]);
+                            var x = parseFloat(z).toFixed(2); //string
+                            parcelasArredondada.push(x) //parcelas
+                    }
+
+                    for(let i = 0; i < parcelasArredondada.length; i++){
+                            parcelasTotal.push([dataParc[i], parcelasArredondada[i]])
+                    }
+
+                    documento = { 
+                        fornecedor: cabecalho[0],
+                        emissao: cabecalho[1],
+                        operacao: cabecalho[2],
+                        categoria: cabecalho[3],
+                        serie: cabecalho[4],
+                        nf: cabecalho[5],
+                        compra: cabecalho[6],
+                        produtos: listProdutos, //lista
+                        transportadora: frete[0],
+                        frete: frete[1],
+                        parcelas: parcelasTotal //lista
+                    }
+                    return documento;
                 }
 
-                var parcelas = matrix(ll3);
+                 if(tabela == "venda"){
+                    const obj = response.json().obj;
+                    var documento = {};
+                    var cliente = obj[0].cliente;
+                    var emissao = obj[0].emissao.substring(0,10);
+                    var operacao = obj[0].operacao;
+                    var categoria = obj[0].categoria;
 
-                var parcelasLista = parcelas.slice(0,dataParc.length);
+                    var serie = obj[0].serie;
+                    var venda = obj[0].venda;
 
-                for(let i = 0; i < parcelasLista.length; i++){
-                        var z = this.arredondar(parcelasLista[i]);
-                        var x = parseFloat(z).toFixed(2); //string
-                        parcelasArredondada.push(x) //parcelas
-                }
+                    if(serie == undefined || serie == "" || serie == null) { serie = ""}
+                    if(venda == undefined || venda == "" || venda == null) { venda = ""}
+                    
+                    var transportadora = obj[0].transportadora;
+                    var dataParc = obj[0].dataParc;
+                    var vencimento = obj[0].vencimento;
 
-                for(let i = 0; i < parcelasArredondada.length; i++){
-                        parcelasTotal.push([dataParc[i], parcelasArredondada[i]])
-                }
+                    var cabecalho = [cliente, emissao, operacao, categoria, serie, venda]; //cabeçalho
 
-                documento = { 
-                    fornecedor: cabecalho[0],
-                    emissao: cabecalho[1],
-                    operacao: cabecalho[2],
-                    categoria: cabecalho[3],
-                    serie: cabecalho[4],
-                    nf: cabecalho[5],
-                    compra: cabecalho[6],
-                    produtos: listProdutos, //lista
-                    transportadora: frete[0],
-                    frete: frete[1],
-                    parcelas: parcelasTotal //lista
-                }
+                    var ll = [];
+                    var ll2 = [];
+                    var ll3 = [];
+                    var listProdutos = [];
+                    var parcelasArredondada = [];
+                    var parcelasTotal = [];
 
-                return documento;
+                    for(let i = 0; i < obj.length; i++){
+                        var produto = obj[i].produto[0];
+                        var qtd = obj[i].qtd[0];
+                        var pm = obj[i].pm[0];
+                        var margem = obj[i].margem[0];
+                        var soma = parseFloat(qtd) * pm * ((margem/100)+1);
+                        ll.push(produto+";"+qtd+";"+String(pm)+";"+String(margem)+"%;"+String(soma));                    
+                    }
 
+                    var produtos = ll.filter(function(elem, index, self) { //produtos
+                        return index == self.indexOf(elem);
+                    })
+                    
+                    for(let i = 0; i < produtos.length; i++){
+                        var y = produtos[i].split(";");
+                        listProdutos.push(y);
+                    }                
+                    
+                    for(let i = 0; i < obj.length; i++){
+                        for(let j = 0; j < obj[i].parcFrete.length; j++){
+                            var parcFrete = obj[i].parcFrete[j];
+                            ll2.push(parcFrete)
+                        }
+                        ll3.push(obj[i].parc) //sera usado para calcular cada parcela
+                        ll3.push(obj[i].parcFrete)  
+                    }
+
+                    var parcFreteTotal = ll2.reduce((a, b) => a + b, 0);
+                    var frete = [transportadora, parcFreteTotal]; //frete
+
+                    var matrix = function sumByIndex(arr) {
+                        return arr.map( (item, idx) => {
+                            return arr.reduce( (prev, curr) => prev + curr[idx] , 0 )
+                        })
+                    }
+
+                    var parcelas = matrix(ll3);
+
+                    var parcelasLista = parcelas.slice(0,dataParc.length);
+
+                    for(let i = 0; i < parcelasLista.length; i++){
+                            var z = this.arredondar(parcelasLista[i]);
+                            var x = parseFloat(z).toFixed(2); //string
+                            parcelasArredondada.push(x) //parcelas
+                    }
+
+                    for(let i = 0; i < parcelasArredondada.length; i++){
+                            parcelasTotal.push([vencimento[i], dataParc[i], parcelasArredondada[i]])
+                    }
+
+                    documento = { 
+                        cliente: cabecalho[0],
+                        emissao: cabecalho[1],
+                        operacao: cabecalho[2],
+                        categoria: cabecalho[3],
+                        serie: cabecalho[4],
+                        venda: cabecalho[5],
+                        produtos: listProdutos, //lista
+                        transportadora: frete[0],
+                        frete: frete[1],
+                        parcelas: parcelasTotal //lista
+                    }
+                    return documento;
+                 }
             }
         )
             .catch(error => Observable.throw(error.json()));
