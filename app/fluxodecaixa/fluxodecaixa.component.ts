@@ -94,6 +94,7 @@ export class CaixaComponent implements OnInit {
         this.caixaService.fc().subscribe(
             data => {
                 this.fluxodecaixa = data.data;
+                //console.log(this.fluxodecaixa)
             },
             error => console.log(error)
         )
@@ -149,13 +150,9 @@ export class CaixaComponent implements OnInit {
     }
 
     editar(hash, tabela){
-        this.caixaService.editar(hash, tabela).subscribe(
-            data => {
-                //this._router.navigate(['/header/evento-edit']);
-                //this._router.navigateByUrl('/header/index');
-            },
-            error => console.log(error)
-        )
+        if(tabela=="compra"){
+            this._router.navigate(['/fornecedor-editar/'+hash+"/"+tabela]);
+        }
     }
 
     showDialog(hash, tabela) {

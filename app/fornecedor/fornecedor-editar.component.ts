@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { FornecedorService } from './fornecedor.service';
+import { CaixaService } from '../fluxodecaixa/fluxodecaixa.service';
 import { Message, MenuItem } from 'primeng/primeng';
 import { VenderService } from '../vender/vender.service';
 
 declare var sha256: any;
 
 @Component({
-    selector: '<fornecedor></fornecedor>',
-    templateUrl: './js/app/fornecedor/fornecedor.component.html',
-    styleUrls: ['./js/app/fornecedor/fornecedor.component.css'],
+    selector: '<fornecedor-editar></fornecedor-editar>',
+    templateUrl: './js/app/fornecedor/fornecedor-editar.component.html',
+    styleUrls: ['./js/app/fornecedor/fornecedor-editar.component.css'],
 })
-export class FornecedorComponent implements OnInit {
+export class FornecedorEditarComponent implements OnInit {
     private menus: MenuItem[];
     fornecedores: SelectItem[];
     operacao: SelectItem[];
@@ -24,6 +25,19 @@ export class FornecedorComponent implements OnInit {
     selectedCategoria: string;
     selectedTransportadora: string;
     valueEmissao: Date;
+
+    fornecedorFC: string;
+    emissaoFC: string;
+    operacaoFC: string;
+    categoriaFC: string;
+    serieFC: string;
+    nfFC: string;
+    compraFC: string;
+    produtosFC = [];
+    transportadoraFC: string;
+    freteFC: string;
+    parcelasFC = [];
+
     serie: Number;
     nf: Number;
     compra: Number;
@@ -79,7 +93,9 @@ export class FornecedorComponent implements OnInit {
 
     constructor(private _router: Router,
         private fornecedorService: FornecedorService,
-        private venderService: VenderService
+        private venderService: VenderService,
+        private activatedRoute: ActivatedRoute,
+        private caixaService: CaixaService
     ){
         /*const numberMask = createNumberMask({
             prefix: 'R$ ',
@@ -102,6 +118,31 @@ export class FornecedorComponent implements OnInit {
         this.frete = 0;
         this.sum = 0;
         this.subtracao = 0.00;
+
+        this.activatedRoute.params.subscribe((params: Params) => {
+                let hash = params['hash'];
+                let tabela = params['tabela'];
+                this.caixaService.editar(hash, tabela).subscribe(
+                    data => {
+                        this.fornecedorFC = data.fornecedor,
+                        this.emissaoFC = data.emissao,
+                        this.operacaoFC = data.operacao,
+                        this.categoriaFC = data.categoria,
+                        this.serieFC = data.serie,
+                        this.nfFC = data.nf,
+                        this.compraFC = data.compra
+                        this.produtosFC = data.produtos, //lista
+                        this.transportadoraFC = data.transportadora,
+                        this.freteFC = data.frete,
+                        this.parcelasFC = data.parcelas //lista
+
+                        console.log(data)
+                    },
+                    error => console.log(error)
+                )
+                //console.log(hashId);
+        });
+        
 
         this.fornecedorService.getItem("Produto")
             .subscribe(

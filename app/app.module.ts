@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { routing } from './routes';
 import { FornecedorComponent } from './fornecedor/fornecedor.component';
+import { FornecedorEditarComponent } from './fornecedor/fornecedor-editar.component';
 import { FornecedorService } from './fornecedor/fornecedor.service';
 import { VenderService } from './vender/vender.service';
 import { LoginComponent } from './login/login.component';
@@ -44,6 +45,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
   declarations: [
     AppComponent,
     FornecedorComponent,
+    FornecedorEditarComponent,
     LoginComponent,
     VenderComponent,
     CaixaComponent,

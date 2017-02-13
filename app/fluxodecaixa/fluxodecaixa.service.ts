@@ -24,6 +24,7 @@ export class CaixaService {
                 var onlySaldo = [];
                 var saldoAcumulado = [];
                 var linhaCompra = [];
+                this.dataObject = [];
                 var diaEdit: string;
                 var mesEdit: string;
 
@@ -95,7 +96,7 @@ export class CaixaService {
                     var tabelaAtual = ll[i][5];
 
                     if(dataAtual == dataNext) {
-                        ll2.push([dataAtual, hashAtual, vencimentoAtual, fornencedorAtual, valorCompraAtual, "", "", tabelaAtual])
+                        ll2.push([dataAtual, hashAtual, vencimentoAtual, fornencedorAtual, valorCompraAtual, tabelaAtual, "", ""])
                     }else if(dataAtual != dataNext){
                         var linhaSemAlterar = ll[i];
                         ll2.push(linhaSemAlterar);
