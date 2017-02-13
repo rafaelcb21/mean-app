@@ -17,6 +17,20 @@ export class CaixaComponent implements OnInit {
     fluxodecaixa: FluxoDeCaixa[];
     filtroDropdown: SelectItem[];
     br: any;
+    display: boolean = false;
+
+    fornecedor: string;
+    emissao: string;
+    operacao: string;
+    categoria: string;
+    serie: string;
+    nf: string;
+    compra: string;
+    produtos = [];
+    transportadora: string;
+    frete: string;
+    parcelas = [];
+
 
     constructor(private _router: Router,
         private caixaService: CaixaService,
@@ -137,7 +151,28 @@ export class CaixaComponent implements OnInit {
     editar(hash, tabela){
         this.caixaService.editar(hash, tabela).subscribe(
             data => {
-                
+                //this._router.navigate(['/header/evento-edit']);
+                //this._router.navigateByUrl('/header/index');
+            },
+            error => console.log(error)
+        )
+    }
+
+    showDialog(hash, tabela) {
+        this.display = true;
+        this.caixaService.editar(hash, tabela).subscribe(
+            data => {
+                this.fornecedor = data.fornecedor,
+                this.emissao = data.emissao,
+                this.operacao = data.operacao,
+                this.categoria = data.categoria,
+                this.serie = data.serie,
+                this.nf = data.nf,
+                this.compra = data.compra
+                this.produtos = data.produtos, //lista
+                this.transportadora = data.transportadora,
+                this.frete = data.frete,
+                this.parcelas = data.parcelas //lista
             },
             error => console.log(error)
         )

@@ -2,12 +2,30 @@
     display: flex;
 }
 
+.layout {
+    display: flex;
+    justify-content:space-between;
+}
+
+.layout2 {
+    display: flex;
+    justify-content:flex-start;
+
+}
+
 .margin {
     margin-top: 15px;
 }
 
 .field {
     margin-right: 10px;
+}
+
+.field2 {
+    margin-right: 20px;
+}
+.margin2 {
+    margin-top: 10px;
 }
 
 .paragrafo {

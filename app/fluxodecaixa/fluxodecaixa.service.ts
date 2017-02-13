@@ -167,15 +167,21 @@ export class CaixaService {
         return this._http.get(Config.URL_SITE + 'lista/editar/'+hash+'/'+tabela)
             .map(response => { 
                 const obj = response.json().obj;
-                console.log(obj)
+                var documento = {};
 
                 var fornecedor = obj[0].fornecedor;
                 var emissao = obj[0].emissao.substring(0,10);
                 var operacao = obj[0].operacao;
                 var categoria = obj[0].categoria;
+
                 var serie = obj[0].serie;
                 var nf = obj[0].nf;
                 var compra = obj[0].compra;
+
+                if(serie == undefined || serie == "" || serie == null) { serie = ""}
+                if(nf == undefined || nf == "" || nf == null) { nf = ""}
+                if(compra == undefined || compra == "" || nf == null) { compra = ""}
+                
                 var transportadora = obj[0].transportadora;
                 var dataParc = obj[0].dataParc;
 
@@ -184,7 +190,9 @@ export class CaixaService {
                 var ll = [];
                 var ll2 = [];
                 var ll3 = [];
+                var listProdutos = [];
                 var parcelasArredondada = [];
+                var parcelasTotal = [];
 
                 for(let i = 0; i < obj.length; i++){
                     var produto = obj[i].produto[0];
@@ -197,7 +205,12 @@ export class CaixaService {
                 var produtos = ll.filter(function(elem, index, self) { //produtos
                     return index == self.indexOf(elem);
                 })
-
+                
+                for(let i = 0; i < produtos.length; i++){
+                    var y = produtos[i].split(";");
+                    listProdutos.push(y);
+                }                
+                
                 for(let i = 0; i < obj.length; i++){
                     for(let j = 0; j < obj[i].parcFrete.length; j++){
                         var parcFrete = obj[i].parcFrete[j];
@@ -223,11 +236,28 @@ export class CaixaService {
                 for(let i = 0; i < parcelasLista.length; i++){
                         var z = this.arredondar(parcelasLista[i]);
                         var x = parseFloat(z).toFixed(2); //string
-                        parcelasArredondada.push(x)
+                        parcelasArredondada.push(x) //parcelas
                 }
 
+                for(let i = 0; i < parcelasArredondada.length; i++){
+                        parcelasTotal.push([dataParc[i], parcelasArredondada[i]])
+                }
 
+                documento = { 
+                    fornecedor: cabecalho[0],
+                    emissao: cabecalho[1],
+                    operacao: cabecalho[2],
+                    categoria: cabecalho[3],
+                    serie: cabecalho[4],
+                    nf: cabecalho[5],
+                    compra: cabecalho[6],
+                    produtos: listProdutos, //lista
+                    transportadora: frete[0],
+                    frete: frete[1],
+                    parcelas: parcelasTotal //lista
+                }
 
+                return documento;
 
             }
         )

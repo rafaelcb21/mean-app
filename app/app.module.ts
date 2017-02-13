@@ -31,7 +31,8 @@ import {
   MenuModule,
   DataTableModule,
   CheckboxModule,
-  SharedModule } from 'primeng/primeng';
+  SharedModule,
+  DialogModule } from 'primeng/primeng';
 
 import { TextMaskModule } from 'angular2-text-mask';
 import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.directive';
@@ -72,6 +73,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     DataTableModule,
     SharedModule,
     CheckboxModule,
+    DialogModule,
 //    CurrencyMaskModule,
 //    MoneyMaskModule,
   ],
