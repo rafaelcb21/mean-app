@@ -1,7 +1,16 @@
 .display {
     display: flex;
 }
-
+.layout2 {
+    display: flex;
+    justify-content:flex-start;
+}
+.field2 {
+    margin-right: 20px;
+}
+.margin2 {
+    margin-top: 10px;
+}
 .margin {
     margin-top: 15px;
 }

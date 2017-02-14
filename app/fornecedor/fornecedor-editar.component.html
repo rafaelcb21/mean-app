@@ -3,47 +3,26 @@
     <p-panel header="Editar Produto">
         <div class="margin">
             <p-fieldset legend="Cabeçalho"> 
-                <div class="display">
-                    <div class="field">
-                        <p-autoComplete [(ngModel)]="selectedFornecedor" [suggestions]="searchFornecedorList" (completeMethod)="searchFornecedor($event)" placeholder="Fornecedor"></p-autoComplete>
-                        <!--p-dropdown [options]="fornecedores" [(ngModel)]="selectedFornecedor"></p-dropdown-->
-                    </div>
-                    <div class="field icon-display">
-                        <div>
-                            <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Fornecedores', op)"></i>
-                        </div>
-                    </div>
-                    <div div class="field">
-                        <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="valueEmissao" dateFormat="dd/mm/yy" placeholder="Data Emissão"></p-calendar>
-                    </div>
-                    <div class="field">
-                        <p-autoComplete (onDropdownClick)="operacaoDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedOperacao" [suggestions]="searchOperacaoList" (completeMethod)="searchOperacao($event)" placeholder="Operação"></p-autoComplete>
-                        <!--p-dropdown [options]="operacao" [(ngModel)]="selectedOperacao"></p-dropdown-->
-                    </div>
-                    <div style="margin-right: 20px;margin-left: 33px;margin-top: 4px;">
-                        <div>
-                            <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Operação', op)"></i>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <p-autoComplete (onDropdownClick)="categoriaDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedCategoria" [suggestions]="searchCategoriaList" (completeMethod)="searchCategoria($event)" placeholder="Categoria"></p-autoComplete>
-                        <!--p-dropdown [options]="categoria" [(ngModel)]="selectedCategoria"></p-dropdown-->
-                    </div>
-                    <div style="margin-right: 20px;margin-left: 33px;margin-top: 4px;">
-                        <div>
-                            <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Categoria', op)"></i>
-                        </div>
-                    </div>
+                <div class="layout2">
+                    <div class="field2 margin2"><b>Fornecedor:</b> {{fornecedorFC}}</div>
+                    <div class="field2 margin2"><b>Data de Emissão:</b> {{emissaoFC | numerobrasil:"date"}}</div>
                 </div>
-                <div class="display margin">
-                    <div class="field">
-                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="serie" placeholder="Série"/>
+                <div class="layout2">
+                    <div class="field2 margin2"><b>Operação:</b> {{operacaoFC}}</div>
+                    <div class="field2 margin2"><b>Categoria:</b> {{categoriaFC}}</div>
+                </div>               
+                <div class="layout2">
+                    <div class="field2 margin2">
+                        <span><b>Série: </b></span>
+                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="serieFC" placeholder="Série"/>
                     </div>
-                    <div class="field">
-                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="nf" placeholder="Número NF" style="margin-left: 34px;"/>
+                    <div class="field2 margin2">
+                        <span><b>Número NF: </b></span>
+                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="nfFC" placeholder="Número NF"/>
                     </div>
-                    <div class="field">
-                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="compra" placeholder="Número da Compra"/>
+                    <div class="field2 margin2">
+                        <span><b>Número da Compra: </b></span>
+                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="compraFC" placeholder="Número da Compra"/>
                     </div>
                 </div>
             </p-fieldset>
@@ -55,9 +34,8 @@
                 </div>
                 <div *ngFor="let num of items; let i=index">
                     <div class="display margin">
-                        <div class="field">
-                            <p-autoComplete (ngModelChange)="onChange($event, num)" [(ngModel)]="selectedProduto[num]" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
-                            <!--p-dropdown [options]="produto" [(ngModel)]="selectedProduto[num]"></p-dropdown-->
+                        <div class="field">                            
+                            <p-autoComplete (ngModelChange)="onChange($event, num)" [(ngModel)]="selectedProduto[i]" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
                         </div>
                         <div class="field icon-display">
                             <div>
@@ -80,7 +58,7 @@
                         </div>
 
                         <div class="field">
-                            <input (keypress)="onlyNumber($event)" style="width: 80px" pInputText [(ngModel)]="quantidade[num]" placeholder="Qtd"/>
+                            <input (keypress)="onlyNumber($event)" style="width: 80px" pInputText [(ngModel)]="quantidade[i]" placeholder="Qtd"/>
                         </div>
                         <br>
 
@@ -91,7 +69,7 @@
                                 pInputText
                                 currencyMask
                                 (ngModelChange)="onChangeCM($event, num)"
-                                [(ngModel)]="valor[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                                [(ngModel)]="valor[i]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
                         </div>
                         
                         <div class="field">
@@ -108,7 +86,7 @@
                                 type="text" 
                                 pInputText
                                 currencyMask
-                                [(ngModel)]="quantidade[num]*valor[num]" 
+                                [(ngModel)]="quantidade[i]*valor[i]"
                                 disabled                    
                                 [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
                             />
@@ -127,8 +105,7 @@
             <p-fieldset legend="Frete"> 
                 <div class="display">
                     <div class="field">
-                        <p-autoComplete [(ngModel)]="selectedTransportadora" [suggestions]="searchTransportadoraList" (completeMethod)="searchTransportadora($event)" placeholder="Transportadora"></p-autoComplete>
-                        <!--p-dropdown [options]="transportadora" [(ngModel)]="selectedTransportadora"></p-dropdown-->
+                        <p-autoComplete [(ngModel)]="transportadoraFC" [suggestions]="searchTransportadoraList" (completeMethod)="searchTransportadora($event)" placeholder="Transportadora"></p-autoComplete>
                     </div>
                     <div class="field icon-display" (click)="selectEdit($event, 'Transportadora', op)">
                         <div>
@@ -137,7 +114,7 @@
                     </div>
                     <div class="field">
                         <input type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                            pInputText [(ngModel)]="frete" placeholder="Frete"/>
+                            pInputText [(ngModel)]="freteFC" placeholder="Frete"/>
                     </div>
                 </div>
             </p-fieldset>

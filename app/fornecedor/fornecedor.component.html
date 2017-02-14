@@ -20,7 +20,7 @@
                         <p-autoComplete (onDropdownClick)="operacaoDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedOperacao" [suggestions]="searchOperacaoList" (completeMethod)="searchOperacao($event)" placeholder="Operação"></p-autoComplete>
                         <!--p-dropdown [options]="operacao" [(ngModel)]="selectedOperacao"></p-dropdown-->
                     </div>
-                    <div style="margin-right: 20px;margin-left: 33px;margin-top: 4px;">
+                    <div class="field icon-display">
                         <div>
                             <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Operação', op)"></i>
                         </div>
@@ -29,7 +29,7 @@
                         <p-autoComplete (onDropdownClick)="categoriaDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedCategoria" [suggestions]="searchCategoriaList" (completeMethod)="searchCategoria($event)" placeholder="Categoria"></p-autoComplete>
                         <!--p-dropdown [options]="categoria" [(ngModel)]="selectedCategoria"></p-dropdown-->
                     </div>
-                    <div style="margin-right: 20px;margin-left: 33px;margin-top: 4px;">
+                    <div class="field icon-display">
                         <div>
                             <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Categoria', op)"></i>
                         </div>

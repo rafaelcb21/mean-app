@@ -33,7 +33,6 @@ export class FornecedorEditarComponent implements OnInit {
     serieFC: string;
     nfFC: string;
     compraFC: string;
-    produtosFC = [];
     transportadoraFC: string;
     freteFC: string;
     parcelasFC = [];
@@ -84,37 +83,15 @@ export class FornecedorEditarComponent implements OnInit {
 
     transportadoraList: any[] = [];
     searchTransportadoraList: any[] = [];
-    
-    //ok: any;
-    //mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
-    //<input [textMask]="{mask: mask}" [(ngModel)]="myModel" type="text"/>
-
-    //<input [(ngModel)]="moneyText" [(moneyModel)]="moneyValue" mask-money />
 
     constructor(private _router: Router,
         private fornecedorService: FornecedorService,
         private venderService: VenderService,
         private activatedRoute: ActivatedRoute,
         private caixaService: CaixaService
-    ){
-        /*const numberMask = createNumberMask({
-            prefix: 'R$ ',
-            suffix: '',
-            includeThousandsSeparator: true,
-            thousandsSeparatorSymbol: '.',
-            allowDecimal: false,
-            decimalSymbol: ',',
-            decimalLimit: 2,
-            requireDecimal: false,
-            allowNegative: false,
-        })*/
-    }
+    ){}
 
     ngOnInit() {
-        //this.items.push("0");
-        //this.quantidade.push("");
-        //this.valor.push("");
-        //this.selectedProduto.push("");
         this.frete = 0;
         this.sum = 0;
         this.subtracao = 0.00;
@@ -122,21 +99,51 @@ export class FornecedorEditarComponent implements OnInit {
         this.activatedRoute.params.subscribe((params: Params) => {
                 let hash = params['hash'];
                 let tabela = params['tabela'];
+
+
                 this.caixaService.editar(hash, tabela).subscribe(
                     data => {
-                        this.fornecedorFC = data.fornecedor,
-                        this.emissaoFC = data.emissao,
-                        this.operacaoFC = data.operacao,
-                        this.categoriaFC = data.categoria,
-                        this.serieFC = data.serie,
-                        this.nfFC = data.nf,
-                        this.compraFC = data.compra
-                        this.produtosFC = data.produtos, //lista
+                        this.fornecedorFC = data.fornecedor;
+                        this.emissaoFC = data.emissao;
+                        this.operacaoFC = data.operacao;
+                        this.categoriaFC = data.categoria;
+                        this.serieFC = data.serie;
+                        this.nfFC = data.nf;
+                        this.compraFC = data.compra;
+                        this.items = data.produtos; //lista
+                        //console.log(this.items)
+
+                        for(let i = 0; i < this.items.length; i++) {
+                            //console.log(this.items[i][0])
+                            this.selectedProduto.push(this.items[i][0]);
+                            
+                            this.quantidade.push(this.items[i][1]);
+                            this.valor.push(this.items[i][2]);
+
+                        }
+                        //quantidadeAtual
+                        //this.onChange(this.items[i][0],i);
+
+                        for(let i = 0; i < this.selectedProduto.length; i++) {
+                            console.log(this.selectedProduto[i])
+                            this.venderService.getItemProdutoQuantidade(this.selectedProduto[i])
+                                .subscribe(
+                                    data => {                    
+                                        console.log(data)
+                                    },
+                                    error => {
+                                        console.log(error)
+                                    }                
+                                );
+                        }
+
+                        console.log(this.selectedProduto)
+                        console.log(this.quantidade)
+                        console.log(this.valor)
                         this.transportadoraFC = data.transportadora,
                         this.freteFC = data.frete,
                         this.parcelasFC = data.parcelas //lista
 
-                        console.log(data)
                     },
                     error => console.log(error)
                 )
@@ -209,8 +216,8 @@ export class FornecedorEditarComponent implements OnInit {
                 }                
             );
 
-        this.addProduto();
-        this.addPagamento();
+        //this.addProduto();
+        //this.addPagamento();
 
         this.br = {
             //data
