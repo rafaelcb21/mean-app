@@ -24,7 +24,12 @@
             </div>
         </div>
         <div class="margin">
-            <p-dataTable [value]="fluxodecaixa" sortField="order">
+            <p-dataTable [value]="fluxodecaixa" sortField="order" #dt exportFilename="fluxodecaixa">
+                <p-header>
+                    <div class="ui-helper-clearfix">
+                        <button type="button" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float:left"></button>
+                    </div>
+                </p-header>
                 <!--p-column field="order" header="Ordem"></p-column-->
                 <p-column field="data" header="Data Pagto/Receb">
                     <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
@@ -39,7 +44,7 @@
                 <p-column field="nome" header="Nome">
                     <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
                         <div title={{fluxodecaixa[col.field]}} style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ fluxodecaixa[col.field] }}</div>
-                    </template>                
+                    </template>
                 </p-column>
                 <p-column field="valor" header="Valor">
                     <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
@@ -67,7 +72,7 @@
     </p-panel>
 </div>
 
-<p-dialog [(visible)]="display" modal="modal" responsive="true" width="702">
+<p-dialog [(visible)]="display" modal="modal" responsive="true" width="702" *ngIf="(tabela=='compra') || (tabela=='venda')">
     <div class="layout2">
         <div *ngIf="tabela=='compra'" class="field2 margin2"><b>Fornecedor:</b> {{fornecedor}}</div>
         <div *ngIf="tabela=='venda'" class="field2 margin2"><b>Cliente:</b> {{cliente}}</div>
@@ -122,5 +127,27 @@
     </div>
 </p-dialog>
 
+<p-dialog [(visible)]="display" modal="modal" responsive="true" width="702" *ngIf="tabela=='dr'">
+    <div class="layout2">
+        <div class="field2 margin2"><b>Descrição:</b> {{descricao}}</div>
+    </div>
+    <div class="layout2">
+        <div class="field2 margin2"><b>Categoria:</b> {{categoria}}</div>
+        <div class="field2 margin2"><b>Data de Emissão:</b> {{emissao | numerobrasil:"date"}}</div>
+    </div>
+    <div class="margin2">====================================================================</div>
+    <div class="layout2">
+        <div class="field2 margin2"><b>{{tipo | numerobrasil: "captalize"}}:</b></div>
+        <div class="field2 margin2">{{valor | numerobrasil:"money"}}</div>
+        <div class="field2 margin2">{{data | numerobrasil:"date"}}</div>
+    </div>
+    <div class="margin2">====================================================================</div>
+
+    <div class="layout2" *ngIf="fixaparcelada != 'false'">
+        <div class="field2 margin2"><b>{{tipo | numerobrasil: "captalize"}} {{fixaparcelada | numerobrasil: "captalize"}}</b></div>
+        <div class="field2 margin2"><b>Periodo:</b> {{periodo | numerobrasil: "captalize"}}</div>
+        <div *ngIf="parcela != 'false'" class="field2 margin2"><b>Parcelas:</b> {{parcela}}</div>
+    </div>
+</p-dialog>
 
                 

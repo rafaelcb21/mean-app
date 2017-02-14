@@ -207,7 +207,7 @@ export class DespesasReceitasComponent implements OnInit {
 
                 if(fixaparcelada == "parcelada"){
                     if(periodo == undefined || periodo == null) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    if(parcela == undefined || parcela == null || parcela == "") {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(parcela == undefined || parcela == null || parcela == "" || parcela < 2) {listaVerify.push(false)}else{listaVerify.push(true)}
                 }
             }
 

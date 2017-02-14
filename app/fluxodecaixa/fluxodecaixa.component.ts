@@ -33,7 +33,13 @@ export class CaixaComponent implements OnInit {
     frete: string;
     tabela: string;
     parcelas = [];
-
+    descricao: string;
+    tipo: string;
+    valor: string;
+    data: string;
+    fixaparcelada: string;
+    periodo: string;
+    parcela: string;
 
     constructor(private _router: Router,
         private caixaService: CaixaService,
@@ -96,8 +102,9 @@ export class CaixaComponent implements OnInit {
 
         this.caixaService.fc().subscribe(
             data => {
-                this.fluxodecaixa = data.data;
-                //console.log(this.fluxodecaixa)
+                var start = moment().format("YYYY-MM");
+                //this.fluxodecaixa = data.data;
+                this.filtro(start);
             },
             error => console.log(error)
         )
@@ -190,6 +197,18 @@ export class CaixaComponent implements OnInit {
                     this.transportadora = data.transportadora,
                     this.frete = data.frete,
                     this.parcelas = data.parcelas //lista
+                }
+                if(tabela == "dr"){
+                    this.tabela = tabela;
+                    this.display = true;
+                    this.descricao = data.descricao,
+                    this.categoria = data.categoria,
+                    this.tipo = data.tipo,
+                    this.valor = data.valor,
+                    this.data = data.data,
+                    this.fixaparcelada = data.fixaparcelada,
+                    this.periodo = data.periodo,
+                    this.parcela = data.parcela
                 }
                 
             },

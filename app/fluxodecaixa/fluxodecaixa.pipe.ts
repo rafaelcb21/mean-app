@@ -23,6 +23,11 @@ export class NumberBrasil implements PipeTransform {
         data = "";
       }
       return data;
+    }else if(type == "captalize"){
+      if (value) {
+            return value.charAt(0).toUpperCase() + value.slice(1);
+        }
+        return value;
     }
   }
 }

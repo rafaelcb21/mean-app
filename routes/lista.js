@@ -811,6 +811,12 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
         obj: doc
       });
     })
+  }else if(tabela=="dr"){
+    DespRec.find({hash: hash},function(err, doc){
+      res.status(200).json({
+        obj: doc
+      });
+    })
   }
 })
 module.exports = router;

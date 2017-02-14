@@ -352,6 +352,59 @@ export class CaixaService {
                     }
                     return documento;
                  }
+
+                 if(tabela == "dr"){
+                    const obj = response.json().obj;
+                    var documento = {};
+                    var descricao = obj[0].descricao;
+                    var categoria = obj[0].selectedCategoria;
+                    var tipo = obj[0].tipo;
+                    var valor = obj[0].valor;
+                    var data = obj[0].dataDespesaReceita;
+                    var repetir = obj[0].repetir;
+
+                    if(repetir == true) {
+                        var fixaparcelada = obj[0].fixaparcelada;
+                        if(fixaparcelada == "fixa"){
+                            var periodo = obj[0].periodo;
+                            documento = { 
+                                descricao: descricao,
+                                categoria: categoria,
+                                tipo: tipo,
+                                valor: valor,
+                                data: data,
+                                fixaparcelada: fixaparcelada,
+                                periodo: periodo,
+                                parcela: "false"
+                            }
+                        }else if(fixaparcelada == "parcelada"){
+                            var periodo = obj[0].periodo;
+                            var parcela = obj[0].parcela;
+                            documento = { 
+                                descricao: descricao,
+                                categoria: categoria,
+                                tipo: tipo,
+                                valor: valor,
+                                data: data,
+                                fixaparcelada: fixaparcelada,
+                                periodo: periodo,
+                                parcela: parcela
+                            }
+                        }                    
+                    }else{
+                        documento = { 
+                            descricao: descricao,
+                            categoria: categoria,
+                            tipo: tipo,
+                            valor: valor,
+                            data: data,
+                            fixaparcelada: "false",
+                            periodo: "false",
+                            parcela: "false"
+                        }
+                    }
+                    return documento;
+                 }
             }
         )
             .catch(error => Observable.throw(error.json()));
