@@ -823,21 +823,66 @@ router.get('/show/:hash/:tabela', function(req, res, next) {
 router.get('/editar/:hash/:tabela', function(req, res, next) {
   var hash = req.params.hash;
   var tabela = req.params.tabela;
-
+  ll = [];
+  ll2 = [];
+  ll3 = [];
+  qtdTotal = [];
+  qtdNota = [];
+  pmTotal = [];
+  pmTotalNota = [];
+  pmJuntandoTN = [];
+  valTotalNota = [];
   if(tabela=="compra"){
-    Produto.find({hash: hash},function(err1, doc1){ //produtos da nota da compra 5
-      Produto.find({hash: hash, vendido: false},function(err2, doc2){ //produtos da nota da compra que não foram vendidos 3
-        var produto = doc2[0].produto[0];
-        Produto.find({produto: produto, vendido: false , hash: {$ne: hash}},function(err3, doc3){ //o mesmo produtos de todas as nota da compra que não foram vendidos -(menos) os não vendidos da minha nota
-          console.log(doc1.length)
-          console.log(doc2.length)
-          console.log(doc3)
+    
+    Produto.find({hash: hash}, function(err1, doc1){ //todos os produtos da nota da compra 5
+      for(let i = 0; i < doc1.length; i++){
+        ll.push(doc1[i].produto[0]);
+      }
+      var uniqueProduct = ll.filter(function(elem, index, self){ // 0 => lista de todos os produtos
+        return index == self.indexOf(elem);
+      })
 
-          res.status(200).json({
-            obj: doc2
-          });
+      for(let i = 0; i < uniqueProduct.length; i++){
+        Produto.find({produto: uniqueProduct[i], vendido: false, hash: {$ne: hash}}, function(err2, doc2){ //quantidade total de produtos não vendidos menos o da nota ex: 15
+          qtdTotal.push(doc2.length); //1
+          for(let j = 0; j < doc2.length; j++){
+            var produtosValor = doc2[j].val[0];
+            ll2.push(produtosValor);
+          }
+          var sum = ll2.reduce((a, b) => a + b, 0); //** ** */
+          var pm = sum/doc2.length;
+          pmTotal.push(pm); //2
+
+          Produto.find({produto: uniqueProduct[i], hash: hash, vendido: false}, function(err3, doc3){ //quantidade do produto na nota da compra que não foram vendidos ex:3
+            qtdNota.push(doc3.length); //3
+
+            for(let j = 0; j < doc3.length; j++){
+              var produtosValorNota = doc3[j].val[0];
+              ll3.push(produtosValorNota);
+            }
+            var sumNota = ll3.reduce((a, b) => a + b, 0); //** ** */
+            valTotalNota.push(sumNota); //6
+            
+            var pmNota = sumNota/doc3.length;
+            pmTotalNota.push(pmNota); //4
+
+            var pmTotaleNota = (sum + sumNota)/(doc2.length + doc3.length);
+            pmJuntandoTN.push(pmTotaleNota); //5
+
+            console.log(pmJuntandoTN);
+
+            {}
+
+            
+                    
+          })
         })        
-      })      
+      }
+      
+      res.status(200).json({
+        obj: "ok"
+      });
+           
     })
 
   }else if(tabela=="venda"){
