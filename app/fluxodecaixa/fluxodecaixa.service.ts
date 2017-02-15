@@ -164,8 +164,8 @@ export class CaixaService {
             .catch(error => Observable.throw(error.json()));
     }
 
-    editar(hash, tabela){
-        return this._http.get(Config.URL_SITE + 'lista/editar/'+hash+'/'+tabela)
+    show(hash, tabela){
+        return this._http.get(Config.URL_SITE + 'lista/show/'+hash+'/'+tabela)
             .map(response => {
                 if(tabela=="compra"){
                     const obj = response.json().obj;
@@ -408,6 +408,14 @@ export class CaixaService {
             }
         )
             .catch(error => Observable.throw(error.json()));
+    }
+
+    editar(hash, tabela){
+        return this._http.get(Config.URL_SITE + 'lista/editar/'+hash+'/'+tabela)
+            .map(response => {
+                console.log(response)
+            })
+            .catch(error => Observable.throw(error.json()))
     }
 
     arredondar(x) {

@@ -795,16 +795,51 @@ router.post('/despesas-receitas', function(req, res, next) {
   })
 })
 
-router.get('/editar/:hash/:tabela', function(req, res, next) {
+router.get('/show/:hash/:tabela', function(req, res, next) {
   var hash = req.params.hash;
   var tabela = req.params.tabela;
-  //venda, dr
+
   if(tabela=="compra"){
     Produto.find({hash: hash},function(err, doc){
       res.status(200).json({
         obj: doc
       });
     })
+  }else if(tabela=="venda"){
+    Venda.find({hash: hash},function(err, doc){
+      res.status(200).json({
+        obj: doc
+      });
+    })
+  }else if(tabela=="dr"){
+    DespRec.find({hash: hash},function(err, doc){
+      res.status(200).json({
+        obj: doc
+      });
+    })
+  }
+})
+
+router.get('/editar/:hash/:tabela', function(req, res, next) {
+  var hash = req.params.hash;
+  var tabela = req.params.tabela;
+
+  if(tabela=="compra"){
+    Produto.find({hash: hash},function(err1, doc1){ //produtos da nota da compra 5
+      Produto.find({hash: hash, vendido: false},function(err2, doc2){ //produtos da nota da compra que não foram vendidos 3
+        var produto = doc2[0].produto[0];
+        Produto.find({produto: produto, vendido: false , hash: {$ne: hash}},function(err3, doc3){ //o mesmo produtos de todas as nota da compra que não foram vendidos -(menos) os não vendidos da minha nota
+          console.log(doc1.length)
+          console.log(doc2.length)
+          console.log(doc3)
+
+          res.status(200).json({
+            obj: doc2
+          });
+        })        
+      })      
+    })
+
   }else if(tabela=="venda"){
     Venda.find({hash: hash},function(err, doc){
       res.status(200).json({

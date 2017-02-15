@@ -256,6 +256,10 @@ export class FornecedorEditarComponent implements OnInit {
 
         this.menus = [
             {
+                label: 'Comprar Produto',
+                routerLink: ['/fornecedor']
+            },
+            {
                 label: 'Vender Produto',
                 routerLink: ['/vender']
             },

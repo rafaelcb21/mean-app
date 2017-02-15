@@ -167,7 +167,7 @@ export class CaixaComponent implements OnInit {
 
     showDialog(hash, tabela) {
         
-        this.caixaService.editar(hash, tabela).subscribe(
+        this.caixaService.show(hash, tabela).subscribe(
             data => {
                 if(tabela == "compra"){
                     this.tabela = tabela;
