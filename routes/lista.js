@@ -842,11 +842,11 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
         return index == self.indexOf(elem);
       })
 
-      for(let i = 0; i < uniqueProduct.length; i++){
-        Produto.find({produto: uniqueProduct[i], vendido: false, hash: {$ne: hash}})
-		      .then(function(doc2){ //quantidade total de produtos não vendidos menos o da nota ex: 15
-            qtdTotal.push(doc2.length); //1
-            console.log(doc2.length)
+      async.map(uniqueProduct, function (key, next) {
+        // Do a query for each key
+        Produto.find({ produto: key, vendido: false, hash: {$ne: hash}}, function (err, doc2) {
+          qtdTotal.push(doc2.length); //1
+          if(doc2.length> 0){
             for(let j = 0; j < doc2.length; j++){
               var produtosValor = doc2[j].val[0];
               ll2.push(produtosValor);
@@ -854,36 +854,55 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
             var sum = ll2.reduce((a, b) => a + b, 0); //** ** */
             var pm = sum/doc2.length;
             pmTotal.push(pm); //2
+          }else{pm = 0}
+          next(err, [doc2.length, pm]);
+        });
+      },
+      function (err, result) {
+        console.log(result); // [value1, value 2, ...]
+      });
+      //for(let i = 0; i < uniqueProduct.length; i++){
+      //  Produto.find({produto: uniqueProduct[i], vendido: false, hash: {$ne: hash}})
+		  //    .then(function(doc2){ //quantidade total de produtos não vendidos menos o da nota ex: 15
+      //      qtdTotal.push(doc2.length); //1
+      //      console.log(doc2.length)
+      //      for(let j = 0; j < doc2.length; j++){
+      //        var produtosValor = doc2[j].val[0];
+      //        ll2.push(produtosValor);
+      //      }
+      //      var sum = ll2.reduce((a, b) => a + b, 0); //** ** */
+      //      var pm = sum/doc2.length;
+      //      pmTotal.push(pm); //2
 
-            Produto.find({produto: uniqueProduct[i], hash: hash, vendido: false})
-             .then(function(doc3){ //quantidade do produto na nota da compra que não foram vendidos ex:3
-                qtdNota.push(doc3.length); //3
+      //      Produto.find({produto: uniqueProduct[i], hash: hash, vendido: false})
+      //       .then(function(doc3){ //quantidade do produto na nota da compra que não foram vendidos ex:3
+      //          qtdNota.push(doc3.length); //3
 
-                for(let j = 0; j < doc3.length; j++){
-                  var produtosValorNota = doc3[j].val[0];
-                  ll3.push(produtosValorNota);
-                }
-                var sumNota = ll3.reduce((a, b) => a + b, 0); //** ** */
-                valTotalNota.push(sumNota); //6
+      //          for(let j = 0; j < doc3.length; j++){
+      //            var produtosValorNota = doc3[j].val[0];
+      //            ll3.push(produtosValorNota);
+      //          }
+      //          var sumNota = ll3.reduce((a, b) => a + b, 0); //** ** */
+      //          valTotalNota.push(sumNota); //6
                 
-                var pmNota = sumNota/doc3.length;
-                pmTotalNota.push(pmNota); //4
+      //          var pmNota = sumNota/doc3.length;
+      //          pmTotalNota.push(pmNota); //4
 
-                var pmTotaleNota = (sum + sumNota)/(doc2.length + doc3.length);
-                pmJuntandoTN.push(pmTotaleNota); //5
+      //          var pmTotaleNota = (sum + sumNota)/(doc2.length + doc3.length);
+      //          pmJuntandoTN.push(pmTotaleNota); //5
 
 
-                console.log(uniqueProduct);
-                console.log(qtdTotal);
-                console.log(pmTotal);
-                console.log(qtdNota);
-                console.log(pmTotalNota);
-                console.log(pmJuntandoTN);
-                console.log(valTotalNota);
-          })
-        })        
-    }
-      //console.log(pmJuntandoTN);
+      //          console.log(uniqueProduct);
+      //          console.log(qtdTotal);
+      //          console.log(pmTotal);
+      //          console.log(qtdNota);
+      //          console.log(pmTotalNota);
+      //          console.log(pmJuntandoTN);
+      //          console.log(valTotalNota);
+      //    })
+      //  })        
+      //}
+      
       res.status(200).json({
         obj: "ok"
       });
