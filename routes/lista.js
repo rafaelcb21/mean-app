@@ -824,17 +824,21 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
   var hash = req.params.hash;
   var tabela = req.params.tabela;
   ll = [];
-  ll2 = [];
-  ll3 = [];
-  qtdTotal = [];
-  qtdNota = [];
-  pmTotal = [];
-  pmTotalNota = [];
-  pmJuntandoTN = [];
-  valTotalNota = [];
-  if(tabela=="compra"){
-    
+
+  if(tabela=="compra"){    
     Produto.find({hash: hash}, function(err1, doc1){ //todos os produtos da nota da compra 5
+      console.log(doc1[0])
+      fornecedor = doc1[0].fornecedor;
+      emissao = doc1[0].emissao;
+      operacao = doc1[0].operacao;
+      categoria = doc1[0].categoria;
+      serie = doc1[0].serie;
+      nf = doc1[0].nf;
+      compra = doc1[0].compra;
+      transportadora = doc1[0].transportadora;
+
+      dataParc = doc1[0].dataParc;
+
       for(let i = 0; i < doc1.length; i++){
         ll.push(doc1[i].produto[0]);
       }
@@ -842,73 +846,98 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
         return index == self.indexOf(elem);
       })
 
-      async.map(uniqueProduct, function (key, next) {
-        // Do a query for each key
+      var funcao1 = function(key, callback){
+        ll2 = [];
         Produto.find({ produto: key, vendido: false, hash: {$ne: hash}}, function (err, doc2) {
-          qtdTotal.push(doc2.length); //1
-          if(doc2.length> 0){
-            for(let j = 0; j < doc2.length; j++){
+          qtd_total = doc2.length; //1 quantidade total de produtos não vendidos menos o da nota
+          if(qtd_total > 0){
+            for(let j = 0; j < qtd_total; j++){
               var produtosValor = doc2[j].val[0];
               ll2.push(produtosValor);
             }
-            var sum = ll2.reduce((a, b) => a + b, 0); //** ** */
-            var pm = sum/doc2.length;
-            pmTotal.push(pm); //2
-          }else{pm = 0}
-          next(err, [doc2.length, pm]);
+            var sum = ll2.reduce((a, b) => a + b, 0);
+            ll2 = [];
+            var pm = sum/qtd_total;//2 preço medio do total de produtos não vendidos, não entra na conta a nota
+          }else{
+            pm = 0
+          }
+          callback(err, [qtd_total, sum, pm]);
+        })
+      };
+
+      var funcao2 = function(key, callback){
+        ll3 = [];
+        Produto.find({ produto: key, vendido: false, hash: hash}, function (err, doc3) {
+          var qtd_nota = doc3.length; //3 quantidade do produto na nota da compra que não foram vendidos
+          for(let j = 0; j < qtd_nota; j++){
+            var produtosValorNota = doc3[j].val[0];
+            ll3.push(produtosValorNota);
+          }
+          var sumNota = ll3.reduce((a, b) => a + b, 0); //6 preço total do produto na nota
+          ll3 = [];
+          var pmNota = sumNota/qtd_nota; //4 preço medio dos produtos não vendidos da nota
+          callback(err, [qtd_nota, sumNota, pmNota]);
         });
-      },
-      function (err, result) {
-        console.log(result); // [value1, value 2, ...]
+      }
+
+      async.map(uniqueProduct, funcao1, function (err1, result1) {
+        async.map(uniqueProduct, funcao2, function (err2, result2) {
+          //console.log(result1); //[ [ 4, 800, 200 ], [ 0, undefined, 0 ] ]
+          //console.log(result2); //[ [ 5, 500, 100 ], [ 6, 1200, 200 ] ]
+          var pms = [];
+          for(let i = 0; i < result1.length; i++){
+            var qtd1 = result1[i][0];
+            var qtd2 = result2[i][0];
+            var sum1 = result1[i][1];
+            var sum2 = result2[i][1];
+            if(sum1 == undefined){sum1 = 0;}
+            if(sum2 == undefined){sum2 = 0;}
+
+            var quantidade = qtd1 +qtd2;
+            var soma = sum1 + sum2;
+            var pm_total_nota = soma/quantidade;
+            pms.push(pm_total_nota) //6 preço total do produto na nota
+          }
+
+          qtdTotal = [];
+          pmTotal = [];
+          qtdNota = [];
+          pmTotalNota = [];
+          valTotalNota = [];
+          for(let i = 0; i < result1.length; i++){
+            qtdTotal.push(result1[i][0]) //1 quantidade total de produtos não vendidos menos o da nota
+            pmTotal.push(result1[i][2]) //2 preço medio do total de produtos não vendidos, não entra na conta a nota
+            qtdNota.push(result2[i][0]) //3 quantidade do produto na nota da compra que não foram vendidos
+            pmTotalNota.push(result2[i][2]) //4 preço medio dos produtos não vendidos da nota
+            valTotalNota.push(result2[i][1]) //5 preço medio de todos os produtos não vendidos
+          }
+
+          document = {
+            fornecedor: fornecedor,
+            emissao: emissao,
+            operacao: operacao,
+            categoria: categoria,
+            serie: serie,
+            nf: nf,
+            compra: compra,
+            transportadora: transportadora,            
+            uniqueProduct: uniqueProduct,
+            qtdTotal: qtdTotal,
+            pmTotal: pmTotal,
+            qtdNota: qtdNota,
+            pmTotalNota: pmTotalNota,
+            pms: pms,
+            valTotalNota: valTotalNota,
+            dataParc: dataParc
+          }
+          console.log(document)
+          res.status(200).json({
+            obj: document
+          });
+
+        });
       });
-      //for(let i = 0; i < uniqueProduct.length; i++){
-      //  Produto.find({produto: uniqueProduct[i], vendido: false, hash: {$ne: hash}})
-		  //    .then(function(doc2){ //quantidade total de produtos não vendidos menos o da nota ex: 15
-      //      qtdTotal.push(doc2.length); //1
-      //      console.log(doc2.length)
-      //      for(let j = 0; j < doc2.length; j++){
-      //        var produtosValor = doc2[j].val[0];
-      //        ll2.push(produtosValor);
-      //      }
-      //      var sum = ll2.reduce((a, b) => a + b, 0); //** ** */
-      //      var pm = sum/doc2.length;
-      //      pmTotal.push(pm); //2
-
-      //      Produto.find({produto: uniqueProduct[i], hash: hash, vendido: false})
-      //       .then(function(doc3){ //quantidade do produto na nota da compra que não foram vendidos ex:3
-      //          qtdNota.push(doc3.length); //3
-
-      //          for(let j = 0; j < doc3.length; j++){
-      //            var produtosValorNota = doc3[j].val[0];
-      //            ll3.push(produtosValorNota);
-      //          }
-      //          var sumNota = ll3.reduce((a, b) => a + b, 0); //** ** */
-      //          valTotalNota.push(sumNota); //6
-                
-      //          var pmNota = sumNota/doc3.length;
-      //          pmTotalNota.push(pmNota); //4
-
-      //          var pmTotaleNota = (sum + sumNota)/(doc2.length + doc3.length);
-      //          pmJuntandoTN.push(pmTotaleNota); //5
-
-
-      //          console.log(uniqueProduct);
-      //          console.log(qtdTotal);
-      //          console.log(pmTotal);
-      //          console.log(qtdNota);
-      //          console.log(pmTotalNota);
-      //          console.log(pmJuntandoTN);
-      //          console.log(valTotalNota);
-      //    })
-      //  })        
-      //}
-      
-      res.status(200).json({
-        obj: "ok"
-      });
-           
     })
-
   }else if(tabela=="venda"){
     Venda.find({hash: hash},function(err, doc){
       res.status(200).json({
