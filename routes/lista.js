@@ -824,10 +824,12 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
   var hash = req.params.hash;
   var tabela = req.params.tabela;
   ll = [];
+  freteList = [];
+  parcelasMatrix = [];
 
   if(tabela=="compra"){    
     Produto.find({hash: hash}, function(err1, doc1){ //todos os produtos da nota da compra 5
-      console.log(doc1[0])
+      //console.log(doc1)
       fornecedor = doc1[0].fornecedor;
       emissao = doc1[0].emissao;
       operacao = doc1[0].operacao;
@@ -836,15 +838,36 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
       nf = doc1[0].nf;
       compra = doc1[0].compra;
       transportadora = doc1[0].transportadora;
+      _dataParc = doc1[0].dataParc;
+      dataParc = [];
 
-      dataParc = doc1[0].dataParc;
+      for(let j = 0; j < _dataParc.length; j++){
+        var date = _dataParc[j].slice(0, 10);
+        dataParc.push(date);
+      }
 
       for(let i = 0; i < doc1.length; i++){
         ll.push(doc1[i].produto[0]);
+        for(let j = 0; j < doc1[0].parcFrete.length; j++){
+          freteList.push(doc1[i].parcFrete[j]);
+        }
+        
+        parcelasMatrix.push(doc1[i].parc);
+        parcelasMatrix.push(doc1[i].parcFrete);
       }
       var uniqueProduct = ll.filter(function(elem, index, self){ // 0 => lista de todos os produtos
         return index == self.indexOf(elem);
       })
+      var somarFrete = freteList.reduce((a, b) => a + b, 0);
+      frete = somarFrete;
+
+      var matrix = function sumByIndex(arr) {
+          return arr.map( (item, idx) => {
+              return arr.reduce( (prev, curr) => prev + curr[idx] , 0 )
+          })
+      }
+      var parcelas = matrix(parcelasMatrix);
+      var parcelasLista = parcelas.slice(0,dataParc.length);
 
       var funcao1 = function(key, callback){
         ll2 = [];
@@ -920,7 +943,6 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
             serie: serie,
             nf: nf,
             compra: compra,
-            transportadora: transportadora,            
             uniqueProduct: uniqueProduct,
             qtdTotal: qtdTotal,
             pmTotal: pmTotal,
@@ -928,7 +950,11 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
             pmTotalNota: pmTotalNota,
             pms: pms,
             valTotalNota: valTotalNota,
-            dataParc: dataParc
+            transportadora: transportadora,
+            frete: frete,
+            dataParc: dataParc,
+            parcelas: parcelasLista
+            
           }
           console.log(document)
           res.status(200).json({

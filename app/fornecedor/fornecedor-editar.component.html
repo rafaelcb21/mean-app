@@ -140,16 +140,18 @@
                     <button (click)="addPagamento()" pButton type="button" label="Pagamento" iconPos="left" icon="fa-plus-circle"></button>
                 </div>
 
-                <div *ngFor="let _num of itemsPgto; let i=index">
+                <div *ngFor="let i of [0,1,2]; let i=index">
+                    <p class="">{{i}}</p>
+                    <p class="">{{datePgto[i]}}</p>
                     <div class="display margin">
                         <div div class="field">
-                            <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="datePgto[_num]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
+                            <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="datePgto[i]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
                         </div>
                         <div class="field">
                             <input
                                 pInputText
                                 currencyMask
-                                [(ngModel)]="valorPgto[_num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                                [(ngModel)]="valorPgto[i]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
                         </div>
                         <div class="field icon-display">
                             <div>

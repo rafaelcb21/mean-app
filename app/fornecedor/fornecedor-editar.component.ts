@@ -103,6 +103,7 @@ export class FornecedorEditarComponent implements OnInit {
 
                 this.caixaService.editar(hash, tabela).subscribe(
                     data => {
+                        console.log(data)
                         this.fornecedorFC = data.fornecedor;
                         this.emissaoFC = data.emissao;
                         this.operacaoFC = data.operacao;
@@ -110,19 +111,14 @@ export class FornecedorEditarComponent implements OnInit {
                         this.serieFC = data.serie;
                         this.nfFC = data.nf;
                         this.compraFC = data.compra;
-                        this.items = data.produtos; //lista
-                        //console.log(this.items)
 
-                        for(let i = 0; i < this.items.length; i++) {
-                            //console.log(this.items[i][0])
-                            this.selectedProduto.push(this.items[i][0]);
-                            
-                            this.quantidade.push(this.items[i][1]);
-                            this.valor.push(this.items[i][2]);
+                        this.transportadoraFC = data.transportadora;
+                        this.freteFC = data.frete;
+                        this.datePgto = data.dataParc; //lista
+                        console.log(this.datePgto)
+                        this.valorPgto = data.parcelas; //lista
 
-                        }
-                        //quantidadeAtual
-                        //this.onChange(this.items[i][0],i);
+
 
                         for(let i = 0; i < this.selectedProduto.length; i++) {
                             console.log(this.selectedProduto[i])
@@ -140,8 +136,7 @@ export class FornecedorEditarComponent implements OnInit {
                         console.log(this.selectedProduto)
                         console.log(this.quantidade)
                         console.log(this.valor)
-                        this.transportadoraFC = data.transportadora,
-                        this.freteFC = data.frete,
+                        
                         this.parcelasFC = data.parcelas //lista
 
                     },

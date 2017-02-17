@@ -414,7 +414,7 @@ export class CaixaService {
         return this._http.get(Config.URL_SITE + 'lista/editar/'+hash+'/'+tabela)
             .map(response => {
                 const obj = response.json().obj;
-                console.log(obj)
+                return obj;
             })
             .catch(error => Observable.throw(error.json()))
     }
