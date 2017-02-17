@@ -87,6 +87,8 @@ export class FornecedorEditarComponent implements OnInit {
 
     //calendario: Date = new Date("01-08-2016");
     calendarPgto = [];
+    hash: string;
+    selectedProd = [];
 
     constructor(private _router: Router,
         private fornecedorService: FornecedorService,
@@ -101,110 +103,46 @@ export class FornecedorEditarComponent implements OnInit {
         this.subtracao = 0.00;
 
         this.activatedRoute.params.subscribe((params: Params) => {
-                let hash = params['hash'];
-                let tabela = params['tabela'];
+            this.hash = params['hash'];
+            let tabela = params['tabela'];
 
+            this.caixaService.editar(this.hash, tabela).subscribe(
+                data => {
+                    this.fornecedorFC = data.fornecedor;
+                    this.emissaoFC = data.emissao;
+                    this.operacaoFC = data.operacao;
+                    this.categoriaFC = data.categoria;
+                    this.serieFC = data.serie;
+                    this.nfFC = data.nf;
+                    this.compraFC = data.compra;
 
-                this.caixaService.editar(hash, tabela).subscribe(
-                    data => {
-                        console.log(data)
-                        this.fornecedorFC = data.fornecedor;
-                        this.emissaoFC = data.emissao;
-                        this.operacaoFC = data.operacao;
-                        this.categoriaFC = data.categoria;
-                        this.serieFC = data.serie;
-                        this.nfFC = data.nf;
-                        this.compraFC = data.compra;
+                    this.selectedProduto = data.uniqueProduct; //lista
+                    this.quantidadeAtual = data.qtdTotal; //lista
+                    this.pm = data.pmTotal; //lista
+                    this.quantidade = data.qtdNota; //lista                        
+                    this.valor = data.pmTotalNota; //lista
+                    this.pmNovo = data.pms; //lista
 
-                        this.transportadoraFC = data.transportadora;
-                        this.freteFC = data.frete;
+                    this.transportadoraFC = data.transportadora;
+                    this.freteFC = data.frete;
 
-                        this.items = data.uniqueProduct; //lista
-                        this.selectedProduto = this.items;
-
-                        this.datePgto = data.dataParc; //lista
-                        for(let i = 0; i < data.dataParc.length; i++){
-                            var x = moment(data.dataParc[i]).format("MM-DD-YYYY"); //convert para MM-DD-YYYY
-                            var y = new Date(x); //converto para tipo Date
-                            this.calendarPgto.push(y);
-                        }
-                        this.valorPgto = data.parcelas; //lista
-
-
-
-
-
-                        for(let i = 0; i < this.selectedProduto.length; i++) {
-                            console.log(this.selectedProduto[i])
-                            this.venderService.getItemProdutoQuantidade(this.selectedProduto[i])
-                                .subscribe(
-                                    data => {                    
-                                        console.log(data)
-                                    },
-                                    error => {
-                                        console.log(error)
-                                    }                
-                                );
-                        }
-
-                        console.log(this.selectedProduto)
-                        console.log(this.quantidade)
-                        console.log(this.valor)
-                        
-                        this.parcelasFC = data.parcelas //lista
-
-                    },
-                    error => console.log(error)
-                )
-                //console.log(hashId);
-        });
-        
+                    this.datePgto = data.dataParc; //lista
+                    for(let i = 0; i < data.dataParc.length; i++){
+                        var x = moment(data.dataParc[i]).format("MM-DD-YYYY"); //convert para MM-DD-YYYY
+                        var y = new Date(x); //converto para tipo Date
+                        this.calendarPgto.push(y);
+                    }
+                    this.valorPgto = data.parcelas; //lista
+                },
+                error => console.log(error)
+            )
+        });        
 
         this.fornecedorService.getItem("Produto")
             .subscribe(
                 data => {
-                    //this.produto = data;
                     for(let i = 0; i < data[0].length; i++) {
                         this.produtoList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.fornecedorService.getItem("Fornecedores")
-            .subscribe(
-                data => {
-                    //this.fornecedores = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.fornecedoresList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.fornecedorService.getItem("Operação")
-            .subscribe(
-                data => {
-                    //this.operacao = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.operacaoList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.fornecedorService.getItem("Categoria")
-            .subscribe(
-                data => {
-                    //this.categoria = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.categoriaList.push(data[0][i].label);
                     }
                 },
                 error => {
@@ -215,7 +153,6 @@ export class FornecedorEditarComponent implements OnInit {
         this.fornecedorService.getItem("Transportadora")
             .subscribe(
                 data => {
-                    //this.transportadora = data;
                     for(let i = 0; i < data[0].length; i++) {
                         this.transportadoraList.push(data[0][i].label);
                     }
@@ -224,9 +161,6 @@ export class FornecedorEditarComponent implements OnInit {
                     console.log(error)
                 }                
             );
-
-        //this.addProduto();
-        //this.addPagamento();
 
         this.br = {
             //data
@@ -371,7 +305,8 @@ export class FornecedorEditarComponent implements OnInit {
     }
 
     searchProduto(event) {
-         this.searchProdutoList = []
+        console.log(event)
+        this.searchProdutoList = [];
 
         for (let j = 0; j < this.produtoList.length; j++) {
             try{
@@ -380,6 +315,10 @@ export class FornecedorEditarComponent implements OnInit {
                 }
             }catch(e){}
         }
+    }
+
+    searchProduto2(event) {
+        console.log(event)
     }
 
     searchFornecedor(event) {

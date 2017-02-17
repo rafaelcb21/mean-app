@@ -949,7 +949,7 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
             qtdNota: qtdNota,
             pmTotalNota: pmTotalNota,
             pms: pms,
-            valTotalNota: valTotalNota,
+            valTotalNota: valTotalNota, //nao esta sendo usado
             transportadora: transportadora,
             frete: frete,
             dataParc: dataParc,
