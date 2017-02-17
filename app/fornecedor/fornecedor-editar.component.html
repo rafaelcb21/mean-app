@@ -139,13 +139,10 @@
                 <div class="display">
                     <button (click)="addPagamento()" pButton type="button" label="Pagamento" iconPos="left" icon="fa-plus-circle"></button>
                 </div>
-
-                <div *ngFor="let i of [0,1,2]; let i=index">
-                    <p class="">{{i}}</p>
-                    <p class="">{{datePgto[i]}}</p>
+                <div *ngFor="let num of datePgto; let i=index">
                     <div class="display margin">
                         <div div class="field">
-                            <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="datePgto[i]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
+                            <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="calendarPgto[i]" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
                         </div>
                         <div class="field">
                             <input

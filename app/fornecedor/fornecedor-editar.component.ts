@@ -5,6 +5,7 @@ import { FornecedorService } from './fornecedor.service';
 import { CaixaService } from '../fluxodecaixa/fluxodecaixa.service';
 import { Message, MenuItem } from 'primeng/primeng';
 import { VenderService } from '../vender/vender.service';
+import * as moment from 'moment';
 
 declare var sha256: any;
 
@@ -84,6 +85,9 @@ export class FornecedorEditarComponent implements OnInit {
     transportadoraList: any[] = [];
     searchTransportadoraList: any[] = [];
 
+    //calendario: Date = new Date("01-08-2016");
+    calendarPgto = [];
+
     constructor(private _router: Router,
         private fornecedorService: FornecedorService,
         private venderService: VenderService,
@@ -114,9 +118,19 @@ export class FornecedorEditarComponent implements OnInit {
 
                         this.transportadoraFC = data.transportadora;
                         this.freteFC = data.frete;
+
+                        this.items = data.uniqueProduct; //lista
+                        this.selectedProduto = this.items;
+
                         this.datePgto = data.dataParc; //lista
-                        console.log(this.datePgto)
+                        for(let i = 0; i < data.dataParc.length; i++){
+                            var x = moment(data.dataParc[i]).format("MM-DD-YYYY"); //convert para MM-DD-YYYY
+                            var y = new Date(x); //converto para tipo Date
+                            this.calendarPgto.push(y);
+                        }
                         this.valorPgto = data.parcelas; //lista
+
+
 
 
 
