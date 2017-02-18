@@ -13,7 +13,7 @@ export class NumberBrasil implements PipeTransform {
       if(value != ""){
         var str = accounting.formatMoney(value, "R$ ", 2, ".", ",");
       }else{
-        str = "";
+        str = accounting.formatMoney("0", "R$ ", 2, ".", ",");
       }
       return str;
     }else if(type == "date"){

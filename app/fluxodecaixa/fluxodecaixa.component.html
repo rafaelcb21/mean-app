@@ -53,12 +53,12 @@
                 </p-column>
                 <p-column field="saldo" header="Saldo Diário">
                     <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
-                        <span [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
+                        <span *ngIf="fluxodecaixa[col.field] != ''" [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
                     </template>
                 </p-column>
                 <p-column field="acumulado" header="Saldo Acumulado">
                     <template let-col let-fluxodecaixa="rowData" let-ri="rowIndex" pTemplate="body">
-                        <span [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
+                        <span *ngIf="fluxodecaixa[col.field] != ''" [ngClass]="{ 'redNumber': fluxodecaixa[col.field] < 0 }">{{fluxodecaixa[col.field] | numerobrasil:"money"}}</span>
                     </template>
                 </p-column>
                 <p-column field="hash" [style]="{'width':'110px','text-align':'center'}">

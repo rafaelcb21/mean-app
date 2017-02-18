@@ -562,8 +562,8 @@ export class FornecedorComponent implements OnInit {
                         this.quantidadeAtual[num] = data[0];
                         this.pm[num] = data[1];
                     }else{
-                        this.quantidadeAtual[num] = "";
-                        this.pm[num] = "";
+                        this.quantidadeAtual[num] = 0;
+                        this.pm[num] = 0;
                         this.pmNovo[num] = "";
                         this.quantidade[num] = "";
                         this.valor[num] = "";
@@ -584,20 +584,20 @@ export class FornecedorComponent implements OnInit {
     addProduto() {
         if(this.items.length == 0) {
             this.items.push("0");
-            this.quantidade.push("");
+            this.quantidade.push(0);
             this.valor.push("");
-            this.pm.push("");
+            this.pm.push(0);
             this.selectedProduto.push("");
             this.pmNovo.push("");
-            this.quantidadeAtual.push("");
+            this.quantidadeAtual.push(0);
         }else{
             this.items.push(String(this.items.length));
-            this.quantidade.push("");
+            this.quantidade.push(0);
             this.valor.push("");
-            this.pm.push("");
+            this.pm.push(0);
             this.selectedProduto.push("");
             this.pmNovo.push("");
-            this.quantidadeAtual.push("");
+            this.quantidadeAtual.push(0);
         }
         
     }

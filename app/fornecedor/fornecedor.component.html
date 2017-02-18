@@ -56,7 +56,7 @@
                 <div *ngFor="let num of items; let i=index">
                     <div class="display margin">
                         <div class="field">
-                            <p-autoComplete (ngModelChange)="onChange($event, num)" [(ngModel)]="selectedProduto[num]" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
+                            <p-autoComplete pTooltip="Produto" tooltipPosition="top" (ngModelChange)="onChange($event, num)" [(ngModel)]="selectedProduto[num]" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
                             <!--p-dropdown [options]="produto" [(ngModel)]="selectedProduto[num]"></p-dropdown-->
                         </div>
                         <div class="field icon-display">
@@ -66,27 +66,32 @@
                         </div>
                         
                         <div class="field">
-                            <input (keypress)="onlyNumber($event)" style="width: 80px" disabled pInputText [(ngModel)]="quantidadeAtual[num]" placeholder="Qtd Atual"/>
+                            <!--input pTooltip="Quantidade no estoque" tooltipPosition="top" (keypress)="onlyNumber($event)" style="width: 80px" disabled pInputText [(ngModel)]="quantidadeAtual[num]" placeholder="Qtd Atual"/-->
+                            <div pTooltip="Quantidade no estoque" tooltipPosition="top" class="input-style">{{quantidadeAtual[num]}}</div>
                         </div>
                         <div class="field">
-                            <input 
+                            <div pTooltip="Preço médio no estoque" style="width:130px;" tooltipPosition="top" class="input-style">{{ pm[num] | numerobrasil:"money"}}</div>
+                            <!--input 
                                 (keypress)="onlyNumber($event)"
+                                pTooltip="Preço médio no estoque" tooltipPosition="top"
                                 style="width: 130px"
                                 disabled
                                 pInputText
                                 currencyMask
                                 [(ngModel)]="pm[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                                placeholder="CM Atual"/>
+                                placeholder="CM Atual"/-->
                         </div>
 
                         <div class="field">
-                            <input (keypress)="onlyNumber($event)" style="width: 80px" pInputText [(ngModel)]="quantidade[num]" placeholder="Qtd"/>
+                            <input pTooltip="Quantidade" tooltipPosition="top" (keypress)="onlyNumber($event)" style="width: 80px" pInputText [(ngModel)]="quantidade[num]" placeholder="Qtd"/>
                         </div>
                         <br>
 
                         <div class="field">
                             <input
+                                pTooltip="Preço" tooltipPosition="top"
                                 (keypress)="onlyNumber($event)"
+                                pTooltip="Preço" tooltipPosition="top"
                                 style="width: 130px"
                                 pInputText
                                 currencyMask
@@ -95,23 +100,28 @@
                         </div>
                         
                         <div class="field">
-                            <input (keypress)="onlyNumber($event)" style="width: 130px" disabled pInputText
-                            currencyMask
-                            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                            [(ngModel)]="pmNovo[num]"
-                            placeholder="Novo CM"/>
+                            <div pTooltip="Preço médio junto com o estoque" style="width:130px;" tooltipPosition="top" class="input-style">{{ pmNovo[num] | numerobrasil:"money"}}</div>
+                            <!--input (keypress)="onlyNumber($event)" style="width: 130px" disabled pInputText
+                                pTooltip="Preço médio junto com o estoque"
+                                currencyMask
+                                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                                [(ngModel)]="pmNovo[num]"
+                                placeholder="Novo CM"/
+                            -->
                         </div>
 
                         <div class="field">
-                            <input
+                            <div pTooltip="Total" tooltipPosition="top" style="width:150px;" class="input-style">{{ quantidade[num]*valor[i] | numerobrasil:"money"}}</div>
+                            <!--input
                                 style="width: 150px"
+                                pTooltip="Total" tooltipPosition="top"
                                 type="text" 
                                 pInputText
                                 currencyMask
                                 [(ngModel)]="quantidade[num]*valor[num]" 
                                 disabled                    
                                 [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                            />
+                            /-->
                         </div>
                         <div class="field icon-display">
                             <div>
