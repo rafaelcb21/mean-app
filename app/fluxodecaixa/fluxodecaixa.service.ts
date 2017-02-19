@@ -44,7 +44,7 @@ export class CaixaService {
 
                 saldoLista.sort();
 
-                for(let i = 0; i < saldoLista.length; i++) {                    
+                for(let i = 0; i < saldoLista.length; i++) {
                     onlySaldo.push(saldoLista[i][1]);
                 }
 

@@ -177,8 +177,8 @@ router.post('/fornecedoresEdit', function(req, res, next) {
   var quantidade = quantidade0.concat(quantidade2);
 
   if(quantidade.length > 0){
-    //Produto.remove({ hash: key, vendido: false}, function (err, doc2){});
-    //Fluxos.remove({ hash: key, tabela: "compra"}, function (err, doc2){});
+    //Produto.remove({ hash: hash, vendido: false}, function (err, doc2){});
+    //Fluxos.remove({ hash: hash, tabela: "compra"}, function (err, doc2){});
 
     var selectedProduto = selectedProduto0.concat(selectedProduto2);
     var valor = valor0.concat(valor2);
@@ -242,55 +242,49 @@ router.post('/fornecedoresEdit', function(req, res, next) {
       //fluxo.save(function(err, result) {})
     }
       /**code para os produtos vendidos */
+      var stringRandom = crypto.randomBytes(32).toString('hex');
+      var hashId = SHA256(stringRandom).toString();
+    
     Produto.find({ vendido: true, hash: hash}, function (err, doc3) {
       for (let i = 0; i < doc3.length; i++) {
-        /*doc3.fornecedor
-        doc3.emissao
-        doc3.operacao
-        doc3.categoria
-        doc3.serie
-        doc3.nf
-        doc3.compra
-        doc3.transportadora
-        doc3.hash //
-        doc3.hashId
-        doc3.vendido
-        doc3.parcFrete
-        doc3.dataParc
-        doc3.parc
-        doc3.prop // [1]
-        doc3.val
-        doc3.qtd //[1]
-        doc3.produto*/
 
+        var product2 = new Produto({
+          fornecedor: doc3.fornecedor,
+          emissao: doc3.emissao,
+          operacao: doc3.operacao,
+          categoria: doc3.categoria,
+          serie: doc3.serie,
+          nf: doc3.nf,
+          compra: doc3.compra,
+          produto: doc3.produto,
+          qtd: [ '1' ],
+          val: doc3.val,
+          prop: [ 1 ],
+          parc: doc3.parc,
+          dataParc: doc3.dataParc,
+          transportadora: doc3.transportadora,
+          parcFrete: doc3.parcFrete,
+          vendido: doc3.vendido,
+          hash: hashId,
+          hashId: doc3.hashId
+        })
 
+        for (let i = 0; i < valorPgto.length; i++) {
+          var fluxo = new Fluxo({
+              dataParc: dataParc[i],
+              dataVencimento: "",
+              fornecedor: selectedFornecedor,
+              valorPgto: -1*valorPgto[i],
+              hash: hash,
+              tabela: "compra"
+            })
+          //fluxo.save(function(err, result) {})
+        }
 
 
       }
       console.log(doc3)
 
-      /*[ { _id: 58a97b3329e7df04a4fc16cd,
-    updated_at: 2017-02-19T11:02:11.780Z,
-    created_at: 2017-02-19T11:02:11.780Z,
-    fornecedor: 'ABB Ltda',
-    emissao: 2017-02-22T03:00:00.000Z,
-    operacao: 'Outra saída',
-    categoria: 'AMORTIZAÇÃO DE IMPRESTIMO',
-    serie: 11,
-    nf: 22,
-    compra: 33,
-    transportadora: '000002-CLIENTE BALCAO',
-    hash: '7dc8d0c8b2ec903a872d612c813a01e7e45b1494bbbd9e751d0b32734a338073',
-    __v: 0,
-    hashId: '024349d97edb379230baf4157bbdfbcee7b8011ef4c872807be2eea565ab48e3',
-    vendido: true,
-    parcFrete: [ 12.5, 12.5 ],
-    dataParc: [ '2017-02-21T03:00:00.000Z', '2017-02-24T03:00:00.000Z' ],
-    parc: [ 50, 50 ],
-    prop: [ 0.8 ],
-    val: [ 100 ],
-    qtd: [ '2' ],
-    produto: [ '( OPÇÃO ) BOMBA DARKA AP2X-5 1,5CV MONOFÁSICA 127/220V 60hZ' ] } ]*/
 
     })
 
