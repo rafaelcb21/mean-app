@@ -125,6 +125,95 @@ router.post('/fornecedores', function(req, res, next) {
   })
 })
 
+router.post('/fornecedoresEdit', function(req, res, next) {
+  var hash = req.body.hash;
+  var serie = req.body.serie;
+  var nf = req.body.nf;
+  var compra = req.body.compra;
+  var selectedProduto = req.body.selectedProduto; //lista
+  var quantidade = req.body.quantidade; //lista
+  var valor = req.body.valor; //lista
+  var selectedProduto2 = req.body.selectedProduto2; //lista
+  var quantidade2 = req.body.quantidade2; //lista
+  var valor2 = req.body.valor2; //lista
+  var selectedTransportadora = req.body.selectedTransportadora;
+  var frete = req.body.frete;
+  var valorPgto = req.body.valorPgto; //lista
+  var datePgto = req.body.datePgto; //lista
+  var proporcaoList = req.body.proporcaoList; //lista
+  var soma = req.body.soma;
+  
+  var list1 = [];
+  var list2 = [];
+  var list4 = [];
+
+  /*var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+
+  for(let i = 0; i < valorPgto.length; i++) {
+    var freteporProduto = (((valorPgto[i] / soma) * frete) / quantidadeTotal);
+    list4.push(freteporProduto)
+
+  }
+
+  for (let i = 0; i < proporcaoList.length; i++) {
+    for (let j = 0; j < valorPgto.length; j++) {
+      var parcela = parseFloat(proporcaoList[i])*parseFloat(valorPgto[j])/quantidade[i];
+      list1.push(parcela);
+    }
+    list2.push(list1);
+    list1 = [];
+  }
+
+  for (let i = 0; i < quantidade.length; i++) {
+    for (let j = 0; j < quantidade[i]; j++) {
+
+      var produto = selectedProduto[i];
+      var qtd = quantidade[i];
+      var val = valor[i];
+      var prop = proporcaoList[i];
+      var parc = list2[i];
+      var dataParc = datePgto;
+
+
+      var product = new Produto({
+        fornecedor: selectedFornecedor,
+        emissao: valueEmissao,
+        operacao: selectedOperacao,
+        categoria: selectedCategoria,
+        serie: serie,
+        nf: nf,
+        compra: compra,
+        produto: produto,
+        qtd: qtd,
+        val: val,
+        prop: prop,
+        parc: parc,
+        transportadora: selectedTransportadora,
+        dataParc: dataParc,
+        parcFrete: list4,
+        hash: hash
+      })
+      product.save(function(err, result) {})
+    }
+  }
+
+  for (let i = 0; i < valorPgto.length; i++) {
+    var fluxo = new Fluxo({
+        dataParc: dataParc[i],
+        dataVencimento: "",
+        fornecedor: selectedFornecedor,
+        valorPgto: -1*valorPgto[i],
+        hash: hash,
+        tabela: "compra"
+      })
+    fluxo.save(function(err, result) {})
+  }*/
+
+  res.status(201).json({
+    msg: "sucesso"
+  })
+})
+
 router.get('/item/:label', function(req, res, next) {
   var label = req.params.label;
   Lista.find({label: label, status: true},
@@ -956,7 +1045,6 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
             parcelas: parcelasLista
             
           }
-          console.log(document)
           res.status(200).json({
             obj: document
           });

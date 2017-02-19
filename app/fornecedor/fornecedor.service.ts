@@ -60,6 +60,48 @@ export class FornecedorService {
             .catch(error => Observable.throw(error.json()));
     }
 
+    postFornecedoresEdit(
+        hash,
+        serieFC,
+        nfFC,
+        compraFC,
+        selectedProduto,
+        quantidade,
+        valor,
+        selectedProduto2,
+        quantidade2,
+        valor2,
+        transportadoraFC,
+        freteFC,
+        valorPgto,
+        datePgto,
+        proporcaoList,
+        soma
+    ) {
+        const body = JSON.stringify({
+            hash: hash,
+            serie: serieFC,
+            nf: nfFC,
+            compra: compraFC,
+            selectedProduto: selectedProduto,
+            quantidade: quantidade,
+            valor: valor,
+            selectedProduto2: selectedProduto2,
+            quantidade2: quantidade2,
+            valor2: valor2,
+            selectedTransportadora: transportadoraFC,
+            frete: freteFC,
+            valorPgto: valorPgto,
+            datePgto: datePgto,
+            proporcaoList: proporcaoList,
+            soma: soma
+        });
+        const header = new Headers({'Content-Type': 'application/json'});
+        return this._http.post(Config.URL_SITE + 'lista/fornecedoresEdit', body, {headers: header})
+            .map(response => response.json().msg)
+            .catch(error => Observable.throw(error.json()));
+    }
+
     getItem(label) {
         return this._http.get(Config.URL_SITE + 'lista/item/' + label)
             .map(response => {

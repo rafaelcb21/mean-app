@@ -65,6 +65,7 @@ export class FornecedorEditarComponent implements OnInit {
     sum: any;
     sumPgto: any;
     ll = [];
+    ll2 = [];
     pp = [];
     pm = [];
     pmNovo = [];
@@ -97,6 +98,7 @@ export class FornecedorEditarComponent implements OnInit {
     //calendarPgto = [];
     hash: string;
     selectedProd = [];
+    origem: string;
 
     constructor(private _router: Router,
         private fornecedorService: FornecedorService,
@@ -113,6 +115,7 @@ export class FornecedorEditarComponent implements OnInit {
         this.activatedRoute.params.subscribe((params: Params) => {
             this.hash = params['hash'];
             let tabela = params['tabela'];
+            this.origem = params['origem'];
 
             this.caixaService.editar(this.hash, tabela).subscribe(
                 data => {
@@ -125,6 +128,11 @@ export class FornecedorEditarComponent implements OnInit {
                     this.compraFC = data.compra;
 
                     this.selectedProduto = data.uniqueProduct; //lista
+
+                    for(let i = 0; i < this.selectedProduto.length; i++){
+                        this.items.push(i)
+                    }
+
                     this.quantidadeAtual = data.qtdTotal; //lista
                     this.pm = data.pmTotal; //lista
                     this.quantidade = data.qtdNota; //lista                        
@@ -262,7 +270,11 @@ export class FornecedorEditarComponent implements OnInit {
             var x = parseFloat(this.quantidade[i])*parseFloat(this.valor[i])
             this.pp.push(x)
         }
-        this.sum = this.pp.reduce((a, b) => a + b, 0) + this.frete;
+        for(let i = 0;  i < this.quantidade2.length; i++) {
+            var x = parseFloat(this.quantidade2[i])*parseFloat(this.valor2[i])
+            this.pp.push(x)
+        }
+        this.sum = this.pp.reduce((a, b) => a + b, 0) + this.freteFC;
 
         for(let i = 0;  i < this.pp.length; i++) {
             var y = parseFloat(this.pp[i])/this.sum;
@@ -273,12 +285,19 @@ export class FornecedorEditarComponent implements OnInit {
     }
 
     somar() {
-        this.ll = []
+        this.ll = [];
+        this.ll2 = [];
         for(let i = 0;  i < this.quantidade.length; i++) {
             var x = parseFloat(this.quantidade[i])*parseFloat(this.valor[i])
             this.ll.push(x)
         }
-        this.sum = this.ll.reduce((a, b) => a + b, 0) + this.freteFC;
+        for(let i = 0;  i < this.quantidade2.length; i++) {
+            var y = parseFloat(this.quantidade2[i])*parseFloat(this.valor2[i])
+            this.ll2.push(y)
+        }
+        var sum2 = this.ll2.reduce((a, b) => a + b, 0);
+        this.sum = this.ll.reduce((a, b) => a + b, 0) + this.freteFC + sum2;
+
         return this.sum
     }
 
@@ -315,9 +334,7 @@ export class FornecedorEditarComponent implements OnInit {
     }
 
     searchProduto(event) {
-        console.log(event)
         this.searchProdutoList = [];
-
         for (let j = 0; j < this.produtoList.length; j++) {
             try{
                 if (this.produtoList[j].match(event.query)) {
@@ -327,26 +344,8 @@ export class FornecedorEditarComponent implements OnInit {
         }
     }
 
-    searchProduto2(event) {
-        console.log(event)
-    }
-
-    searchFornecedor(event) {
-         this.searchFornecedorList = []
-
-        for (let j = 0; j < this.fornecedoresList.length; j++) {
-            try{
-                if (this.fornecedoresList[j].match(event.query)) {
-                    this.searchFornecedorList.push(this.fornecedoresList[j])
-                }
-                //console.log(this.searchFornecedorList)
-            }catch(e){}
-        }
-    }
-
     searchTransportadora(event) {
-         this.searchTransportadoraList = []
-
+        this.searchTransportadoraList = [];
         for (let j = 0; j < this.transportadoraList.length; j++) {
             try{
                 if (this.transportadoraList[j].match(event.query)) {
@@ -355,45 +354,6 @@ export class FornecedorEditarComponent implements OnInit {
                 //console.log(this.searchTransportadoraList)
             }catch(e){}
         }
-    }
-
-    searchOperacao(event) {
-         this.searchOperacaoList = []
-
-        for (let j = 0; j < this.operacaoList.length; j++) {
-            try{
-                if (this.operacaoList[j].match(event.query)) {
-                    this.searchOperacaoList.push(this.operacaoList[j])
-                }
-                //console.log(this.searchOperacaoList)
-            }catch(e){}
-        }
-    }
-
-    operacaoDropdownClick(event) {       
-        this.searchOperacaoList = [];
-        setTimeout(() => {
-            this.searchOperacaoList = this.operacaoList;
-        }, 100)
-    }
-
-    searchCategoria(event) {
-         this.searchCategoriaList = []
-
-        for (let j = 0; j < this.categoriaList.length; j++) {
-            try{
-                if (this.categoriaList[j].match(event.query)) {
-                    this.searchCategoriaList.push(this.categoriaList[j])
-                }
-            }catch(e){}
-        }
-    }
-
-    categoriaDropdownClick(event) {       
-        this.searchCategoriaList = [];
-        setTimeout(() => {
-            this.searchCategoriaList = this.categoriaList;
-        }, 100)
     }
 
     salvar(
@@ -424,11 +384,11 @@ export class FornecedorEditarComponent implements OnInit {
                 }else{listaVerify.push(true)}
             }
 
-            if(quantidade.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(quantidade.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+            if(quantidade2.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+            //if(quantidade.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-            if(valor.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(valor.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+            if(valor2.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+            if(valor2.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
             
             if(freteFC > 0) {
                 if( (transportadoraFC == undefined) || 
@@ -450,10 +410,8 @@ export class FornecedorEditarComponent implements OnInit {
             if(datePgto.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
 
             var somatorio = this.verificar();
-            //console.log(somatorio)
-            var z = this.toFixed(somatorio);
 
-            //console.log(z)
+            var z = this.toFixed(somatorio);
 
             if(z.toFixed(2) != 0.00) {listaVerify.push(false)}else{listaVerify.push(true)}
 
@@ -467,50 +425,31 @@ export class FornecedorEditarComponent implements OnInit {
 
             var soma = this.somar();
             var proporcaoList = this.proporcional();
-            var hashString = this.randomString(32, '#aA!');
-            var pwSHA256 = sha256(hashString);
 
-            /*if(this.verify == true) {
+            if(this.verify == true) {
                 this.showSucesso();
-                this.fornecedorService.postFornecedores(
-                    selectedFornecedor,
-                    valueEmissao,
-                    selectedOperacao,
-                    selectedCategoria,
-                    serie,
-                    nf,
-                    compra,
+                this.fornecedorService.postFornecedoresEdit(
+                    hash,
+                    serieFC,
+                    nfFC,
+                    compraFC,
                     selectedProduto,
                     quantidade,
                     valor,
+                    selectedProduto2,
+                    quantidade2,
+                    valor2,
                     transportadoraFC,
                     freteFC,
                     valorPgto,
                     datePgto,
                     proporcaoList,
-                    soma,
-                    pwSHA256
+                    soma
                 ).subscribe(
                     data => {
-                        this.selectedFornecedor = "";
-                        this.valueEmissao = undefined;
-                        this.selectedOperacao = "";
-                        this.selectedCategoria = "";
-                        this.serie = undefined;
-                        this.nf = undefined;
-                        this.compra = undefined;
-                        this.items = [];
-                        this.selectedProduto.splice(0, this.selectedProduto.length);
-                        this.quantidade.splice(0, this.quantidade.length);
-                        this.valor.splice(0, this.valor.length);
-                        this.selectedTransportadora = "";
-                        this.frete = 0;
-                        this.sum = 0;
-                        this.itemsPgto.splice(0, this.itemsPgto.length);
-                        this.valorPgto.splice(0, this.valorPgto.length);
-                        this.datePgto.splice(0, this.datePgto.length);
-                        this.subtracao = 0;
-                        this.check = undefined;
+                        if(this.origem=="fc"){
+                            this._router.navigate(['/fluxodecaixa']);
+                        }
                     },
                     error => {
                         console.log(error)
@@ -518,7 +457,7 @@ export class FornecedorEditarComponent implements OnInit {
                 );
             }else{
                 this.showError();
-            }*/
+            }
     }
 
     showError() {
@@ -576,7 +515,6 @@ export class FornecedorEditarComponent implements OnInit {
         }        
     }
 
-
     onChangeCM(valor, num){
         var numerador = ((this.quantidadeAtual2[num]*this.pm2[num])+(this.quantidade2[num]*valor));
         var dividendo = (parseInt(this.quantidadeAtual2[num])+parseInt(this.quantidade2[num]));
@@ -587,7 +525,7 @@ export class FornecedorEditarComponent implements OnInit {
     addProduto() {
         if(this.items2.length == 0) {
             this.items2.push("0");
-            this.quantidade2.push(0);
+            this.quantidade2.push("");
             this.valor2.push("");
             this.pm2.push("");
             this.selectedProduto2.push("");
@@ -595,7 +533,7 @@ export class FornecedorEditarComponent implements OnInit {
             this.quantidadeAtual2.push(0);
         }else{            
             this.items2.push(String(this.items2.length));
-            this.quantidade2.push(0);
+            this.quantidade2.push("");
             this.valor2.push("");
             this.pm2.push("");
             this.selectedProduto2.push("");
@@ -616,7 +554,21 @@ export class FornecedorEditarComponent implements OnInit {
         }        
     }
 
-    remove(x) {
+    /*remove(x) {
+        var tamanho = this.items.length;
+        for(let i = 0; i < tamanho-1; i++) {
+            this.items.push(String(i))
+        }
+        this.items.splice(0, tamanho);
+        this.quantidade.splice(x, 1);
+        this.valor.splice(x, 1);
+        this.selectedProduto.splice(x, 1);
+        this.pm.splice(x, 1);
+        this.pmNovo.splice(x, 1);
+        this.quantidadeAtual.splice(x, 1);
+    }*/
+
+    remove2(x) {
         var tamanho = this.items2.length;
         for(let i = 0; i < tamanho-1; i++) {
             this.items2.push(String(i))
@@ -646,57 +598,9 @@ export class FornecedorEditarComponent implements OnInit {
         overlaypanel.toggle(event);
     }
 
-    itemEscolhido(label, item) {
-        if(item.trim() != ""){
-            var lista = item.split(";");
-            var listaApoio = [];
-            this.fornecedorService.postItem(label, lista)
-                .subscribe(
-                    data => {
-                        this.fornecedorService.getItem(data)
-                            .subscribe(
-                                data => {
-                                    for(let i = 0; i < data[0].length; i++) {
-                                        listaApoio.push(data[0][i].label);
-                                    }
-
-                                    if(data[1] == "Fornecedores") {
-                                        this.fornecedoresList.splice(0, this.fornecedoresList.length);
-                                        for(let i = 0; i < listaApoio.length; i++) {
-                                            this.fornecedoresList.push(listaApoio[i]);
-                                        }
-                                    }else if(data[1] == "Operação") {
-                                        this.operacaoList.splice(0, this.operacaoList.length);
-                                        for(let i = 0; i < listaApoio.length; i++) {
-                                            this.operacaoList.push(listaApoio[i]);
-                                        }
-                                    }else if(data[1] == "Categoria") {
-                                        this.categoriaList.splice(0, this.categoriaList.length);
-                                        for(let i = 0; i < listaApoio.length; i++) {
-                                            this.categoriaList.push(listaApoio[i]);
-                                        }
-                                    }else if(data[1] == "Produto") {
-                                        this.produtoList.splice(0, this.produtoList.length);
-                                        for(let i = 0; i < listaApoio.length; i++) {
-                                            this.produtoList.push(listaApoio[i]);
-                                        }
-                                    }else if(data[1] == "Transportadora") {
-                                        this.transportadoraList.splice(0, this.transportadoraList.length);
-                                        for(let i = 0; i < listaApoio.length; i++) {
-                                            this.transportadoraList.push(listaApoio[i]);
-                                        }
-                                    }
-                                    listaApoio = [];
-                                },
-                                error => {
-                                    console.log(error)
-                                }                
-                            );
-                    },
-                    error => {
-                        console.log(error)
-                    }                
-                );
+    sair(){
+        if(this.origem=="fc"){
+            this._router.navigate(['/fluxodecaixa']);
         }
     }
 }

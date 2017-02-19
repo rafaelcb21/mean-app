@@ -9,7 +9,7 @@ import { DespesasReceitasComponent } from './despesasreceitas/despesasreceitas.c
 export const appRoutes: Routes = [
     {path: 'login', component: LoginComponent},
     {path: 'fornecedor', component: FornecedorComponent},
-    {path: 'fornecedor-editar/:hash/:tabela', component: FornecedorEditarComponent},
+    {path: 'fornecedor-editar/:hash/:tabela/:origem', component: FornecedorEditarComponent},
     {path: 'vender', component: VenderComponent},
     {path: 'fluxodecaixa', component: CaixaComponent},
     {path: 'despesasreceitas', component: DespesasReceitasComponent},

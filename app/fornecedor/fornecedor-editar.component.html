@@ -1,4 +1,4 @@
-<!--p-contextMenu [global]="true" [model]="menus"></p-contextMenu-->
+<p-contextMenu [global]="true" [model]="menus"></p-contextMenu>
 <div class="container back">
     <p-panel header="Editar Produto">
         <div class="margin">
@@ -32,20 +32,20 @@
                 <div class="display">
                     <button (click)="addProduto()" pButton type="button" label="Produto" iconPos="left" icon="fa-plus-circle"></button>
                 </div>
-                <div *ngFor="let num of selectedProduto; let i=index">
+                <div *ngFor="let num of items; let i=index">
                     <div class="display margin">
                         <div class="field center-div">                            
-                            <div pTooltip="Produto" class="input-style" tooltipPosition="top" title={{selectedProduto[i]}} style="cursor: default; width:205px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ selectedProduto[i] }}</div>
+                            <div pTooltip="Produto" class="input-style" tooltipPosition="top" title={{selectedProduto[num]}} style="cursor: default; width:205px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ selectedProduto[i] }}</div>
                         </div>                       
                         <div class="field center-div">
-                            <div pTooltip="Quantidade no estoque" tooltipPosition="top" class="input-style">{{ quantidadeAtual[i] }}</div>
+                            <div pTooltip="Quantidade no estoque" tooltipPosition="top" class="input-style">{{ quantidadeAtual[num] }}</div>
                         </div>
                         <div class="field center-div">
-                            <div pTooltip="Preço médio no estoque" style="width:130px;" tooltipPosition="top" class="input-style">{{ pm[i] | numerobrasil:"money"}}</div>
+                            <div pTooltip="Preço médio no estoque" style="width:130px;" tooltipPosition="top" class="input-style">{{ pm[num] | numerobrasil:"money"}}</div>
                         </div>
 
                         <div class="field">
-                            <input pTooltip="Quantidade" tooltipPosition="top" (keypress)="onlyNumber($event)" style="width: 80px" pInputText [(ngModel)]="quantidade[i]" placeholder="Qtd"/>
+                            <input pTooltip="Quantidade" tooltipPosition="top" (keypress)="onlyNumber($event)" style="width: 80px" pInputText [(ngModel)]="quantidade[num]" placeholder="Qtd"/>
                         </div>
                         <br>
                         <div class="field">
@@ -56,20 +56,20 @@
                                 pInputText
                                 currencyMask
                                 (ngModelChange)="onChangeCM($event, num)"
-                                [(ngModel)]="valor[i]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                                [(ngModel)]="valor[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
                         </div>                        
                         <div class="field center-div">
-                            <div pTooltip="Preço médio junto com o estoque" style="width:130px;" tooltipPosition="top" class="input-style">{{ pmNovo[i] | numerobrasil:"money"}}</div>
+                            <div pTooltip="Preço médio junto com o estoque" style="width:130px;" tooltipPosition="top" class="input-style">{{ pmNovo[num] | numerobrasil:"money"}}</div>
                         </div>
 
                         <div class="field center-div">
-                            <div pTooltip="Total" tooltipPosition="top" style="width:150px;" class="input-style">{{ quantidade[i]*valor[i] | numerobrasil:"money"}}</div>
+                            <div pTooltip="Total" tooltipPosition="top" style="width:150px;" class="input-style">{{ quantidade[i]*valor[num] | numerobrasil:"money"}}</div>
                         </div>
-                        <div class="field icon-display">
+                        <!--div class="field icon-display">
                             <div>
-                                <i class="fa fa-times" (click)="remove(i)" style="color:red"></i>
+                                <i class="fa fa-times" (click)="remove(num)" style="color:red"></i>
                             </div>
-                        </div>
+                        </div-->
                     </div>
                 </div>
                 <!-- Lista de produtos-->
@@ -134,7 +134,7 @@
                         </div>
                         <div class="field icon-display">
                             <div>
-                                <i class="fa fa-times" (click)="remove(i)" style="color:red"></i>
+                                <i class="fa fa-times" (click)="remove2(i)" style="color:red"></i>
                             </div>
                         </div>
                     </div>
@@ -220,18 +220,17 @@
                 <button
                     (click)="salvar(
                                 hash,
-                                selectedFornecedor,
-                                valueEmissao,
-                                selectedOperacao,
-                                selectedCategoria,
-                                serie,
-                                nf,
-                                compra,
+                                serieFC,
+                                nfFC,
+                                compraFC,
                                 selectedProduto,
                                 quantidade,
                                 valor,
-                                selectedTransportadora,
-                                frete,
+                                selectedProduto2,
+                                quantidade2,
+                                valor2,
+                                transportadoraFC,
+                                freteFC,
                                 sum,
                                 valorPgto,
                                 datePgto,
@@ -239,15 +238,14 @@
                             )"
                     pButton type="button" label="Salvar" style="color:#fff;background:green;border-color:green;margin-bottom:12px;margin-top:5px">
                 </button>
+                <button
+                    (click)="sair()"
+                    pButton type="button" label="Sair sem salvar" style="color:#fff;background:red;border-color:red;margin-bottom:12px;margin-top:5px">
+                </button>
             </div>
         </div>
     </p-panel>
 </div>
-
-<p-overlayPanel #op>
-    <input type="text" pInputText [(ngModel)]="item" placeholder="{{ label }}"/>
-    <i class="fa fa-check-circle certo" (click)="itemEscolhido(label, item);op.hide($event)"></i>    
-</p-overlayPanel>
 
 
 

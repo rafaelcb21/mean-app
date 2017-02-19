@@ -310,8 +310,7 @@ export class FornecedorComponent implements OnInit {
     }
 
     searchProduto(event) {
-         this.searchProdutoList = []
-
+        this.searchProdutoList = [];
         for (let j = 0; j < this.produtoList.length; j++) {
             try{
                 if (this.produtoList[j].match(event.query)) {
@@ -322,8 +321,7 @@ export class FornecedorComponent implements OnInit {
     }
 
     searchFornecedor(event) {
-         this.searchFornecedorList = []
-
+        this.searchFornecedorList = [];
         for (let j = 0; j < this.fornecedoresList.length; j++) {
             try{
                 if (this.fornecedoresList[j].match(event.query)) {
@@ -335,8 +333,7 @@ export class FornecedorComponent implements OnInit {
     }
 
     searchTransportadora(event) {
-         this.searchTransportadoraList = []
-
+        this.searchTransportadoraList = [];
         for (let j = 0; j < this.transportadoraList.length; j++) {
             try{
                 if (this.transportadoraList[j].match(event.query)) {
@@ -348,8 +345,7 @@ export class FornecedorComponent implements OnInit {
     }
 
     searchOperacao(event) {
-         this.searchOperacaoList = []
-
+        this.searchOperacaoList = [];
         for (let j = 0; j < this.operacaoList.length; j++) {
             try{
                 if (this.operacaoList[j].match(event.query)) {
@@ -368,8 +364,7 @@ export class FornecedorComponent implements OnInit {
     }
 
     searchCategoria(event) {
-         this.searchCategoriaList = []
-
+        this.searchCategoriaList = [];
         for (let j = 0; j < this.categoriaList.length; j++) {
             try{
                 if (this.categoriaList[j].match(event.query)) {
@@ -584,7 +579,7 @@ export class FornecedorComponent implements OnInit {
     addProduto() {
         if(this.items.length == 0) {
             this.items.push("0");
-            this.quantidade.push(0);
+            this.quantidade.push("");
             this.valor.push("");
             this.pm.push(0);
             this.selectedProduto.push("");
@@ -592,7 +587,7 @@ export class FornecedorComponent implements OnInit {
             this.quantidadeAtual.push(0);
         }else{
             this.items.push(String(this.items.length));
-            this.quantidade.push(0);
+            this.quantidade.push("");
             this.valor.push("");
             this.pm.push(0);
             this.selectedProduto.push("");
