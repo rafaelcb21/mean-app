@@ -126,13 +126,17 @@ router.post('/fornecedores', function(req, res, next) {
 })
 
 router.post('/fornecedoresEdit', function(req, res, next) {
+  var selectedFornecedor = req.body.selectedFornecedor;
+  var valueEmissao = req.body.valueEmissao;
+  var selectedOperacao = req.body.selectedOperacao;
+  var selectedCategoria = req.body.selectedCategoria;
   var hash = req.body.hash;
   var serie = req.body.serie;
   var nf = req.body.nf;
   var compra = req.body.compra;
-  var selectedProduto = req.body.selectedProduto; //lista
-  var quantidade = req.body.quantidade; //lista
-  var valor = req.body.valor; //lista
+  var selectedProduto0 = req.body.selectedProduto; //lista
+  var quantidade0 = req.body.quantidade; //lista
+  var valor0 = req.body.valor; //lista
   var selectedProduto2 = req.body.selectedProduto2; //lista
   var quantidade2 = req.body.quantidade2; //lista
   var valor2 = req.body.valor2; //lista
@@ -142,72 +146,157 @@ router.post('/fornecedoresEdit', function(req, res, next) {
   var datePgto = req.body.datePgto; //lista
   var proporcaoList = req.body.proporcaoList; //lista
   var soma = req.body.soma;
+  var hashToVendidos = req.body.hashToVendidos;
   
   var list1 = [];
   var list2 = [];
   var list4 = [];
 
-  /*var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+  ////var qtd = quantidade.map(Number);
+  ////indiceQtd = qtd.indexOf(0);
 
-  for(let i = 0; i < valorPgto.length; i++) {
-    var freteporProduto = (((valorPgto[i] / soma) * frete) / quantidadeTotal);
-    list4.push(freteporProduto)
-
-  }
-
-  for (let i = 0; i < proporcaoList.length; i++) {
-    for (let j = 0; j < valorPgto.length; j++) {
-      var parcela = parseFloat(proporcaoList[i])*parseFloat(valorPgto[j])/quantidade[i];
-      list1.push(parcela);
+  function getAllIndexes(arr, val) {
+    var indexes = [], i = -1;
+    while ((i = arr.indexOf(val, i+1)) != -1){
+        indexes.push(i);
     }
-    list2.push(list1);
-    list1 = [];
+    return indexes;
   }
 
-  for (let i = 0; i < quantidade.length; i++) {
-    for (let j = 0; j < quantidade[i]; j++) {
+  ////var x = ['1','2','0','5','7','0','9','0','0']
+  var indices = getAllIndexes(quantidade0, '0');
+  indices.reverse();
+  ////console.log(indices) //2 5 7 8
 
-      var produto = selectedProduto[i];
-      var qtd = quantidade[i];
-      var val = valor[i];
-      var prop = proporcaoList[i];
-      var parc = list2[i];
-      var dataParc = datePgto;
+  for(let i = 0; i < indices.length; i++){
+    selectedProduto0.splice(indices[i], 1);
+    quantidade0.splice(indices[i], 1);
+    valor0.splice(indices[i], 1);
+  }   
 
+  var quantidade = quantidade0.concat(quantidade2);
 
-      var product = new Produto({
-        fornecedor: selectedFornecedor,
-        emissao: valueEmissao,
-        operacao: selectedOperacao,
-        categoria: selectedCategoria,
-        serie: serie,
-        nf: nf,
-        compra: compra,
-        produto: produto,
-        qtd: qtd,
-        val: val,
-        prop: prop,
-        parc: parc,
-        transportadora: selectedTransportadora,
-        dataParc: dataParc,
-        parcFrete: list4,
-        hash: hash
-      })
-      product.save(function(err, result) {})
+  if(quantidade.length > 0){
+    //Produto.remove({ hash: key, vendido: false}, function (err, doc2){});
+    //Fluxos.remove({ hash: key, tabela: "compra"}, function (err, doc2){});
+
+    var selectedProduto = selectedProduto0.concat(selectedProduto2);
+    var valor = valor0.concat(valor2);
+
+    var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+
+    for(let i = 0; i < valorPgto.length; i++) {
+      var freteporProduto = (((valorPgto[i] / soma) * frete) / quantidadeTotal);
+      list4.push(freteporProduto);
     }
+
+    for (let i = 0; i < proporcaoList.length; i++) {
+      for (let j = 0; j < valorPgto.length; j++) {
+        var parcela = parseFloat(proporcaoList[i])*parseFloat(valorPgto[j])/quantidade[i];
+        list1.push(parcela);
+      }
+      list2.push(list1);
+      list1 = [];
+    }
+  
+    for (let i = 0; i < quantidade.length; i++) {    
+      for (let j = 0; j < quantidade[i]; j++) {
+        var produto = selectedProduto[i];
+        var qtd = quantidade[i];
+        var val = valor[i];
+        var prop = proporcaoList[i];
+        var parc = list2[i];
+        var dataParc = datePgto;
+
+        var product = new Produto({
+          fornecedor: selectedFornecedor,
+          emissao: valueEmissao,
+          operacao: selectedOperacao,
+          categoria: selectedCategoria,
+          serie: serie,
+          nf: nf,
+          compra: compra,
+          produto: produto,
+          qtd: qtd,
+          val: val,
+          prop: prop,
+          parc: parc,
+          transportadora: selectedTransportadora,
+          dataParc: dataParc,
+          parcFrete: list4,
+          hash: hash
+        })
+        //product.save(function(err, result) {})
+      }
+    }  
+
+    for (let i = 0; i < valorPgto.length; i++) {
+      var fluxo = new Fluxo({
+          dataParc: dataParc[i],
+          dataVencimento: "",
+          fornecedor: selectedFornecedor,
+          valorPgto: -1*valorPgto[i],
+          hash: hash,
+          tabela: "compra"
+        })
+      //fluxo.save(function(err, result) {})
+    }
+      /**code para os produtos vendidos */
+    Produto.find({ vendido: true, hash: hash}, function (err, doc3) {
+      for (let i = 0; i < doc3.length; i++) {
+        /*doc3.fornecedor
+        doc3.emissao
+        doc3.operacao
+        doc3.categoria
+        doc3.serie
+        doc3.nf
+        doc3.compra
+        doc3.transportadora
+        doc3.hash //
+        doc3.hashId
+        doc3.vendido
+        doc3.parcFrete
+        doc3.dataParc
+        doc3.parc
+        doc3.prop // [1]
+        doc3.val
+        doc3.qtd //[1]
+        doc3.produto*/
+
+
+
+
+      }
+      console.log(doc3)
+
+      /*[ { _id: 58a97b3329e7df04a4fc16cd,
+    updated_at: 2017-02-19T11:02:11.780Z,
+    created_at: 2017-02-19T11:02:11.780Z,
+    fornecedor: 'ABB Ltda',
+    emissao: 2017-02-22T03:00:00.000Z,
+    operacao: 'Outra saída',
+    categoria: 'AMORTIZAÇÃO DE IMPRESTIMO',
+    serie: 11,
+    nf: 22,
+    compra: 33,
+    transportadora: '000002-CLIENTE BALCAO',
+    hash: '7dc8d0c8b2ec903a872d612c813a01e7e45b1494bbbd9e751d0b32734a338073',
+    __v: 0,
+    hashId: '024349d97edb379230baf4157bbdfbcee7b8011ef4c872807be2eea565ab48e3',
+    vendido: true,
+    parcFrete: [ 12.5, 12.5 ],
+    dataParc: [ '2017-02-21T03:00:00.000Z', '2017-02-24T03:00:00.000Z' ],
+    parc: [ 50, 50 ],
+    prop: [ 0.8 ],
+    val: [ 100 ],
+    qtd: [ '2' ],
+    produto: [ '( OPÇÃO ) BOMBA DARKA AP2X-5 1,5CV MONOFÁSICA 127/220V 60hZ' ] } ]*/
+
+    })
+
   }
 
-  for (let i = 0; i < valorPgto.length; i++) {
-    var fluxo = new Fluxo({
-        dataParc: dataParc[i],
-        dataVencimento: "",
-        fornecedor: selectedFornecedor,
-        valorPgto: -1*valorPgto[i],
-        hash: hash,
-        tabela: "compra"
-      })
-    fluxo.save(function(err, result) {})
-  }*/
+  
 
   res.status(201).json({
     msg: "sucesso"

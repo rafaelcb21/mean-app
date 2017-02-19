@@ -61,6 +61,10 @@ export class FornecedorService {
     }
 
     postFornecedoresEdit(
+        fornecedorFC,
+        emissaoFC,
+        operacaoFC,
+        categoriaFC, 
         hash,
         serieFC,
         nfFC,
@@ -76,9 +80,14 @@ export class FornecedorService {
         valorPgto,
         datePgto,
         proporcaoList,
-        soma
+        soma,
+        hashToVendidos
     ) {
         const body = JSON.stringify({
+            fornecedorFC: fornecedorFC,
+            emissaoFC: emissaoFC,
+            operacaoF: operacaoFC,
+            categoriaFC: categoriaFC,
             hash: hash,
             serie: serieFC,
             nf: nfFC,
@@ -94,7 +103,8 @@ export class FornecedorService {
             valorPgto: valorPgto,
             datePgto: datePgto,
             proporcaoList: proporcaoList,
-            soma: soma
+            soma: soma,
+            hashToVendidos: hashToVendidos
         });
         const header = new Headers({'Content-Type': 'application/json'});
         return this._http.post(Config.URL_SITE + 'lista/fornecedoresEdit', body, {headers: header})

@@ -259,6 +259,16 @@ export class FornecedorEditarComponent implements OnInit {
         }        
     }
 
+    onlyNumberZero(event){
+        var lista = [49,50,51,52,53,54,55,56,57];
+        var result = lista.indexOf(event.keyCode);
+        if(result == -1) {
+            return false
+        }else{
+            return true
+        }        
+    }
+
     onlyDate(event){
         return false
     }
@@ -357,6 +367,10 @@ export class FornecedorEditarComponent implements OnInit {
     }
 
     salvar(
+            fornecedorFC,
+            emissaoFC,
+            operacaoFC,
+            categoriaFC,   
             hash,
             serieFC,
             nfFC,
@@ -384,7 +398,13 @@ export class FornecedorEditarComponent implements OnInit {
                 }else{listaVerify.push(true)}
             }
 
+            //var qtd = quantidade.map(Number);
+            //if(qtd.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+
             if(quantidade2.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+            var qtd2 = quantidade2.map(Number);
+            if(qtd2.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}            
+
             //if(quantidade.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
 
             if(valor2.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
@@ -425,10 +445,16 @@ export class FornecedorEditarComponent implements OnInit {
 
             var soma = this.somar();
             var proporcaoList = this.proporcional();
+            var hashString = this.randomString(32, '#aA!');
+            var hashToVendidos = sha256(hashString);
 
             if(this.verify == true) {
                 this.showSucesso();
                 this.fornecedorService.postFornecedoresEdit(
+                    fornecedorFC,
+                    emissaoFC,
+                    operacaoFC,
+                    categoriaFC, 
                     hash,
                     serieFC,
                     nfFC,
@@ -444,7 +470,8 @@ export class FornecedorEditarComponent implements OnInit {
                     valorPgto,
                     datePgto,
                     proporcaoList,
-                    soma
+                    soma,
+                    hashToVendidos
                 ).subscribe(
                     data => {
                         if(this.origem=="fc"){
