@@ -177,8 +177,8 @@ router.post('/fornecedoresEdit', function(req, res, next) {
   var quantidade = quantidade0.concat(quantidade2);
 
   if(quantidade.length > 0){
-    //Produto.remove({ hash: hash, vendido: false}, function (err, doc2){});
-    //Fluxos.remove({ hash: hash, tabela: "compra"}, function (err, doc2){});
+    Produto.remove({ hash: hash, vendido: false}, function (err, doc2){});
+    Fluxo.remove({ hash: hash, tabela: "compra"}, function (err, doc2){});
 
     var selectedProduto = selectedProduto0.concat(selectedProduto2);
     var valor = valor0.concat(valor2);
@@ -226,7 +226,7 @@ router.post('/fornecedoresEdit', function(req, res, next) {
           parcFrete: list4,
           hash: hash
         })
-        //product.save(function(err, result) {})
+        product.save(function(err, result) {})
       }
     }  
 
@@ -239,12 +239,12 @@ router.post('/fornecedoresEdit', function(req, res, next) {
           hash: hash,
           tabela: "compra"
         })
-      //fluxo.save(function(err, result) {})
+      fluxo.save(function(err, result) {})
     }
       /**code para os produtos vendidos */
-      var stringRandom = crypto.randomBytes(32).toString('hex');
-      var hashId = SHA256(stringRandom).toString();
-    
+    var stringRandom = crypto.randomBytes(32).toString('hex');
+    var hashId = SHA256(stringRandom).toString();
+
     Produto.find({ vendido: true, hash: hash}, function (err, doc3) {
       for (let i = 0; i < doc3.length; i++) {
 
@@ -268,17 +268,18 @@ router.post('/fornecedoresEdit', function(req, res, next) {
           hash: hashId,
           hashId: doc3.hashId
         })
-
-        for (let i = 0; i < valorPgto.length; i++) {
-          var fluxo = new Fluxo({
-              dataParc: dataParc[i],
+        console.log(product2)
+        product2.save(function(err, result) {})
+        for (let i = 0; i < doc3.parc.length; i++) {
+          var fluxo2 = new Fluxo({
+              dataParc: doc3.dataParc[i],
               dataVencimento: "",
-              fornecedor: selectedFornecedor,
-              valorPgto: -1*valorPgto[i],
-              hash: hash,
+              fornecedor: doc3.produto,
+              valorPgto: -1*doc3.parc[i],
+              hash: hashId,
               tabela: "compra"
             })
-          //fluxo.save(function(err, result) {})
+          fluxo2.save(function(err, result) {})
         }
 
 
