@@ -34,7 +34,9 @@ import {
   CheckboxModule,
   SharedModule,
   DialogModule,
-  TooltipModule } from 'primeng/primeng';
+  TooltipModule,
+  ConfirmDialogModule,
+  ConfirmationService } from 'primeng/primeng';
 
 import { TextMaskModule } from 'angular2-text-mask';
 import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.directive';
@@ -78,6 +80,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     CheckboxModule,
     DialogModule,
     TooltipModule,
+    ConfirmDialogModule,
 //    CurrencyMaskModule,
 //    MoneyMaskModule,
   ],
@@ -86,6 +89,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     VenderService,
     CaixaService,
     DespesasReceitasService,
+    ConfirmationService,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     {provide: LOCALE_ID, useValue: "pt-BR"},
   ],

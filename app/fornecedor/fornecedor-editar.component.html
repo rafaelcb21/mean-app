@@ -217,7 +217,7 @@
         </div>
         <div class="display margin">
             <div class="field paragrafo">
-                <button
+                <button *ngIf="verificarNota"
                     (click)="salvar(
                                 fornecedorFC,
                                 emissaoFC,
@@ -242,15 +242,25 @@
                             )"
                     pButton type="button" label="Salvar" style="color:#fff;background:green;border-color:green;margin-bottom:12px;margin-top:5px">
                 </button>
+                <div *ngIf="!verificarNota" style="width:700px;" class="input-style">Nota com produto(s) vendido(s), para altera-la ou exclui-la é necessário excluir a(s) venda(s)</div>
                 <button
                     (click)="sair()"
                     pButton type="button" label="Sair sem salvar" style="color:#fff;background:red;border-color:red;margin-bottom:12px;margin-top:5px">
+                </button>
+                <button *ngIf="verificarNota"
+                    (click)="excluir(hash)"
+                    pButton type="button" label="Excluir" icon="fa-trash" style="color:#fff;background:red;border-color:red;margin-bottom:12px;margin-top:5px">
                 </button>
             </div>
         </div>
     </p-panel>
 </div>
-
+<p-confirmDialog icon="fa fa-question-circle" width="425" #cd>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" label="Não"></button>
+        <button type="button" pButton icon="fa-check" label="Sim" (click)="cd.accept()"></button>
+    </p-footer>
+</p-confirmDialog>
 
 
 

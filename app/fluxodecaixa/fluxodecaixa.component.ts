@@ -166,7 +166,6 @@ export class CaixaComponent implements OnInit {
     }
 
     showDialog(hash, tabela) {
-        
         this.caixaService.show(hash, tabela).subscribe(
             data => {
                 if(tabela == "compra"){

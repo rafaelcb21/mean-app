@@ -86,7 +86,7 @@ export class FornecedorService {
         const body = JSON.stringify({
             fornecedorFC: fornecedorFC,
             emissaoFC: emissaoFC,
-            operacaoF: operacaoFC,
+            operacaoFC: operacaoFC,
             categoriaFC: categoriaFC,
             hash: hash,
             serie: serieFC,
@@ -131,6 +131,14 @@ export class FornecedorService {
                     return [{label: labelItem, value: {name: labelItem}}]
                 }
             })
+            .catch(error => Observable.throw(error.json()));
+    }
+
+    exluirNota(hash) {
+        const body = JSON.stringify({hash: hash});
+        const header = new Headers({'Content-Type': 'application/json'});
+        return this._http.post(Config.URL_SITE + 'lista/excluirNota', body, {headers: header})
+            .map(response => response.json().msg)
             .catch(error => Observable.throw(error.json()));
     }
 }

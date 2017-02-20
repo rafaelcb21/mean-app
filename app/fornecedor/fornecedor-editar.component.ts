@@ -6,6 +6,7 @@ import { CaixaService } from '../fluxodecaixa/fluxodecaixa.service';
 import { Message, MenuItem } from 'primeng/primeng';
 import { VenderService } from '../vender/vender.service';
 import * as moment from 'moment';
+import { ConfirmationService } from 'primeng/primeng';
 
 declare var sha256: any;
 
@@ -99,12 +100,14 @@ export class FornecedorEditarComponent implements OnInit {
     hash: string;
     selectedProd = [];
     origem: string;
+    verificarNota: boolean;
 
     constructor(private _router: Router,
         private fornecedorService: FornecedorService,
         private venderService: VenderService,
         private activatedRoute: ActivatedRoute,
-        private caixaService: CaixaService
+        private caixaService: CaixaService,
+        private confirmationService: ConfirmationService
     ){}
 
     ngOnInit() {
@@ -126,7 +129,7 @@ export class FornecedorEditarComponent implements OnInit {
                     this.serieFC = data.serie;
                     this.nfFC = data.nf;
                     this.compraFC = data.compra;
-
+                    this.verificarNota = data.verificar;
                     this.selectedProduto = data.uniqueProduct; //lista
 
                     for(let i = 0; i < this.selectedProduto.length; i++){
@@ -629,5 +632,19 @@ export class FornecedorEditarComponent implements OnInit {
         if(this.origem=="fc"){
             this._router.navigate(['/fluxodecaixa']);
         }
+    }
+
+    excluir(hash) {
+        this.confirmationService.confirm({
+            message: 'Tem certeza que deseja excluir essa Nota de Compra?',
+            header: 'Excluir',
+            icon: 'fa fa-trash',
+            accept: () => {
+                this.fornecedorService.exluirNota(hash).subscribe(
+                    data => this._router.navigate(['/fluxodecaixa']),
+                    error => console.log(error)
+                )                
+            }
+        });
     }
 }

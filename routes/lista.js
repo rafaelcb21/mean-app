@@ -126,10 +126,10 @@ router.post('/fornecedores', function(req, res, next) {
 })
 
 router.post('/fornecedoresEdit', function(req, res, next) {
-  var selectedFornecedor = req.body.selectedFornecedor;
-  var valueEmissao = req.body.valueEmissao;
-  var selectedOperacao = req.body.selectedOperacao;
-  var selectedCategoria = req.body.selectedCategoria;
+  var selectedFornecedor = req.body.fornecedorFC;
+  var valueEmissao = req.body.emissaoFC;
+  var selectedOperacao = req.body.operacaoFC;
+  var selectedCategoria = req.body.categoriaFC;
   var hash = req.body.hash;
   var serie = req.body.serie;
   var nf = req.body.nf;
@@ -147,7 +147,7 @@ router.post('/fornecedoresEdit', function(req, res, next) {
   var proporcaoList = req.body.proporcaoList; //lista
   var soma = req.body.soma;
   var hashToVendidos = req.body.hashToVendidos;
-  
+
   var list1 = [];
   var list2 = [];
   var list4 = [];
@@ -242,57 +242,48 @@ router.post('/fornecedoresEdit', function(req, res, next) {
       fluxo.save(function(err, result) {})
     }
       /**code para os produtos vendidos */
-    var stringRandom = crypto.randomBytes(32).toString('hex');
+    /*var stringRandom = crypto.randomBytes(32).toString('hex');
     var hashId = SHA256(stringRandom).toString();
 
     Produto.find({ vendido: true, hash: hash}, function (err, doc3) {
       for (let i = 0; i < doc3.length; i++) {
 
         var product2 = new Produto({
-          fornecedor: doc3.fornecedor,
-          emissao: doc3.emissao,
-          operacao: doc3.operacao,
-          categoria: doc3.categoria,
-          serie: doc3.serie,
-          nf: doc3.nf,
-          compra: doc3.compra,
-          produto: doc3.produto,
+          fornecedor: doc3[i].fornecedor,
+          emissao: doc3[i].emissao,
+          operacao: doc3[i].operacao,
+          categoria: doc3[i].categoria,
+          serie: doc3[i].serie,
+          nf: doc3[i].nf,
+          compra: doc3[i].compra,
+          produto: doc3[i].produto,
           qtd: [ '1' ],
-          val: doc3.val,
+          val: doc3[i].val,
           prop: [ 1 ],
-          parc: doc3.parc,
-          dataParc: doc3.dataParc,
-          transportadora: doc3.transportadora,
-          parcFrete: doc3.parcFrete,
-          vendido: doc3.vendido,
+          parc: doc3[i].parc,
+          dataParc: doc3[i].dataParc,
+          transportadora: doc3[i].transportadora,
+          parcFrete: doc3[i].parcFrete,
+          vendido: doc3[i].vendido,
           hash: hashId,
-          hashId: doc3.hashId
+          hashId: doc3[i].hashId
         })
-        console.log(product2)
         product2.save(function(err, result) {})
-        for (let i = 0; i < doc3.parc.length; i++) {
+
+        for (let i = 0; i < doc3[0].parc.length; i++) {
           var fluxo2 = new Fluxo({
-              dataParc: doc3.dataParc[i],
+              dataParc: doc3[0].dataParc[i],
               dataVencimento: "",
-              fornecedor: doc3.produto,
-              valorPgto: -1*doc3.parc[i],
+              fornecedor: doc3[0].produto,
+              valorPgto: -1*doc3[0].parc[i],
               hash: hashId,
               tabela: "compra"
             })
           fluxo2.save(function(err, result) {})
         }
-
-
       }
-      console.log(doc3)
-
-
-    })
-
+    })*/
   }
-
-  
-
   res.status(201).json({
     msg: "sucesso"
   })
@@ -520,8 +511,18 @@ router.get('/fc', function(req, res, next) {
           "value":{ "$sum":"$valorPgto" }
         }
       }
-    ], function(err, compra){      
+    ], function(err, compra){
+        if (err) {
+            return res.status(404).json({
+                msg: err,
+            });
+        }
         Fluxo.find({}, function(erro, linhas_compra){
+          if (erro) {
+              return res.status(404).json({
+                  msg: erro,
+              });
+          }
           res.status(200).json({
                   linhas_compra: linhas_compra,
                   compra: compra
@@ -1044,7 +1045,7 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
 
       var funcao1 = function(key, callback){
         ll2 = [];
-        Produto.find({ produto: key, vendido: false, hash: {$ne: hash}}, function (err, doc2) {
+        Produto.find({ produto: key, vendido: false, hash: {$ne: hash}}, function (err2, doc2) {
           qtd_total = doc2.length; //1 quantidade total de produtos não vendidos menos o da nota
           if(qtd_total > 0){
             for(let j = 0; j < qtd_total; j++){
@@ -1057,13 +1058,13 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
           }else{
             pm = 0
           }
-          callback(err, [qtd_total, sum, pm]);
+          callback(err2, [qtd_total, sum, pm]);
         })
       };
 
       var funcao2 = function(key, callback){
         ll3 = [];
-        Produto.find({ produto: key, vendido: false, hash: hash}, function (err, doc3) {
+        Produto.find({ produto: key, vendido: false, hash: hash}, function (err3, doc3) {
           var qtd_nota = doc3.length; //3 quantidade do produto na nota da compra que não foram vendidos
           for(let j = 0; j < qtd_nota; j++){
             var produtosValorNota = doc3[j].val[0];
@@ -1072,67 +1073,85 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
           var sumNota = ll3.reduce((a, b) => a + b, 0); //6 preço total do produto na nota
           ll3 = [];
           var pmNota = sumNota/qtd_nota; //4 preço medio dos produtos não vendidos da nota
-          callback(err, [qtd_nota, sumNota, pmNota]);
+          callback(err3, [qtd_nota, sumNota, pmNota]);
+        });
+      }
+
+      var funcao3 = function(key, callback){
+        ll3 = [];
+        Produto.find({ produto: key, vendido: true, hash: hash}, function (err4, doc4) {
+          var qtd_nota = doc4.length; //vaerificar se tem produto vendido na nota
+          var verificar = true
+          if(qtd_nota > 0){
+            verificar = false //false significa que possui produto vendido
+          }
+          callback(err4, verificar);
         });
       }
 
       async.map(uniqueProduct, funcao1, function (err1, result1) {
         async.map(uniqueProduct, funcao2, function (err2, result2) {
+          async.map(uniqueProduct, funcao3, function (err3, result3) {
           //console.log(result1); //[ [ 4, 800, 200 ], [ 0, undefined, 0 ] ]
           //console.log(result2); //[ [ 5, 500, 100 ], [ 6, 1200, 200 ] ]
-          var pms = [];
-          for(let i = 0; i < result1.length; i++){
-            var qtd1 = result1[i][0];
-            var qtd2 = result2[i][0];
-            var sum1 = result1[i][1];
-            var sum2 = result2[i][1];
-            if(sum1 == undefined){sum1 = 0;}
-            if(sum2 == undefined){sum2 = 0;}
+            var pms = [];
+            var verify = result3.indexOf(false)
+            if(verify != -1){ //significa que tem false, se for -1 significa que não tem false
+              var verificado = false;
+            }else{verificado = true;}
 
-            var quantidade = qtd1 +qtd2;
-            var soma = sum1 + sum2;
-            var pm_total_nota = soma/quantidade;
-            pms.push(pm_total_nota) //6 preço total do produto na nota
-          }
+            for(let i = 0; i < result1.length; i++){
+              var qtd1 = result1[i][0];
+              var qtd2 = result2[i][0];
+              var sum1 = result1[i][1];
+              var sum2 = result2[i][1];
+              if(sum1 == undefined){sum1 = 0;}
+              if(sum2 == undefined){sum2 = 0;}
 
-          qtdTotal = [];
-          pmTotal = [];
-          qtdNota = [];
-          pmTotalNota = [];
-          valTotalNota = [];
-          for(let i = 0; i < result1.length; i++){
-            qtdTotal.push(result1[i][0]) //1 quantidade total de produtos não vendidos menos o da nota
-            pmTotal.push(result1[i][2]) //2 preço medio do total de produtos não vendidos, não entra na conta a nota
-            qtdNota.push(result2[i][0]) //3 quantidade do produto na nota da compra que não foram vendidos
-            pmTotalNota.push(result2[i][2]) //4 preço medio dos produtos não vendidos da nota
-            valTotalNota.push(result2[i][1]) //5 preço medio de todos os produtos não vendidos
-          }
+              var quantidade = qtd1 +qtd2;
+              var soma = sum1 + sum2;
+              var pm_total_nota = soma/quantidade;
+              pms.push(pm_total_nota) //6 preço total do produto na nota
+            }
 
-          document = {
-            fornecedor: fornecedor,
-            emissao: emissao,
-            operacao: operacao,
-            categoria: categoria,
-            serie: serie,
-            nf: nf,
-            compra: compra,
-            uniqueProduct: uniqueProduct,
-            qtdTotal: qtdTotal,
-            pmTotal: pmTotal,
-            qtdNota: qtdNota,
-            pmTotalNota: pmTotalNota,
-            pms: pms,
-            valTotalNota: valTotalNota, //nao esta sendo usado
-            transportadora: transportadora,
-            frete: frete,
-            dataParc: dataParc,
-            parcelas: parcelasLista
-            
-          }
-          res.status(200).json({
-            obj: document
-          });
+            qtdTotal = [];
+            pmTotal = [];
+            qtdNota = [];
+            pmTotalNota = [];
+            valTotalNota = [];
+            for(let i = 0; i < result1.length; i++){
+              qtdTotal.push(result1[i][0]) //1 quantidade total de produtos não vendidos menos o da nota
+              pmTotal.push(result1[i][2]) //2 preço medio do total de produtos não vendidos, não entra na conta a nota
+              qtdNota.push(result2[i][0]) //3 quantidade do produto na nota da compra que não foram vendidos
+              pmTotalNota.push(result2[i][2]) //4 preço medio dos produtos não vendidos da nota
+              valTotalNota.push(result2[i][1]) //5 preço medio de todos os produtos não vendidos
+            }
 
+            document = {
+              fornecedor: fornecedor,
+              emissao: emissao,
+              operacao: operacao,
+              categoria: categoria,
+              serie: serie,
+              nf: nf,
+              compra: compra,
+              uniqueProduct: uniqueProduct,
+              qtdTotal: qtdTotal,
+              pmTotal: pmTotal,
+              qtdNota: qtdNota,
+              pmTotalNota: pmTotalNota,
+              pms: pms,
+              valTotalNota: valTotalNota, //nao esta sendo usado
+              transportadora: transportadora,
+              frete: frete,
+              dataParc: dataParc,
+              parcelas: parcelasLista,
+              verificar: verificado              
+            }
+            res.status(200).json({
+              obj: document
+            });
+          })
         });
       });
     })
@@ -1150,4 +1169,14 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
     })
   }
 })
+
+router.post('/excluirNota', function(req, res, next) {
+  var hash = req.body.hash;
+  Produto.remove({ hash: hash}, function (err, doc2){});
+  Fluxo.remove({ hash: hash, tabela: "compra"}, function (err, doc2){});
+  res.status(200).json({
+    msg: "Excluido"
+  })
+})
+
 module.exports = router;
