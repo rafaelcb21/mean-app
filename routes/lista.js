@@ -999,6 +999,9 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
   var hash = req.params.hash;
   var tabela = req.params.tabela;
   ll = [];
+  llvenda = [];
+  freteListVenda = [];
+  parcelasMatrixVenda = [];
   freteList = [];
   parcelasMatrix = [];
 
@@ -1081,7 +1084,7 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
       var funcao3 = function(key, callback){
         ll3 = [];
         Produto.find({ produto: key, vendido: true, hash: hash}, function (err4, doc4) {
-          var qtd_nota = doc4.length; //vaerificar se tem produto vendido na nota
+          var qtd_nota = doc4.length; //verificar se tem produto vendido na nota
           var verificar = true
           if(qtd_nota > 0){
             verificar = false //false significa que possui produto vendido
@@ -1147,7 +1150,7 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
               frete: frete,
               dataParc: dataParc,
               parcelas: parcelasLista,
-              verificar: verificado              
+              verificar: verificado
             }
             res.status(200).json({
               obj: document
@@ -1157,11 +1160,104 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
       });
     })
   }else if(tabela=="venda"){
-    Venda.find({hash: hash},function(err, doc){
-      res.status(200).json({
-        obj: doc
-      });
-    })
+    Venda.find({hash: hash},function(err, doc1){
+      cliente = doc1[0].cliente;
+      emissao = doc1[0].emissao;
+      operacao = doc1[0].operacao;
+      categoria = doc1[0].categoria;
+      serie = doc1[0].serie;
+      venda = doc1[0].venda;
+      hashId = doc1[0].hashId;
+
+      
+
+      //produto = doc1[0].produto; //lista
+      //pm = doc1[0].pm; //lista
+      //qtd = doc1[0].qtd; //lista
+      //margem = doc1[0].margem; //lista
+      transportadora = doc1[0].transportadora;
+      //parcFrete = doc1[0].parcFrete; //lista
+      _dataParc = doc1[0].dataParc; //lista
+      _vencimento = doc1[0].vencimento; //lista
+      //parc = doc1[0].parc; //lista
+      
+      dataParc = [];
+      vencimento = [];
+      pmList = [];
+      qtdList = [];
+      margemList = [];
+
+      for(let j = 0; j < _dataParc.length; j++){
+          var date = _dataParc[j].slice(0, 10);
+          var venc = _vencimento[j].slice(0, 10);
+          dataParc.push(date);
+          vencimento.push(venc);
+      }
+
+      for(let i = 0; i < doc1.length; i++){
+          llvenda.push(doc1[i].produto[0]);
+          for(let j = 0; j < doc1[0].parcFrete.length; j++){
+            freteListVenda.push(doc1[i].parcFrete[j]);
+          }        
+          parcelasMatrixVenda.push(doc1[i].parc);
+          parcelasMatrixVenda.push(doc1[i].parcFrete);
+      }
+
+      var uniqueProduct = llvenda.filter(function(elem, index, self){ // 0 => lista de todos os produtos
+          return index == self.indexOf(elem);
+      })
+
+      var somarFrete = freteListVenda.reduce((a, b) => a + b, 0);
+      frete = somarFrete;
+
+      var matrix = function sumByIndex(arr) {
+          return arr.map( (item, idx) => {
+              return arr.reduce( (prev, curr) => prev + curr[idx] , 0 )
+          })
+      }
+      var parcelas = matrix(parcelasMatrixVenda);
+      var parcelasLista = parcelas.slice(0,dataParc.length);
+
+      var funcaoVenda1 = function(key, callback){
+          ll3 = [];
+          Venda.find({ produto: key, hash: hash}, function (err5, doc5) {
+            var margem = doc5[0].margem;
+            var qtd = doc5[0].qtd;
+            var pm = doc5[0].pm;
+            callback(err5, [pm[0], parseInt(qtd[0]), margem[0]]);
+        });
+      }
+
+      async.map(uniqueProduct, funcaoVenda1, function (err1, result1) {       
+        for(let i = 0; i < result1.length; i++){
+            pmList.push(result1[i][0]);
+            qtdList.push(result1[i][1]);
+            margemList.push(result1[i][2]);
+        }
+        document = {
+            cliente: cliente,
+            emissao: emissao,
+            operacao: operacao,
+            categoria: categoria,
+            serie: serie,
+            venda: venda,
+            hashId: hashId,
+            uniqueProduct: uniqueProduct,
+            transportadora: transportadora,
+            frete: frete,
+            vencimento: vencimento,
+            dataParc: dataParc,
+            parcelasLista: parcelasLista,
+            pmList: pmList,
+            qtdList: qtdList,
+            margemList: margemList,
+            hash: hash
+        }
+        res.status(200).json({
+          obj: document
+        });    
+    })     
+  })
   }else if(tabela=="dr"){
     DespRec.find({hash: hash},function(err, doc){
       res.status(200).json({

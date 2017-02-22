@@ -58,7 +58,24 @@ private menus: MenuItem[];
     checkError:  Boolean;
     msgs: Message[] = [];
     margem = [];
+    quantidadeAtual = [];
+    pmNovo = [];
 
+    fornecedorFC: string;
+    emissaoFC: string;
+    operacaoFC: string;
+    categoriaFC: string;
+    serieFC: string;
+    nfFC: string;
+    compraFC: string;
+    transportadoraFC: string;
+    freteFC: string;
+    parcelasFC = [];
+    hash: string;
+    selectedProd = [];
+    origem: string;
+    verificarNota: boolean;
+    
     clienteList: any[] = [];
     searchClienteList: any[] = [];
 
@@ -76,16 +93,62 @@ private menus: MenuItem[];
     
     constructor(private _router: Router,
         private venderService: VenderService,
+        private activatedRoute: ActivatedRoute,
+        private caixaService: CaixaService
     ){}
 
     ngOnInit() {
-        //this.items.push("0");
-        //this.quantidade.push("");
-        //this.valor.push("");
-        //this.selectedProduto.push("");
+
         this.frete = 0;
         this.sum = 0;
         this.subtracao = 0.00;
+
+        this.activatedRoute.params.subscribe((params: Params) => {
+            this.hash = params['hash'];
+            let tabela = params['tabela'];
+            this.origem = params['origem'];
+
+            this.caixaService.editar(this.hash, tabela).subscribe(
+                data => {
+                    console.log(data)
+
+                    
+                    this.fornecedorFC = data.fornecedor;
+                    this.emissaoFC = data.emissao;
+                    this.operacaoFC = data.operacao;
+                    this.categoriaFC = data.categoria;
+                    this.serieFC = data.serie;
+                    this.nfFC = data.nf;
+                    this.compraFC = data.compra;
+                    this.verificarNota = data.verificar;
+                    this.selectedProduto = data.uniqueProduct; //lista
+
+                    for(let i = 0; i < this.selectedProduto.length; i++){
+                        this.items.push(i)
+                    }
+
+                    this.quantidadeAtual = data.qtdTotal; //lista
+                    this.pm = data.pmTotal; //lista
+                    this.quantidade = data.qtdNota; //lista                        
+                    this.valor = data.pmTotalNota; //lista
+                    this.pmNovo = data.pms; //lista
+
+                    this.transportadoraFC = data.transportadora;
+                    this.freteFC = data.frete;
+
+                    //this.datePgto = data.dataParc; //lista
+                    
+                    for(let i = 0; i < data.dataParc.length; i++){
+                        this.itemsPgto.push(i)
+                        var x = moment(data.dataParc[i]).format("MM-DD-YYYY"); //convert para MM-DD-YYYY
+                        var y = new Date(x); //converto para tipo Date
+                        this.datePgto.push(y);
+                    }
+                    this.valorPgto = data.parcelas; //lista
+                },
+                error => console.log(error)
+            )
+        }); 
 
         this.venderService.getItemProduto()
             .subscribe(
