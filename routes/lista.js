@@ -464,7 +464,8 @@ router.post('/venda', function(req, res, next) {
   }
 
   for (let i = 0; i < quantidade.length; i++) {
-    var query = Produto.find({produto: selectedProduto[i], vendido: false}).limit(quantidade[i]).exec();
+    var inteiro = parseInt(quantidade[i])
+    var query = Produto.find({produto: selectedProduto[i], vendido: false}).limit(inteiro).exec();
     query.then(function (doc) {
       for (let j = 0; j < doc.length; j++) {
         Produto.update({ _id: doc[j]._id }, { $set: { vendido: true, hashId: listHash[j] }}, function(e, r){

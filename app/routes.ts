@@ -3,6 +3,7 @@ import { LoginComponent } from './login/login.component';
 import { FornecedorComponent } from './fornecedor/fornecedor.component';
 import { FornecedorEditarComponent } from './fornecedor/fornecedor-editar.component';
 import { VenderComponent } from './vender/vender.component';
+import { VenderEditarComponent } from './vender/vender-editar.component';
 import { CaixaComponent } from './fluxodecaixa/fluxodecaixa.component';
 import { DespesasReceitasComponent } from './despesasreceitas/despesasreceitas.component';
 
@@ -10,6 +11,7 @@ export const appRoutes: Routes = [
     {path: 'login', component: LoginComponent},
     {path: 'fornecedor', component: FornecedorComponent},
     {path: 'fornecedor-editar/:hash/:tabela/:origem', component: FornecedorEditarComponent},
+    {path: 'vender-editar/:hash/:tabela/:origem', component: VenderEditarComponent},
     {path: 'vender', component: VenderComponent},
     {path: 'fluxodecaixa', component: CaixaComponent},
     {path: 'despesasreceitas', component: DespesasReceitasComponent},
