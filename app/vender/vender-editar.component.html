@@ -2,42 +2,23 @@
 <div class="container back">
     <p-panel header="Editar Venda">
         <div class="margin">
-            <p-fieldset legend="Cabeçalho"> 
-                <div class="display">
-                    <div class="field">
-                        <p-autoComplete [(ngModel)]="selectedCliente" [suggestions]="searchClienteList" (completeMethod)="searchCliente($event)" placeholder="Cliente"></p-autoComplete>
-                    </div>
-                    <div class="field icon-display">
-                        <div>
-                            <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Cliente', op)"></i>
-                        </div>
-                    </div>
-                    <div div class="field">
-                        <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="valueEmissao" dateFormat="dd/mm/yy" placeholder="Data Emissão"></p-calendar>
-                    </div>
-                    <div class="field">
-                        <p-autoComplete (onDropdownClick)="operacaoDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedOperacao" [suggestions]="searchOperacaoList" (completeMethod)="searchOperacao($event)" placeholder="Operação"></p-autoComplete>
-                    </div>
-                    <div class="field icon-display">
-                        <div>
-                            <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Operação', op)"></i>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <p-autoComplete (onDropdownClick)="categoriaDropdownClick($event)" [dropdown]="true" [(ngModel)]="selectedCategoria" [suggestions]="searchCategoriaList" (completeMethod)="searchCategoria($event)" placeholder="Categoria"></p-autoComplete>
-                    </div>
-                    <div class="field icon-display">
-                        <div>
-                            <i class="fa fa-plus-circle" (click)="selectEdit($event, 'Categoria', op)"></i>
-                        </div>
-                    </div>
+            <p-fieldset legend="Cabeçalho">                
+                <div class="layout2">
+                    <div class="field2 margin2"><b>Cliente:</b> {{cliente}}</div>
+                    <div class="field2 margin2"><b>Data de Emissão:</b> {{emissaoFC | numerobrasil:"date"}}</div>
                 </div>
-                <div class="display margin">
-                    <div class="field">
-                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="serie" placeholder="Série"/>
+                <div class="layout2">
+                    <div class="field2 margin2"><b>Operação:</b> {{operacaoFC}}</div>
+                    <div class="field2 margin2"><b>Categoria:</b> {{categoriaFC}}</div>
+                </div>               
+                <div class="layout2">
+                    <div class="field2 margin2">
+                        <span><b>Série: </b></span>
+                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="serieFC" placeholder="Série"/>
                     </div>
-                    <div class="field">
-                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="venda" placeholder="Número da Venda" style="margin-left: 34px;"/>
+                    <div class="field2 margin2">
+                        <span><b>Número da Venda: </b></span>
+                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="vendaFC" placeholder="Número da Venda"/>
                     </div>
                 </div>
             </p-fieldset>
@@ -47,64 +28,56 @@
                 <div class="display">
                     <button (click)="addProduto()" pButton type="button" label="Produto" iconPos="left" icon="fa-plus-circle"></button>
                 </div>
-                <!--div class="display margin">
-                    <div class="field">
-                        <input pInputText placeholder="Produto" disabled/>
-                    </div>
-                    <div class="field">
-                        <input pInputText placeholder="Custo Médio" disabled/>
-                    </div>
-                    <div class="field">
-                        <input pInputText placeholder="Quantidade" disabled/>
-                    </div>
-                    <div class="field">
-                        <input pInputText placeholder="Margem %" disabled/>
-                    </div>
-                    <div class="field">
-                        <input pInputText placeholder="Valor da Venda" disabled/>
-                    </div-->
-                    <!--div class="field">
-                        <input pInputText placeholder="Total" disabled/>
-                    </div-->
-                <!--/div-->
                 <div *ngFor="let num of items; let i=index">
                     <div class="display margin">
+                        <div class="field">                            
+                            <div pTooltip="Produto" class="input-style" tooltipPosition="top" title={{selectedProduto[num]}} style="cursor: default; width:205px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ selectedProduto[num] }}</div>
+                        </div> 
                         <div class="field">
-                            <p-autoComplete pTooltip="Produto" tooltipPosition="top" [(ngModel)]="selectedProduto[num]" (ngModelChange)="onChange($event, num)" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
+                            <div pTooltip="Preço médio no estoque" style="width:130px;" tooltipPosition="top" class="input-style">0</div>
                         </div>
                         <div class="field">
-                            <div pTooltip="Preço médio no estoque" style="width:130px;" tooltipPosition="top" class="input-style">{{ pm[num] | numerobrasil:"money"}}</div>
-                            <!--input
-                                disabled
-                                pInputText
-                                currencyMask
-                                [(ngModel)]="pm[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" /-->
+                            <div pTooltip="Quantidade total no estoque" style="width:100px;" tooltipPosition="top" class="input-style">0</div>
                         </div>
                         <div class="field">
-                            <input pTooltip="Quantidade" tooltipPosition="top" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
+                            <div pTooltip="Preço médio na compra" style="width:130px;" tooltipPosition="top" class="input-style">{{ pm[num] | numerobrasil:"money"}}</div>
                         </div>
                         <div class="field">
-                            <input pTooltip="Margem %" tooltipPosition="top" type="text" pInputText [(ngModel)]="margem[num]" style="width:205px"/>
-                            <p-slider [(ngModel)]="margem[num]" [style]="{'width':'205px'}"></p-slider>
+                            <input pTooltip="Quantidade" tooltipPosition="top" style="width:100px;" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
+                        </div>
+                        <div class="field">
+                            <input pTooltip="Margem %" tooltipPosition="top" type="text" pInputText [(ngModel)]="margem[num]" style="width:100px"/>
+                            <p-slider [(ngModel)]="margem[num]" [style]="{'width':'100px'}"></p-slider>
                         </div>
                         <div class="field">
                             <div pTooltip="Valor da Venda" tooltipPosition="top" style="width:150px;" class="input-style">{{ ((margem[num]/100)+1)*pm[num]*quantidade[num] | numerobrasil:"money"}}</div>
-                            <!--input
-                                disabled
-                                pInputText
-                                currencyMask                    
-                                [(ngModel)]="((margem[num]/100)+1)*pm[num]*quantidade[num]" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" /-->
                         </div>
-                        <!--div class="field">
-                            <input
-                                type="text" 
-                                pInputText
-                                currencyMask
-                                [(ngModel)]="quantidade[num]*valor[num]" 
-                                disabled                    
-                                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                            />
-                        </div-->
+                    </div>
+                </div>
+                <div *ngFor="let num of items2; let i=index">
+                    <div class="display margin">
+                        <div class="field">
+                            <p-autoComplete pTooltip="Produto" tooltipPosition="top" [(ngModel)]="selectedProduto2[num]" (ngModelChange)="onChange($event, num)" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
+                        </div>
+                        <div class="field">
+                            <div pTooltip="Preço médio no estoque" style="width:130px;" tooltipPosition="top" class="input-style">0</div>
+                        </div>
+                        <div class="field">
+                            <div pTooltip="Quantidade total no estoque" style="width:100px;" tooltipPosition="top" class="input-style">0</div>
+                        </div>
+                        <div class="field">
+                            <div pTooltip="Preço médio na compra" style="width:130px;" tooltipPosition="top" class="input-style">{{ pm2[num] | numerobrasil:"money"}}</div>
+                        </div>
+                        <div class="field">
+                            <input pTooltip="Quantidade" tooltipPosition="top" style="width:100px;" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="quantidade2[num]" placeholder="Quantidade"/>
+                        </div>
+                        <div class="field">
+                            <input pTooltip="Margem %" tooltipPosition="top" type="text" pInputText [(ngModel)]="margem2[num]" style="width:100px"/>
+                            <p-slider [(ngModel)]="margem2[num]" [style]="{'width':'100px'}"></p-slider>
+                        </div>
+                        <div class="field">
+                            <div pTooltip="Valor da Venda" tooltipPosition="top" style="width:150px;" class="input-style">{{ ((margem2[num]/100)+1)*pm2[num]*quantidade2[num] | numerobrasil:"money"}}</div>
+                        </div>
                         <div class="field icon-display">
                             <div>
                                 <i class="fa fa-times" (click)="remove(i)" style="color:red"></i>
@@ -119,16 +92,11 @@
             <p-fieldset legend="Frete"> 
                 <div class="display">
                     <div class="field">
-                        <p-autoComplete [(ngModel)]="selectedTransportadora" [suggestions]="searchTransportadoraList" (completeMethod)="searchTransportadora($event)" placeholder="Transportadora"></p-autoComplete>
-                    </div>
-                    <div class="field icon-display" (click)="selectEdit($event, 'Transportadora', op)">
-                        <div>
-                            <i class="fa fa-plus-circle"></i>
-                        </div>
+                        <p-autoComplete [(ngModel)]="transportadoraFC" [suggestions]="searchTransportadoraList" (completeMethod)="searchTransportadora($event)" placeholder="Transportadora"></p-autoComplete>
                     </div>
                     <div class="field">
                         <input type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                            pInputText [(ngModel)]="frete" placeholder="Frete"/>
+                            pInputText [(ngModel)]="freteFC" placeholder="Frete"/>
                     </div>
                 </div>
             </p-fieldset>
@@ -153,17 +121,6 @@
                 <div class="display">
                     <button (click)="addPagamento()" pButton type="button" label="Recebimento" iconPos="left" icon="fa-plus-circle"></button>
                 </div>
-                <!--div class="display margin">
-                    <div class="field">
-                        <input pInputText placeholder="Vencimento" disabled/>
-                    </div>
-                    <div class="field">
-                        <input pInputText placeholder="Data Recebimento" disabled/>
-                    </div>
-                    <div class="field">
-                        <input pInputText placeholder="Recebimento" disabled/>
-                    </div>
-                </div-->
                 <div *ngFor="let _num of itemsPgto; let i=index">
                     <div class="display margin">
                         <div div class="field">
@@ -236,8 +193,3 @@
         </div>
     </p-panel>
 </div>
-
-<p-overlayPanel #op>
-    <input type="text" pInputText [(ngModel)]="item" placeholder="{{ label }}"/>
-    <i class="fa fa-check-circle certo" (click)="itemEscolhido(label, item);op.hide($event)"></i>    
-</p-overlayPanel>

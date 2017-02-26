@@ -61,13 +61,19 @@ private menus: MenuItem[];
     quantidadeAtual = [];
     pmNovo = [];
 
-    fornecedorFC: string;
+    items2 = [];
+    quantidade2 = [];
+    margem2 = [];
+    pm2 = [];
+    selectedProduto2 = []; 
+
+    cliente: string;
     emissaoFC: string;
     operacaoFC: string;
     categoriaFC: string;
     serieFC: string;
     nfFC: string;
-    compraFC: string;
+    vendaFC: string;
     transportadoraFC: string;
     freteFC: string;
     parcelasFC = [];
@@ -111,27 +117,24 @@ private menus: MenuItem[];
             this.caixaService.editar(this.hash, tabela).subscribe(
                 data => {
                     console.log(data)
-
                     
-                    this.fornecedorFC = data.fornecedor;
+                    this.cliente = data.cliente;
                     this.emissaoFC = data.emissao;
                     this.operacaoFC = data.operacao;
                     this.categoriaFC = data.categoria;
                     this.serieFC = data.serie;
-                    this.nfFC = data.nf;
-                    this.compraFC = data.compra;
-                    this.verificarNota = data.verificar;
+                    this.vendaFC = data.venda;
+                    //this.verificarNota = data.verificar;
                     this.selectedProduto = data.uniqueProduct; //lista
 
                     for(let i = 0; i < this.selectedProduto.length; i++){
                         this.items.push(i)
                     }
 
-                    this.quantidadeAtual = data.qtdTotal; //lista
-                    this.pm = data.pmTotal; //lista
-                    this.quantidade = data.qtdNota; //lista                        
-                    this.valor = data.pmTotalNota; //lista
-                    this.pmNovo = data.pms; //lista
+                    this.quantidade = data.qtdList; //lista
+                    this.pm = data.pmList; //lista
+                    this.margem = data.margemList; //lista
+
 
                     this.transportadoraFC = data.transportadora;
                     this.freteFC = data.frete;
@@ -143,8 +146,13 @@ private menus: MenuItem[];
                         var x = moment(data.dataParc[i]).format("MM-DD-YYYY"); //convert para MM-DD-YYYY
                         var y = new Date(x); //converto para tipo Date
                         this.datePgto.push(y);
+
+                        var x1 = moment(data.vencimento[i]).format("MM-DD-YYYY"); //convert para MM-DD-YYYY
+                        var y1 = new Date(x1); //converto para tipo Date
+                        this.vencimento.push(y1);
                     }
-                    this.valorPgto = data.parcelas; //lista
+
+                    this.valorPgto = data.parcelasLista; //lista
                 },
                 error => console.log(error)
             )
@@ -156,45 +164,6 @@ private menus: MenuItem[];
                     //this.produto = data;
                     for(let i = 0; i < data[0].length; i++) {
                         this.produtoList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.venderService.getItem("Cliente")
-            .subscribe(
-                data => {
-                    //this.fornecedores = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.clienteList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.venderService.getItem("Operação")
-            .subscribe(
-                data => {
-                    //this.operacao = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.operacaoList.push(data[0][i].label);
-                    }
-                },
-                error => {
-                    console.log(error)
-                }                
-            );
-
-        this.venderService.getItem("Categoria")
-            .subscribe(
-                data => {
-                    //this.categoria = data;
-                    for(let i = 0; i < data[0].length; i++) {
-                        this.categoriaList.push(data[0][i].label);
                     }
                 },
                 error => {
@@ -214,9 +183,6 @@ private menus: MenuItem[];
                     console.log(error)
                 }                
             );
-
-        this.addProduto();
-        this.addPagamento();
 
         this.br = {
             //data
@@ -318,7 +284,7 @@ private menus: MenuItem[];
             var x = ((parseFloat(this.margem[i])/100)+1) * parseFloat(this.pm[i]) * parseFloat(this.quantidade[i])
             this.ll.push(x)
         }
-        this.sum = this.ll.reduce((a, b) => a + b, 0) + this.frete;
+        this.sum = this.ll.reduce((a, b) => a + b, 0) + this.freteFC;
         var resultado = Math.round(this.sum * 100) / 100;
         return resultado;
     }
@@ -351,18 +317,6 @@ private menus: MenuItem[];
         }
     }
 
-    searchCliente(event) {
-         this.searchClienteList = []
-
-        for (let j = 0; j < this.clienteList.length; j++) {
-            try{
-                if (this.clienteList[j].match(event.query)) {
-                    this.searchClienteList.push(this.clienteList[j])
-                }
-            }catch(e){}
-        }
-    }
-
     searchTransportadora(event) {
          this.searchTransportadoraList = []
 
@@ -374,45 +328,6 @@ private menus: MenuItem[];
                 //console.log(this.searchTransportadoraList)
             }catch(e){}
         }
-    }
-
-    searchOperacao(event) {
-         this.searchOperacaoList = []
-
-        for (let j = 0; j < this.operacaoList.length; j++) {
-            try{
-                if (this.operacaoList[j].match(event.query)) {
-                    this.searchOperacaoList.push(this.operacaoList[j])
-                }
-                //console.log(this.searchOperacaoList)
-            }catch(e){}
-        }
-    }
-
-    operacaoDropdownClick(event) {       
-        this.searchOperacaoList = [];
-        setTimeout(() => {
-            this.searchOperacaoList = this.operacaoList;
-        }, 100)
-    }
-
-    searchCategoria(event) {
-         this.searchCategoriaList = []
-
-        for (let j = 0; j < this.categoriaList.length; j++) {
-            try{
-                if (this.categoriaList[j].match(event.query)) {
-                    this.searchCategoriaList.push(this.categoriaList[j])
-                }
-            }catch(e){}
-        }
-    }
-
-    categoriaDropdownClick(event) {       
-        this.searchCategoriaList = [];
-        setTimeout(() => {
-            this.searchCategoriaList = this.categoriaList;
-        }, 100)
     }
 
     salvar(
@@ -427,7 +342,7 @@ private menus: MenuItem[];
             quantidade,
             margem,
             selectedTransportadora,
-            frete,
+            freteFC,
             sum,
             valorPgto,
             vencimento,
@@ -477,7 +392,7 @@ private menus: MenuItem[];
                     //     error => console.log(error)
                     //)
                 
-                    if(frete > 0) {
+                    if(freteFC > 0) {
                         if( (selectedTransportadora == undefined) || 
                             (selectedTransportadora == "") || 
                             (this.transportadoraList.indexOf(selectedTransportadora) == -1)) {
@@ -532,7 +447,7 @@ private menus: MenuItem[];
                             quantidade,
                             margem,
                             selectedTransportadora,
-                            frete,
+                            freteFC,
                             valorPgto,
                             vencimento,
                             datePgto,
@@ -620,8 +535,8 @@ private menus: MenuItem[];
             .subscribe(
                 data => {                    
                     if(data[0] != 0){
-                        this.quantidade[num] = data[0];
-                        this.pm[num] = data[1];
+                        this.quantidade2[num] = data[0];
+                        this.pm2[num] = data[1];
                     }
                 },
                 error => {
@@ -632,18 +547,18 @@ private menus: MenuItem[];
     }
 
     addProduto() {
-        if(this.items.length == 0) {
-            this.items.push("0");
-            this.quantidade.push("");
-            this.margem.push("");
-            this.pm.push("");
-            this.selectedProduto.push("");            
+        if(this.items2.length == 0) {
+            this.items2.push("0");
+            this.quantidade2.push(0);
+            this.margem2.push("");
+            this.pm2.push("");
+            this.selectedProduto2.push("");            
         }else{
-            this.items.push(String(this.items.length));
-            this.quantidade.push("");
-            this.margem.push("");
-            this.pm.push("");
-            this.selectedProduto.push("");
+            this.items2.push(String(this.items2.length));
+            this.quantidade2.push(0);
+            this.margem2.push("");
+            this.pm2.push("");
+            this.selectedProduto2.push("");
         }
         
     }
@@ -664,15 +579,15 @@ private menus: MenuItem[];
     }
 
     remove(x) {
-        var tamanho = this.items.length;
+        var tamanho = this.items2.length;
         for(let i = 0; i < tamanho-1; i++) {
-            this.items.push(String(i))
+            this.items2.push(String(i))
         }
-        this.items.splice(0, tamanho);
-        this.quantidade.splice(x, 1);
-        this.selectedProduto.splice(x, 1);
-        this.margem.splice(x, 1);
-        this.pm.splice(x, 1);
+        this.items2.splice(0, tamanho);
+        this.quantidade2.splice(x, 1);
+        this.selectedProduto2.splice(x, 1);
+        this.margem2.splice(x, 1);
+        this.pm2.splice(x, 1);
     }
 
     removePgto(x) {
@@ -692,34 +607,4 @@ private menus: MenuItem[];
         overlaypanel.toggle(event);
     }
 
-    itemEscolhido(label, item) {
-        if(item.trim() != ""){
-            var lista = item.split(";");
-            var listaApoio = [];
-            this.venderService.postItem(label, lista)
-                .subscribe(
-                    data => {
-                        this.venderService.getItem(data)
-                            .subscribe(
-                                data => {
-                                    for(let i = 0; i < data[0].length; i++) {
-                                        listaApoio.push(data[0][i].label);
-                                    }                                   
-                                    this.clienteList.splice(0, this.clienteList.length);
-                                    for(let i = 0; i < listaApoio.length; i++) {
-                                        this.clienteList.push(listaApoio[i]);
-                                    }
-                                    listaApoio = [];
-                                },
-                                error => {
-                                    console.log(error)
-                                }                
-                            );
-                    },
-                    error => {
-                        console.log(error)
-                    }                
-                );
-        }
-    }
 }

@@ -1,17 +1,28 @@
 .display {
     display: flex;
 }
-
+.layout2 {
+    display: flex;
+    justify-content:flex-start;
+}
 .margin {
     margin-top: 15px;
 }
-
 .field {
     margin-right: 10px;
 }
-
+.field2 {
+    margin-right: 20px;
+}
+.margin2 {
+    margin-top: 10px;
+}
 .paragrafo {
     margin-left: 20px;
+}
+.center-div{
+    display: flex;
+    align-items: center
 }
 .input-style{
     padding: 4px;
