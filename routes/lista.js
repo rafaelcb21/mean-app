@@ -1186,6 +1186,9 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
       pmList = [];
       qtdList = [];
       margemList = [];
+      pmListTotal = [];
+      qtdListTotal = [];
+      qtdTotal = [];
 
       for(let j = 0; j < _dataParc.length; j++){
           var date = _dataParc[j].slice(0, 10);
@@ -1228,34 +1231,60 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
         });
       }
 
-      async.map(uniqueProduct, funcaoVenda1, function (err1, result1) {       
+      var funcaoVenda2 = function(key, callback){
+          qtdList2 = [];
+          Produto.find({ produto: key, vendido: false}, function (err6, doc6) {
+            for(let i = 0; i < doc6.length; i++){
+              qtdList2.push(doc6[i].val[0]);
+            }
+            qtd = qtdList2.length;
+            sum = qtdList2.reduce((a, b) => a + b, 0);
+            pm = sum/qtd;
+            qtdList2 = [];
+            
+            callback(err6, [key, pm, qtd]);
+        });
+      }
+
+      async.map(uniqueProduct, funcaoVenda1, function (err1, result1) {
         for(let i = 0; i < result1.length; i++){
             pmList.push(result1[i][0]);
             qtdList.push(result1[i][1]);
             margemList.push(result1[i][2]);
         }
-        document = {
-            cliente: cliente,
-            emissao: emissao,
-            operacao: operacao,
-            categoria: categoria,
-            serie: serie,
-            venda: venda,
-            hashId: hashId,
-            uniqueProduct: uniqueProduct,
-            transportadora: transportadora,
-            frete: frete,
-            vencimento: vencimento,
-            dataParc: dataParc,
-            parcelasLista: parcelasLista,
-            pmList: pmList,
-            qtdList: qtdList,
-            margemList: margemList,
-            hash: hash
-        }
-        res.status(200).json({
-          obj: document
-        });    
+        async.map(uniqueProduct, funcaoVenda2, function (err2, result2) {
+          for(let i = 0; i < result2.length; i++){
+            pmListTotal.push(result2[i][1]);
+            qtdListTotal.push(result2[i][2]);
+          }
+          for(let i = 0; i < result2.length; i++){
+            qtdTotal.push(qtdListTotal[i] + qtdList[i])
+          }
+          document = {
+              cliente: cliente,
+              emissao: emissao,
+              operacao: operacao,
+              categoria: categoria,
+              serie: serie,
+              venda: venda,
+              hashId: hashId,
+              uniqueProduct: uniqueProduct,
+              transportadora: transportadora,
+              frete: frete,
+              vencimento: vencimento,
+              dataParc: dataParc,
+              parcelasLista: parcelasLista,
+              pmList: pmList,
+              qtdList: qtdList,
+              margemList: margemList,
+              hash: hash,
+              pmEstoque: pmListTotal,
+              qtdTotal: qtdTotal
+          }
+          res.status(200).json({
+            obj: document
+          });
+      })    
     })     
   })
   }else if(tabela=="dr"){
@@ -1276,4 +1305,12 @@ router.post('/excluirNota', function(req, res, next) {
   })
 })
 
+router.post('/excluirVenda', function(req, res, next) {
+  var hash = req.body.hash;
+  Venda.remove({ hash: hash}, function (err, doc2){});
+  Fluxo.remove({ hash: hash, tabela: "venda"}, function (err, doc2){});
+  res.status(200).json({
+    msg: "Excluido"
+  })
+})
 module.exports = router;

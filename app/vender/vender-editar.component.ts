@@ -65,7 +65,9 @@ private menus: MenuItem[];
     quantidade2 = [];
     margem2 = [];
     pm2 = [];
-    selectedProduto2 = []; 
+    selectedProduto2 = [];
+    pmEstoque = [];
+    qtdTotal = [];
 
     cliente: string;
     emissaoFC: string;
@@ -100,7 +102,8 @@ private menus: MenuItem[];
     constructor(private _router: Router,
         private venderService: VenderService,
         private activatedRoute: ActivatedRoute,
-        private caixaService: CaixaService
+        private caixaService: CaixaService,
+        private confirmationService: ConfirmationService
     ){}
 
     ngOnInit() {
@@ -131,6 +134,8 @@ private menus: MenuItem[];
                         this.items.push(i)
                     }
 
+                    this.pmEstoque = data.pmEstoque; //lista
+                    this.qtdTotal = data.qtdTotal; //lista
                     this.quantidade = data.qtdList; //lista
                     this.pm = data.pmList; //lista
                     this.margem = data.margemList; //lista
@@ -223,6 +228,10 @@ private menus: MenuItem[];
             {
                 label: 'Comprar Produto',
                 routerLink: ['/fornecedor']
+            },
+            {
+                label: 'Vender Produto',
+                routerLink: ['/vender']
             },
             {
                 label: 'Despesas e Receitas',
@@ -605,6 +614,27 @@ private menus: MenuItem[];
         this.label = lista
         this.item = "";
         overlaypanel.toggle(event);
+    }
+
+    sair(){
+        if(this.origem=="fc"){
+            this._router.navigate(['/fluxodecaixa']);
+        }
+    }
+
+    excluir(hash) {
+        console.log(hash)
+        this.confirmationService.confirm({
+            message: 'Tem certeza que deseja excluir essa Nota de Venda?',
+            header: 'Excluir',
+            icon: 'fa fa-trash',
+            accept: () => {
+                this.venderService.excluirVenda(hash).subscribe(
+                    data => this._router.navigate(['/fluxodecaixa']),
+                    error => console.log(error)
+                )                
+            }
+        });
     }
 
 }

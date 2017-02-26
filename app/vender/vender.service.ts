@@ -150,4 +150,12 @@ export class VenderService {
             .map(response => response.json().msg)
             .catch(error => Observable.throw(error.json()));
     }
+
+    excluirVenda(hash) {
+        const body = JSON.stringify({hash: hash});
+        const header = new Headers({'Content-Type': 'application/json'});
+        return this._http.post(Config.URL_SITE + 'lista/excluirVenda', body, {headers: header})
+            .map(response => response.json().msg)
+            .catch(error => Observable.throw(error.json()));
+    }
 }

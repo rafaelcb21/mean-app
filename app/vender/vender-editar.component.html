@@ -34,16 +34,16 @@
                             <div pTooltip="Produto" class="input-style" tooltipPosition="top" title={{selectedProduto[num]}} style="cursor: default; width:205px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ selectedProduto[num] }}</div>
                         </div> 
                         <div class="field">
-                            <div pTooltip="Preço médio no estoque" style="width:130px;" tooltipPosition="top" class="input-style">0</div>
+                            <div pTooltip="Preço médio no estoque" style="width:130px;" tooltipPosition="top" class="input-style">{{ pmEstoque[num] | numerobrasil:"money"}}</div>
                         </div>
                         <div class="field">
-                            <div pTooltip="Quantidade total no estoque" style="width:100px;" tooltipPosition="top" class="input-style">0</div>
+                            <div pTooltip="Quantidade total no estoque" style="width:100px;" tooltipPosition="top" class="input-style">{{ qtdTotal[num]}}</div>
                         </div>
                         <div class="field">
                             <div pTooltip="Preço médio na compra" style="width:130px;" tooltipPosition="top" class="input-style">{{ pm[num] | numerobrasil:"money"}}</div>
                         </div>
                         <div class="field">
-                            <input pTooltip="Quantidade" tooltipPosition="top" style="width:100px;" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
+                            <input pTooltip="Quantidade à ser vendida" tooltipPosition="top" style="width:100px;" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="quantidade[num]" placeholder="Quantidade"/>
                         </div>
                         <div class="field">
                             <input pTooltip="Margem %" tooltipPosition="top" type="text" pInputText [(ngModel)]="margem[num]" style="width:100px"/>
@@ -60,10 +60,10 @@
                             <p-autoComplete pTooltip="Produto" tooltipPosition="top" [(ngModel)]="selectedProduto2[num]" (ngModelChange)="onChange($event, num)" [suggestions]="searchProdutoList" (completeMethod)="searchProduto($event)" placeholder="Produto"></p-autoComplete>
                         </div>
                         <div class="field">
-                            <div pTooltip="Preço médio no estoque" style="width:130px;" tooltipPosition="top" class="input-style">0</div>
+                            <div pTooltip="Preço médio no estoque" style="width:130px;" tooltipPosition="top" class="input-style">---</div>
                         </div>
                         <div class="field">
-                            <div pTooltip="Quantidade total no estoque" style="width:100px;" tooltipPosition="top" class="input-style">0</div>
+                            <div pTooltip="Quantidade total no estoque" style="width:100px;" tooltipPosition="top" class="input-style">---</div>
                         </div>
                         <div class="field">
                             <div pTooltip="Preço médio na compra" style="width:130px;" tooltipPosition="top" class="input-style">{{ pm2[num] | numerobrasil:"money"}}</div>
@@ -189,7 +189,21 @@
                             )"
                     pButton type="button" label="Salvar" style="color:#fff;background:green;border-color:green;margin-bottom:12px;margin-top:5px">
                 </button>
+                <button
+                    (click)="sair()"
+                    pButton type="button" label="Sair sem salvar" style="color:#fff;background:red;border-color:red;margin-bottom:12px;margin-top:5px">
+                </button>
+                <button
+                    (click)="excluir(hash)"
+                    pButton type="button" label="Excluir" icon="fa-trash" style="color:#fff;background:red;border-color:red;margin-bottom:12px;margin-top:5px">
+                </button>
             </div>
         </div>
     </p-panel>
 </div>
+<p-confirmDialog icon="fa fa-question-circle" width="425" #cd>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" label="Não"></button>
+        <button type="button" pButton icon="fa-check" label="Sim" (click)="cd.accept()"></button>
+    </p-footer>
+</p-confirmDialog>
