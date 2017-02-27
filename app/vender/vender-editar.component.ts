@@ -118,9 +118,7 @@ private menus: MenuItem[];
             this.origem = params['origem'];
 
             this.caixaService.editar(this.hash, tabela).subscribe(
-                data => {
-                    console.log(data)
-                    
+                data => {                  
                     this.cliente = data.cliente;
                     this.emissaoFC = data.emissao;
                     this.operacaoFC = data.operacao;
@@ -279,7 +277,11 @@ private menus: MenuItem[];
             var x = ((parseFloat(this.margem[i])/100)+1) * parseFloat(this.pm[i]) * parseFloat(this.quantidade[i])
             this.pp.push(x)
         }
-        this.sum = this.pp.reduce((a, b) => a + b, 0) + this.frete;
+        for(let i = 0;  i < this.quantidade2.length; i++) {
+            var x = ((parseFloat(this.margem2[i])/100)+1) * parseFloat(this.pm2[i]) * parseFloat(this.quantidade2[i])
+            this.pp.push(x)
+        }
+        this.sum = this.pp.reduce((a, b) => a + b, 0) + this.freteFC;
         for(let i = 0;  i < this.pp.length; i++) {
             var y = parseFloat(this.pp[i])/this.sum;
             this.proporcao.push(y);
@@ -291,6 +293,10 @@ private menus: MenuItem[];
         this.ll = []
         for(let i = 0;  i < this.quantidade.length; i++) {
             var x = ((parseFloat(this.margem[i])/100)+1) * parseFloat(this.pm[i]) * parseFloat(this.quantidade[i])
+            this.ll.push(x)
+        }
+        for(let i = 0;  i < this.quantidade2.length; i++) {
+            var x = ((parseFloat(this.margem2[i])/100)+1) * parseFloat(this.pm2[i]) * parseFloat(this.quantidade2[i])
             this.ll.push(x)
         }
         this.sum = this.ll.reduce((a, b) => a + b, 0) + this.freteFC;
@@ -340,54 +346,41 @@ private menus: MenuItem[];
     }
 
     salvar(
-            selectedCliente,
-            valueEmissao,
-            selectedOperacao,
-            selectedCategoria,
-            serie,
-            venda,
+            cliente,
+            emissaoFC,
+            operacaoFC,
+            categoriaFC,
+            serieFC,
+            vendaFC,
             selectedProduto,
             pm,
             quantidade,
             margem,
-            selectedTransportadora,
+            selectedProduto2,
+            pm2,
+            quantidade2,
+            margem2,
+            transportadoraFC,
             freteFC,
             sum,
-            valorPgto,
             vencimento,
             datePgto,
-            subtracao
+            valorPgto,
+            subtracao,
+            hash
         ) {
-
-            this.venderService.verificarQtd(selectedProduto, quantidade).subscribe(
+            this.venderService.verificarQtd2(selectedProduto, quantidade, selectedProduto2, quantidade2).subscribe(
                 bool =>  {
                     var listaVerify = [];
                     listaVerify.push(bool);
 
-                    if(selectedCliente == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    if(this.clienteList.indexOf(selectedCliente) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-
-                    if(valueEmissao == undefined || valueEmissao == null) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    
-                    if(selectedOperacao == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    if(this.operacaoList.indexOf(selectedOperacao) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-
-                    if(selectedCategoria == undefined) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    if(this.categoriaList.indexOf(selectedCategoria) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-
-                    //if(serie == undefined || serie == "") {listaVerify.push(false)}else{listaVerify.push(true)}
-                    //if(venda == undefined || venda == "") {listaVerify.push(false)}else{listaVerify.push(true)}
-
-                    if(selectedProduto.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    for (let j = 0; j < selectedProduto.length; j++) {
-                        if (this.produtoList.indexOf(selectedProduto[j]) == -1) {
+                    if(selectedProduto2.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    for (let j = 0; j < selectedProduto2.length; j++) {
+                        if (this.produtoList.indexOf(selectedProduto2[j]) == -1) {
                             listaVerify.push(false);
                             break;
                         }else{listaVerify.push(true)}
                     }
-
-                    if(pm.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    if(pm.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
 
                     if(quantidade.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
                     if(quantidade.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
@@ -395,25 +388,24 @@ private menus: MenuItem[];
                     if(margem.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
                     if(margem.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
 
+                    if(quantidade2.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(quantidade2.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-                    //this.venderService.verificarQtd(selectedProduto, quantidade).subscribe(
-                    //     data => this.venderService.checkQtd = data,
-                    //     error => console.log(error)
-                    //)
-                
+                    if(margem2.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(margem2.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+              
                     if(freteFC > 0) {
-                        if( (selectedTransportadora == undefined) || 
-                            (selectedTransportadora == "") || 
-                            (this.transportadoraList.indexOf(selectedTransportadora) == -1)) {
+                        if( (transportadoraFC == undefined) || 
+                            (transportadoraFC == "") || 
+                            (this.transportadoraList.indexOf(transportadoraFC) == -1)) {
                                 listaVerify.push(false)
                             }else{listaVerify.push(true)}
                     }else{
-                        selectedTransportadora = "";
+                        transportadoraFC = "";
                         listaVerify.push(true)
                     }
 
                     var num = parseInt(sum) || 0;
-                    //if(num == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
 
                     if((valorPgto.indexOf("") != -1) || (valorPgto.indexOf(0) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
                     if(valorPgto.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
@@ -435,34 +427,39 @@ private menus: MenuItem[];
                         this.verify = false
                     }
 
+                    console.log(listaVerify)
+                    console.log(this.verify)
                     listaVerify = [];
 
                     var soma = this.somar();
                     var proporcaoList = this.proporcional();
-                    var hashString = this.randomString(32, '#aA!');
-                    var pwSHA256 = sha256(hashString);
-
+                    
                     if(this.verify == true) {
                         this.showSucesso();
-                        this.venderService.postVenda(
-                            selectedCliente,
-                            valueEmissao,
-                            selectedOperacao,
-                            selectedCategoria,
-                            serie,
-                            venda,
+                        this.venderService.postVenda2(
+                            cliente,
+                            emissaoFC,
+                            operacaoFC,
+                            categoriaFC,
+                            serieFC,
+                            vendaFC,
                             selectedProduto,
                             pm,
                             quantidade,
                             margem,
-                            selectedTransportadora,
+                            selectedProduto2,
+                            pm2,
+                            quantidade2,
+                            margem2,
+                            transportadoraFC,
                             freteFC,
-                            valorPgto,
+                            soma,
                             vencimento,
                             datePgto,
-                            proporcaoList,
-                            soma,
-                            pwSHA256
+                            valorPgto,
+                            subtracao,
+                            hash,
+                            proporcaoList
                         ).subscribe(
                             data => {
                                 this.selectedCliente = "";
@@ -623,7 +620,6 @@ private menus: MenuItem[];
     }
 
     excluir(hash) {
-        console.log(hash)
         this.confirmationService.confirm({
             message: 'Tem certeza que deseja excluir essa Nota de Venda?',
             header: 'Excluir',
@@ -633,7 +629,8 @@ private menus: MenuItem[];
                     data => this._router.navigate(['/fluxodecaixa']),
                     error => console.log(error)
                 )                
-            }
+            },
+            reject: () => {}
         });
     }
 

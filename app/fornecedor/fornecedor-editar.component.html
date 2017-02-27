@@ -257,7 +257,7 @@
 </div>
 <p-confirmDialog icon="fa fa-question-circle" width="425" #cd>
     <p-footer>
-        <button type="button" pButton icon="fa-close" label="Não"></button>
+        <button type="button" pButton icon="fa-close" label="Não" (click)="cd.reject()"></button>
         <button type="button" pButton icon="fa-check" label="Sim" (click)="cd.accept()"></button>
     </p-footer>
 </p-confirmDialog>

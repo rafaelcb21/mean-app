@@ -169,23 +169,28 @@
             <div class="field paragrafo">
                 <button
                     (click)="salvar(
-                                selectedCliente,
-                                valueEmissao,
-                                selectedOperacao,
-                                selectedCategoria,
-                                serie,
-                                venda,
+                                cliente,
+                                emissaoFC,
+                                operacaoFC,
+                                categoriaFC,
+                                serieFC,
+                                vendaFC,
                                 selectedProduto,
                                 pm,
                                 quantidade,
                                 margem,
-                                selectedTransportadora,
-                                frete,
-                                sum,
-                                valorPgto,
+                                selectedProduto2,
+                                pm2,
+                                quantidade2,
+                                margem2,
+                                transportadoraFC,
+                                freteFC,
+                                sum,                                
                                 vencimento,
                                 datePgto,
-                                subtracao
+                                valorPgto,
+                                subtracao,
+                                hash
                             )"
                     pButton type="button" label="Salvar" style="color:#fff;background:green;border-color:green;margin-bottom:12px;margin-top:5px">
                 </button>
@@ -203,7 +208,7 @@
 </div>
 <p-confirmDialog icon="fa fa-question-circle" width="425" #cd>
     <p-footer>
-        <button type="button" pButton icon="fa-close" label="Não"></button>
+        <button type="button" pButton icon="fa-close" label="Não" (click)="cd.reject()"></button>
         <button type="button" pButton icon="fa-check" label="Sim" (click)="cd.accept()"></button>
     </p-footer>
 </p-confirmDialog>

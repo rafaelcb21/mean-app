@@ -644,7 +644,8 @@ export class FornecedorEditarComponent implements OnInit {
                     data => this._router.navigate(['/fluxodecaixa']),
                     error => console.log(error)
                 )                
-            }
+            },
+            reject: () => {}
         });
     }
 }
