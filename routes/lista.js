@@ -1321,113 +1321,143 @@ router.post('/vendaEdit', function(req, res, next) {
   var selectedCategoria = req.body.selectedCategoria;
   var serie = req.body.serie;
   var venda = req.body.venda;
-  var selectedProduto = req.body.selectedProduto; //lista
-  var pm = req.body.pm; //lista
-  var quantidade = req.body.quantidade; //lista
-  var margem = req.body.margem; //lista
+  var selectedProduto1 = req.body.selectedProduto; //lista
+  var pm1 = req.body.pm; //lista
+  var quantidade1 = req.body.quantidade; //lista
+  var margem1 = req.body.margem; //lista
+  var selectedProduto2 = req.body.selectedProduto2; //lista
+  var pm2 = req.body.pm2; //lista
+  var quantidade2 = req.body.quantidade2; //lista
+  var margem2 = req.body.margem2; //lista
   var selectedTransportadora = req.body.selectedTransportadora;
   var frete = req.body.frete;
-  var valorPgto = req.body.valorPgto; //lista
+  var soma = req.body.soma;
   var vencimento = req.body.vencimento; //lista
   var datePgto = req.body.datePgto; //lista
-  var proporcaoList = req.body.proporcaoList; //lista
-  var soma = req.body.soma;
+  var valorPgto = req.body.valorPgto; //lista
+  var subtracao = req.body.subtracao;
   var hash = req.body.hash;
+  var proporcaoList = req.body.proporcaoList; //lista
 
   var list1 = [];
   var list2 = [];
   var list3 = [];
   var valor = [];
   var listHash = [];
+  var hashIds = [];
 
-  var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);
-
-  for(let i = 0; i < valorPgto.length; i++) {
-    var freteporProduto = (((valorPgto[i] / soma) * frete) / quantidadeTotal);
-    list3.push(freteporProduto);
-  }
-
-  for (let i = 0; i < proporcaoList.length; i++) {
-    for (let j = 0; j < valorPgto.length; j++) {
-      var parcela = parseFloat(proporcaoList[i])*parseFloat(valorPgto[j])/quantidade[i];
-      list1.push(parcela);
+  Venda.find({hash: hash},function(err1, doc1){
+    for(let i = 0; i < doc1.length; i++){
+      hashIds.push(doc1[i].hashId)
     }
-    list2.push(list1);
-    list1 = [];
-  }
+    Venda.remove({ hash: hash}, function (err2, doc2){});
+    Fluxo.remove({ hash: hash, tabela: "venda"}, function (err3, doc3){});
 
-  for (let i = 0; i < quantidade.length; i++) {
-    for (let j = 0; j < quantidade[i]; j++) {
-
-      var produto = selectedProduto[i];
-      var custoMedio = pm[i];
-      var qtd = quantidade[i];
-      var marg = margem[i];
-      var val = valor[i];
-      var prop = proporcaoList[i];
-      var parc = list2[i];
-      var dataParc = datePgto;
-
-      stringRandom = crypto.randomBytes(32).toString('hex');
-      var hashId = SHA256(stringRandom).toString();
-
-      var sell = new Venda({
-        cliente: selectedCliente,
-        emissao: valueEmissao,
-        operacao: selectedOperacao,
-        categoria: selectedCategoria,
-        serie: serie,
-        venda: venda,
-        produto: produto,
-        pm: custoMedio,
-        qtd: qtd,
-        margem: marg,
-        val: val,
-        prop: prop,
-        parc: parc,
-        vencimento: vencimento,
-        dataParc: dataParc,
-        transportadora: selectedTransportadora,
-        parcFrete: list3,
-        hash: hash,
-        hashId: hashId
+    for(let i = 0; i < hashIds.length; i++){
+      Produto.update({hashId: hashIds[i]}, {"$set":{vendido: false, hashId: ""}},function(err4, doc4){
+        console.log(err4)
+        console.log(doc4)
       })
-      sell.save(function(err, result) {});
-      listHash.push(hashId)
-    }      
-  }
+    }
+  
 
-  for (let i = 0; i < quantidade.length; i++) {
-    var inteiro = parseInt(quantidade[i])
-    var query = Produto.find({produto: selectedProduto[i], vendido: false}).limit(inteiro).exec();
-    query.then(function (doc) {
-      for (let j = 0; j < doc.length; j++) {
-        Produto.update({ _id: doc[j]._id }, { $set: { vendido: true, hashId: listHash[j] }}, function(e, r){
-          if(e){
-            console.log(e)
-          }else{
-            console.log(r)
-          }
+    var selectedProduto = selectedProduto1.concat(selectedProduto2);
+    var quantidade0 = quantidade1.concat(quantidade2);
+    var quantidade = quantidade0.map(Number);
+    var margem = margem1.concat(margem2);
+    var pm = pm1.concat(pm2);
+    var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+
+    
+
+    for(let i = 0; i < valorPgto.length; i++) {
+      var freteporProduto = (((valorPgto[i] / soma) * frete) / quantidadeTotal);
+      list3.push(freteporProduto);
+    }
+    
+    for (let i = 0; i < proporcaoList.length; i++) {
+      for (let j = 0; j < valorPgto.length; j++) {
+        var parcela = parseFloat(proporcaoList[i])*parseFloat(valorPgto[j])/quantidade[i];
+        list1.push(parcela);
+      }
+      list2.push(list1);
+      list1 = [];
+    }
+
+    for (let i = 0; i < quantidade.length; i++) {
+      for (let j = 0; j < quantidade[i]; j++) {
+
+        var produto = selectedProduto[i];
+        var custoMedio = pm[i];
+        var qtd = quantidade[i];
+        var marg = margem[i];
+        var val = valor[i];
+        var prop = proporcaoList[i];
+        var parc = list2[i];
+        var dataParc = datePgto;
+
+        stringRandom = crypto.randomBytes(32).toString('hex');
+        var hashId = SHA256(stringRandom).toString();
+
+        var sell = new Venda({
+          cliente: selectedCliente,
+          emissao: valueEmissao,
+          operacao: selectedOperacao,
+          categoria: selectedCategoria,
+          serie: serie,
+          venda: venda,
+          produto: produto,
+          pm: custoMedio,
+          qtd: qtd,
+          margem: marg,
+          val: val,
+          prop: prop,
+          parc: parc,
+          vencimento: vencimento,
+          dataParc: dataParc,
+          transportadora: selectedTransportadora,
+          parcFrete: list3,
+          hash: hash,
+          hashId: hashId
+        })
+        sell.save(function(err, result) {
+          console.log(result)
         });
+        listHash.push(hashId)
       }      
-    });
-  }
+    }
 
+    for (let i = 0; i < quantidade.length; i++) {
+      var inteiro = parseInt(quantidade[i])
+      var query = Produto.find({produto: selectedProduto[i], vendido: false}).limit(inteiro).exec();
+      query.then(function (doc) {
+        for (let j = 0; j < doc.length; j++) {
+          Produto.update({ _id: doc[j]._id }, { $set: { vendido: true, hashId: listHash[j] }}, function(e, r){
+            if(e){
+              console.log(e)
+            }else{
+              console.log(r)
+            }
+          });
+        }      
+      });
+    }
 
-  for (let i = 0; i < valorPgto.length; i++) {
-    var fluxo = new Fluxo({
-        dataParc: dataParc[i],
-        dataVencimento: vencimento[i],
-        fornecedor: selectedCliente,
-        valorPgto: valorPgto[i],
-        hash: hash,
-        tabela: "venda"
-      })
-    fluxo.save(function(err, result) {})
-  }
+    for (let i = 0; i < valorPgto.length; i++) {
+      var fluxo = new Fluxo({
+          dataParc: dataParc[i],
+          dataVencimento: vencimento[i],
+          fornecedor: selectedCliente,
+          valorPgto: valorPgto[i],
+          hash: hash,
+          tabela: "venda"
+        })
+      fluxo.save(function(err, result) {})
+    }
 
-  res.status(201).json({
-    msg: "sucesso"
+    res.status(201).json({
+      msg: "sucesso"
+    })
   })
 })
 module.exports = router;

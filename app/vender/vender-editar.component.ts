@@ -382,18 +382,17 @@ private menus: MenuItem[];
                         }else{listaVerify.push(true)}
                     }
 
-                    if(quantidade.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    if(quantidade.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if((quantidade.indexOf("") != -1) || (quantidade.indexOf("0") != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-                    if(margem.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    if(margem.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(margem.indexOf("") != -1 || margem.indexOf(0) != -1 || margem.indexOf("0") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    //if(margem.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    //if(margem.indexOf("0") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if((quantidade2.indexOf("") != -1) || (quantidade2.indexOf(0) != -1)) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-                    if(quantidade2.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    if(quantidade2.length == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    if(margem2.indexOf("") != -1 || margem2.indexOf(0) != -1 || margem2.indexOf("0") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    //if(margem2.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
+                    //if(margem2.indexOf("0") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
 
-                    if(margem2.indexOf("") != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-                    if(margem2.indexOf(0) != -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-              
                     if(freteFC > 0) {
                         if( (transportadoraFC == undefined) || 
                             (transportadoraFC == "") || 
@@ -462,7 +461,7 @@ private menus: MenuItem[];
                             proporcaoList
                         ).subscribe(
                             data => {
-                                this.selectedCliente = "";
+                                /*this.selectedCliente = "";
                                 this.valueEmissao = undefined;
                                 this.selectedOperacao = "";
                                 this.selectedCategoria = "";
@@ -493,7 +492,7 @@ private menus: MenuItem[];
                                         },
                                         error => {
                                             console.log(error)
-                                });
+                                });*/
                             },
 
                             error => {

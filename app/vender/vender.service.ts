@@ -227,14 +227,19 @@ export class VenderService {
             pm: pm,
             quantidade: quantidade,
             margem: margem,
+            selectedProduto2: selectedProduto2,
+            pm2: pm2,
+            quantidade2: quantidade2,
+            margem2: margem2,
             selectedTransportadora: transportadoraFC,
             frete: freteFC,
-            valorPgto: valorPgto,
+            soma: soma,
             vencimento: vencimento,
             datePgto: datePgto,
-            proporcaoList: proporcaoList,
-            soma: soma,
-            hash: hash
+            valorPgto: valorPgto,
+            subtracao: subtracao,
+            hash: hash,
+            proporcaoList: proporcaoList            
         });
         const header = new Headers({'Content-Type': 'application/json'});
         return this._http.post(Config.URL_SITE + 'lista/vendaEdit', body, {headers: header})
