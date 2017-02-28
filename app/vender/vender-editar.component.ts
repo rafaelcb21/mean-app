@@ -426,10 +426,7 @@ private menus: MenuItem[];
                         this.verify = false
                     }
 
-                    console.log(listaVerify)
-                    console.log(this.verify)
                     listaVerify = [];
-
                     var soma = this.somar();
                     var proporcaoList = this.proporcional();
                     
@@ -461,38 +458,9 @@ private menus: MenuItem[];
                             proporcaoList
                         ).subscribe(
                             data => {
-                                /*this.selectedCliente = "";
-                                this.valueEmissao = undefined;
-                                this.selectedOperacao = "";
-                                this.selectedCategoria = "";
-                                this.serie = undefined;
-                                this.venda = undefined;
-                                this.items = [];
-                                this.selectedProduto.splice(0, this.selectedProduto.length);
-                                this.pm.splice(0, this.pm.length);
-                                this.quantidade.splice(0, this.quantidade.length);
-                                this.margem.splice(0, this.margem.length);
-                                this.selectedTransportadora = "";
-                                this.frete = 0;
-                                this.sum = 0;
-                                this.itemsPgto.splice(0, this.itemsPgto.length);
-                                this.valorPgto.splice(0, this.valorPgto.length);
-                                this.vencimento.splice(0, this.datePgto.length);
-                                this.datePgto.splice(0, this.datePgto.length);
-                                this.subtracao = 0;
-                                this.check = undefined;
-
-                                this.produtoList.splice(0, this.produtoList.length);
-                                this.venderService.getItemProduto()
-                                    .subscribe(
-                                        data => {
-                                            for(let i = 0; i < data[0].length; i++) {
-                                                this.produtoList.push(data[0][i].label);
-                                            }
-                                        },
-                                        error => {
-                                            console.log(error)
-                                });*/
+                                if(this.origem=="fc"){
+                                    this._router.navigate(['/fluxodecaixa']);
+                                }
                             },
 
                             error => {

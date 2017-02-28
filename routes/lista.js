@@ -459,17 +459,18 @@ router.post('/venda', function(req, res, next) {
         hashId: hashId
       })
       sell.save(function(err, result) {});
-      listHash.push(hashId)
+      //listHash.push(hashId);
+      var query = Produto.update({ produto: produto, vendido: false }, { $set: { vendido: true, hashId: hashId }}).limit(1);
+      query.exec(function(err, doc) {
+        console.log(doc)
+      })
     }      
   }
-  console.log(quantidade)
-  for (let i = 0; i < quantidade.length; i++) {
+
+  /*for (let i = 0; i < quantidade.length; i++) {
     var inteiro = parseInt(quantidade[i])
-    console.log(inteiro)
     var query = Produto.find({produto: selectedProduto[i], vendido: false}).limit(inteiro);//.exec();
-    //query.then(function (doc) {
     query.exec(function(err, doc) {
-        console.log(doc)
       for (let j = 0; j < doc.length; j++) {
         Produto.update({ _id: doc[j]._id }, { $set: { vendido: true, hashId: listHash[j] }}, function(e, r){
           if(e){
@@ -480,18 +481,8 @@ router.post('/venda', function(req, res, next) {
         });
       } 
     });  
-    //  console.log(doc)
-    //  for (let j = 0; j < doc.length; j++) {
-    //    Produto.update({ _id: doc[j]._id }, { $set: { vendido: true, hashId: listHash[j] }}, function(e, r){
-    //      if(e){
-    //        console.log(e)
-    //      }else{
-    //        console.log(r)
-    //      }
-    //    });
-    //  }      
-    //});
-  }
+  }*/
+
 
 
   for (let i = 0; i < valorPgto.length; i++) {
@@ -1444,11 +1435,15 @@ router.post('/vendaEdit', function(req, res, next) {
         sell.save(function(err, result) {
           console.log(result)
         });
-        listHash.push(hashId)
+        //listHash.push(hashId)
+        var query = Produto.update({ produto: produto, vendido: false }, { $set: { vendido: true, hashId: hashId }}).limit(1);
+        query.exec(function(err, doc) {
+          console.log(doc)
+        })
       }      
     }
 
-    for (let i = 0; i < quantidade.length; i++) {
+    /*for (let i = 0; i < quantidade.length; i++) {
       var inteiro = parseInt(quantidade[i])
       var query = Produto.find({produto: selectedProduto[i], vendido: false}).limit(inteiro).exec();
       query.then(function (doc) {
@@ -1462,7 +1457,7 @@ router.post('/vendaEdit', function(req, res, next) {
           });
         }      
       });
-    }
+    }*/
 
     for (let i = 0; i < valorPgto.length; i++) {
       var fluxo = new Fluxo({
