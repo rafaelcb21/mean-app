@@ -302,12 +302,12 @@ export class CaixaService {
                     var produtos = ll.filter(function(elem, index, self) { //produtos
                         return index == self.indexOf(elem);
                     })
-                    
+
                     for(let i = 0; i < produtos.length; i++){
                         var y = produtos[i].split(";");
                         listProdutos.push(y);
                     }                
-                    
+
                     for(let i = 0; i < obj.length; i++){
                         for(let j = 0; j < obj[i].parcFrete.length; j++){
                             var parcFrete = obj[i].parcFrete[j];
@@ -327,7 +327,6 @@ export class CaixaService {
                     }
 
                     var parcelas = matrix(ll3);
-
                     var parcelasLista = parcelas.slice(0,dataParc.length);
 
                     for(let i = 0; i < parcelasLista.length; i++){

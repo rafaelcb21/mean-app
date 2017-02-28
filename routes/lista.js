@@ -462,11 +462,14 @@ router.post('/venda', function(req, res, next) {
       listHash.push(hashId)
     }      
   }
-
+  console.log(quantidade)
   for (let i = 0; i < quantidade.length; i++) {
     var inteiro = parseInt(quantidade[i])
-    var query = Produto.find({produto: selectedProduto[i], vendido: false}).limit(inteiro).exec();
-    query.then(function (doc) {
+    console.log(inteiro)
+    var query = Produto.find({produto: selectedProduto[i], vendido: false}).limit(inteiro);//.exec();
+    //query.then(function (doc) {
+    query.exec(function(err, doc) {
+        console.log(doc)
       for (let j = 0; j < doc.length; j++) {
         Produto.update({ _id: doc[j]._id }, { $set: { vendido: true, hashId: listHash[j] }}, function(e, r){
           if(e){
@@ -475,8 +478,19 @@ router.post('/venda', function(req, res, next) {
             console.log(r)
           }
         });
-      }      
-    });
+      } 
+    });  
+    //  console.log(doc)
+    //  for (let j = 0; j < doc.length; j++) {
+    //    Produto.update({ _id: doc[j]._id }, { $set: { vendido: true, hashId: listHash[j] }}, function(e, r){
+    //      if(e){
+    //        console.log(e)
+    //      }else{
+    //        console.log(r)
+    //      }
+    //    });
+    //  }      
+    //});
   }
 
 
@@ -1189,7 +1203,10 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
       pmListTotal = [];
       qtdListTotal = [];
       qtdTotal = [];
-
+      llvenda = [];
+      listProdutos = [];
+      produtosLista = [];
+      
       for(let j = 0; j < _dataParc.length; j++){
           var date = _dataParc[j].slice(0, 10);
           var venc = _vencimento[j].slice(0, 10);
@@ -1198,17 +1215,38 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
       }
 
       for(let i = 0; i < doc1.length; i++){
+          var produtos = doc1[i].produto[0];
+          var qtd = doc1[i].qtd[0];
+          var pm = doc1[i].pm[0];
+          var margem = doc1[i].margem[0];
+          var soma = parseFloat(qtd) * pm * ((margem/100)+1);
+          llvenda.push(produtos+";"+qtd+";"+String(pm)+";"+String(margem)+"%;"+String(soma));                    
+      }
+
+      var uniqueProduct = llvenda.filter(function(elem, index, self) { // 0 => lista de todos os produtos
+          return index == self.indexOf(elem);
+      })
+
+      for(let i = 0; i < uniqueProduct.length; i++){
+          var y = uniqueProduct[i].split(";");
+          listProdutos.push(y);
+      } 
+
+      for(let i = 0; i < listProdutos.length; i++){
+            produtosLista.push(listProdutos[i][0]);
+            qtdList.push(listProdutos[i][1]);
+            pmList.push(listProdutos[i][2]);            
+            margemList.push(parseInt(listProdutos[i][3].slice(0,-1)));
+        }
+
+      for(let i = 0; i < doc1.length; i++){
           llvenda.push(doc1[i].produto[0]);
           for(let j = 0; j < doc1[0].parcFrete.length; j++){
             freteListVenda.push(doc1[i].parcFrete[j]);
           }        
           parcelasMatrixVenda.push(doc1[i].parc);
           parcelasMatrixVenda.push(doc1[i].parcFrete);
-      }
-
-      var uniqueProduct = llvenda.filter(function(elem, index, self){ // 0 => lista de todos os produtos
-          return index == self.indexOf(elem);
-      })
+      }      
 
       var somarFrete = freteListVenda.reduce((a, b) => a + b, 0);
       frete = somarFrete;
@@ -1222,70 +1260,53 @@ router.get('/editar/:hash/:tabela', function(req, res, next) {
       var parcelasLista = parcelas.slice(0,dataParc.length);
 
       var funcaoVenda1 = function(key, callback){
-          ll3 = [];
-          Venda.find({ produto: key, hash: hash}, function (err5, doc5) {
-            var margem = doc5[0].margem;
-            var qtd = doc5[0].qtd;
-            var pm = doc5[0].pm;
-            callback(err5, [pm[0], parseInt(qtd[0]), margem[0]]);
-        });
-      }
-
-      var funcaoVenda2 = function(key, callback){
           qtdList2 = [];
           Produto.find({ produto: key, vendido: false}, function (err6, doc6) {
+            
             for(let i = 0; i < doc6.length; i++){
-              qtdList2.push(doc6[i].val[0]);
+              qtdList2.push(parseInt(doc6[i].val[0]));
             }
             qtd = qtdList2.length;
             sum = qtdList2.reduce((a, b) => a + b, 0);
             pm = sum/qtd;
             qtdList2 = [];
-            
             callback(err6, [key, pm, qtd]);
         });
       }
 
-      async.map(uniqueProduct, funcaoVenda1, function (err1, result1) {
-        for(let i = 0; i < result1.length; i++){
-            pmList.push(result1[i][0]);
-            qtdList.push(result1[i][1]);
-            margemList.push(result1[i][2]);
+      async.map(produtosLista, funcaoVenda1, function (err2, result2) {        
+        for(let i = 0; i < result2.length; i++){
+          pmListTotal.push(result2[i][1]);
+          qtdListTotal.push(result2[i][2]);
         }
-        async.map(uniqueProduct, funcaoVenda2, function (err2, result2) {
-          for(let i = 0; i < result2.length; i++){
-            pmListTotal.push(result2[i][1]);
-            qtdListTotal.push(result2[i][2]);
-          }
-          for(let i = 0; i < result2.length; i++){
-            qtdTotal.push(qtdListTotal[i] + qtdList[i])
-          }
-          document = {
-              cliente: cliente,
-              emissao: emissao,
-              operacao: operacao,
-              categoria: categoria,
-              serie: serie,
-              venda: venda,
-              hashId: hashId,
-              uniqueProduct: uniqueProduct,
-              transportadora: transportadora,
-              frete: frete,
-              vencimento: vencimento,
-              dataParc: dataParc,
-              parcelasLista: parcelasLista,
-              pmList: pmList,
-              qtdList: qtdList,
-              margemList: margemList,
-              hash: hash,
-              pmEstoque: pmListTotal,
-              qtdTotal: qtdTotal
-          }
-          res.status(200).json({
-            obj: document
-          });
+        for(let i = 0; i < result2.length; i++){
+          qtdTotal.push(parseInt(qtdListTotal[i]) + parseInt(qtdList[i]));
+        }
+        document = {
+            cliente: cliente,
+            emissao: emissao,
+            operacao: operacao,
+            categoria: categoria,
+            serie: serie,
+            venda: venda,
+            hashId: hashId,
+            uniqueProduct: produtosLista,
+            transportadora: transportadora,
+            frete: frete,
+            vencimento: vencimento,
+            dataParc: dataParc,
+            parcelasLista: parcelasLista,
+            pmList: pmList,
+            qtdList: qtdList,
+            margemList: margemList,
+            hash: hash,
+            pmEstoque: pmListTotal,
+            qtdTotal: qtdTotal
+        }
+        res.status(200).json({
+          obj: document
+        });
       })    
-    })     
   })
   }else if(tabela=="dr"){
     DespRec.find({hash: hash},function(err, doc){

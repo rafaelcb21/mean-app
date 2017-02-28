@@ -118,7 +118,7 @@ private menus: MenuItem[];
             this.origem = params['origem'];
 
             this.caixaService.editar(this.hash, tabela).subscribe(
-                data => {                  
+                data => {
                     this.cliente = data.cliente;
                     this.emissaoFC = data.emissao;
                     this.operacaoFC = data.operacao;
