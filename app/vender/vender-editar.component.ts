@@ -431,7 +431,7 @@ private menus: MenuItem[];
                     var proporcaoList = this.proporcional();
                     
                     if(this.verify == true) {
-                        this.showSucesso();
+                        //this.showSucesso();
                         this.venderService.postVenda2(
                             cliente,
                             emissaoFC,
@@ -480,10 +480,10 @@ private menus: MenuItem[];
         this.msgs.push({severity:'error', summary:'Erro', detail:'Formulário preenchido incorretamente'});
     }
 
-    showSucesso() {
-        this.msgs = [];
-        this.msgs.push({severity:'success', summary:'Sucesso', detail:'Formulario enviado com sucesso'});
-    }
+    //showSucesso() {
+    //    this.msgs = [];
+    //    this.msgs.push({severity:'success', summary:'Sucesso', detail:'Formulario enviado com sucesso'});
+    //}
 
     toFixed(x) {
         if (Math.abs(x) < 1.0) {

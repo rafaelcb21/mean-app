@@ -564,9 +564,15 @@ router.post('/despesas-receitas', function(req, res, next) {
   var periodo = req.body.periodo;
   var parcela = req.body.parcela;
   var hash = req.body.hash;
+  var editar = req.body.editar;
+  var hashExcluir = req.body.hashExcluir;
+
+  if(editar){
+    DespRec.remove({ hash: hashExcluir}, function (err, doc2){});
+    Fluxo.remove({ hash: hashExcluir, tabela: "dr"}, function (err, doc2){});
+  }
 
   var valorPagto = 0;
-
   if(tipo == "despesa") { valorPagto = -1 * valor }else{ valorPagto = valor }
 
   var dp = new DespRec({
@@ -1312,6 +1318,15 @@ router.post('/excluirNota', function(req, res, next) {
   var hash = req.body.hash;
   Produto.remove({ hash: hash}, function (err, doc2){});
   Fluxo.remove({ hash: hash, tabela: "compra"}, function (err, doc2){});
+  res.status(200).json({
+    msg: "Excluido"
+  })
+})
+
+router.post('/excluirNotaDR', function(req, res, next) {
+  var hash = req.body.hash;
+  DespRec.remove({ hash: hash}, function (err, doc2){});
+  Fluxo.remove({ hash: hash, tabela: "dr"}, function (err, doc2){});
   res.status(200).json({
     msg: "Excluido"
   })

@@ -166,6 +166,9 @@ export class CaixaComponent implements OnInit {
         if(tabela=="venda"){
             this._router.navigate(['/vender-editar/'+hash+"/"+tabela+"/fc"]);
         }
+        if(tabela=="dr"){
+            this._router.navigate(['/despesasreceitas-editar/'+hash+"/"+tabela+"/fc"]);
+        }
     }
 
     showDialog(hash, tabela) {

@@ -1,0 +1,94 @@
+<p-contextMenu [global]="true" [model]="menus"></p-contextMenu>
+<div class="container back">
+    <p-panel header="Editar Despesas e Receitas">
+        <div class="margin">
+            <p-fieldset legend="Cabeçalho"> 
+                <div class="display margin">
+                    <div class="field">
+                        <span><b>Descrição: </b></span>
+                        <input type="text" pInputText [(ngModel)]="descricao" placeholder="Descrição"/>
+                    </div>
+                </div>
+                <div class="display margin">
+                    <div class="field">
+                        <div><b>Categoria: </b> {{categoria}}</div>
+                    </div>
+                </div>
+            </p-fieldset>
+        </div>
+        <div class="margin">
+            <p-fieldset legend="Despesas / Receitas">   
+                <div class="display margin">
+                    <div class="field">
+                        <p-dropdown [options]="despesaOUreceita" [(ngModel)]="tipo"></p-dropdown>
+                    </div> 
+                    <div class="field">
+                        <input
+                            pInputText
+                            currencyMask
+                            [(ngModel)]="valor" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+                    </div>
+                    <div div class="field">
+                        <p-calendar (keypress)="onlyDate($event)" [locale]="br" [(ngModel)]="data" dateFormat="dd/mm/yy" placeholder="Data"></p-calendar>
+                    </div>
+                </div>
+            </p-fieldset>
+        </div>
+        <div class="margin">
+            <p-fieldset legend="Repetir">
+                <div class="display">
+                   <p-checkbox [(ngModel)]="repetir" binary="true" label="Repetir"></p-checkbox>
+                </div>
+                <div class="display margin">
+                    <div class="field">
+                        <p-dropdown [disabled]="!repetir" [options]="fixaOUparcelada" [(ngModel)]="fixaparcelada"></p-dropdown>
+                    </div>                    
+                </div>               
+                <div class="display margin">
+                    <div class="field" *ngIf="((fixaparcelada === 'parcelada' || fixaparcelada === 'fixa') && repetir == true)">
+                        <p-dropdown [options]="periodos" [(ngModel)]="periodo"></p-dropdown>
+                    </div>
+                    <div class="field" *ngIf="((fixaparcelada === 'parcelada') && repetir == true)">
+                        <input type="text" (keypress)="onlyNumber($event)" pInputText [(ngModel)]="parcela" placeholder="Parcelas"/>
+                    </div>
+                </div>
+            </p-fieldset>
+        </div>
+        <div class="display margin">
+            <p-growl [value]="msgs"></p-growl>
+        </div>
+        <div class="display margin">
+            <div class="field paragrafo">
+                <button
+                    (click)="salvar(
+                                descricao,
+                                categoria,
+                                tipo,
+                                valor,
+                                data,
+                                repetir,
+                                fixaparcelada,
+                                periodo,
+                                parcela,
+                                hash
+                            )"
+                    pButton type="button" label="Salvar" style="color:#fff;background:green;border-color:green;margin-bottom:12px;margin-top:5px">
+                </button>
+                <button
+                    (click)="sair()"
+                    pButton type="button" label="Sair sem salvar" style="color:#fff;background:red;border-color:red;margin-bottom:12px;margin-top:5px">
+                </button>
+                <button
+                    (click)="excluir(hash)"
+                    pButton type="button" label="Excluir" icon="fa-trash" style="color:#fff;background:red;border-color:red;margin-bottom:12px;margin-top:5px">
+                </button>
+            </div>
+        </div>
+    </p-panel>
+</div>
+<p-confirmDialog icon="fa fa-question-circle" width="425" #cd>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" label="Não" (click)="cd.reject()"></button>
+        <button type="button" pButton icon="fa-check" label="Sim" (click)="cd.accept()"></button>
+    </p-footer>
+</p-confirmDialog>

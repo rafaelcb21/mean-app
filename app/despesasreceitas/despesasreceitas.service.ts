@@ -40,7 +40,9 @@ export class DespesasReceitasService {
             fixaparcelada,
             periodo,
             parcela,
-            hash
+            hash,
+            editar,
+            hashExcluir
         ) {
         const body = JSON.stringify({
             descricao: descricao,
@@ -52,7 +54,9 @@ export class DespesasReceitasService {
             fixaparcelada: fixaparcelada,
             periodo: periodo,
             parcela: parcela,
-            hash: hash
+            hash: hash,
+            editar: editar,
+            hashExcluir: hashExcluir
         });
         const header = new Headers({'Content-Type': 'application/json'});
         return this._http.post(Config.URL_SITE + 'lista/despesas-receitas', body, {headers: header})
@@ -60,4 +64,11 @@ export class DespesasReceitasService {
             .catch(error => Observable.throw(error.json()));
         }
 
+    exluirNotaDR(hash) {
+        const body = JSON.stringify({hash: hash});
+        const header = new Headers({'Content-Type': 'application/json'});
+        return this._http.post(Config.URL_SITE + 'lista/excluirNotaDR', body, {headers: header})
+            .map(response => response.json().msg)
+            .catch(error => Observable.throw(error.json()));
+    }
 }

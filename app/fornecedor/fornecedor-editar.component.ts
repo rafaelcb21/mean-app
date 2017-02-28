@@ -452,7 +452,7 @@ export class FornecedorEditarComponent implements OnInit {
             var hashToVendidos = sha256(hashString);
 
             if(this.verify == true) {
-                this.showSucesso();
+                //this.showSucesso();
                 this.fornecedorService.postFornecedoresEdit(
                     fornecedorFC,
                     emissaoFC,
@@ -495,10 +495,10 @@ export class FornecedorEditarComponent implements OnInit {
         this.msgs.push({severity:'error', summary:'Erro', detail:'Formulário preenchido incorretamente'});
     }
 
-    showSucesso() {
-        this.msgs = [];
-        this.msgs.push({severity:'success', summary:'Sucesso', detail:'Formulario enviado com sucesso'});
-    }
+    //showSucesso() {
+    //    this.msgs = [];
+    //    this.msgs.push({severity:'success', summary:'Sucesso', detail:'Formulario enviado com sucesso'});
+    //}
 
     toFixed(x) {
         if (Math.abs(x) < 1.0) {

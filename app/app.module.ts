@@ -16,6 +16,7 @@ import { CaixaComponent } from './fluxodecaixa/fluxodecaixa.component';
 import { CaixaService } from './fluxodecaixa/fluxodecaixa.service';
 import { NumberBrasil } from './fluxodecaixa/fluxodecaixa.pipe';
 import { DespesasReceitasComponent } from './despesasreceitas/despesasreceitas.component';
+import { DespesasReceitasEditarComponent } from './despesasreceitas/despesasreceitas-editar.component';
 import { DespesasReceitasService } from './despesasreceitas/despesasreceitas.service';
 
 import { 
@@ -56,6 +57,7 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     NumberBrasil,
     DespesasReceitasComponent,
     VenderEditarComponent,
+    DespesasReceitasEditarComponent,
     //MoneyMaskDirective, 
     CurrencyMaskDirective],
   imports: [

@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { Message, MenuItem } from 'primeng/primeng';
 import { DespesasReceitasService } from './despesasreceitas.service'
+import { CaixaService } from '../fluxodecaixa/fluxodecaixa.service';
+import { ConfirmationService } from 'primeng/primeng';
 
 declare var sha256: any;
 
 @Component({
-    selector: '<despesasreceitas></despesasreceitas>',
-    templateUrl: './js/app/despesasreceitas/despesasreceitas.component.html',
-    styleUrls: ['./js/app/despesasreceitas/despesasreceitas.component.css'],
+    selector: '<despesasreceitas-editar></despesasreceitas-editar>',
+    templateUrl: './js/app/despesasreceitas/despesasreceitas-editar.component.html',
+    styleUrls: ['./js/app/despesasreceitas/despesasreceitas-editar.component.css'],
 })
-export class DespesasReceitasComponent implements OnInit {
+export class DespesasReceitasEditarComponent implements OnInit {
     private menus: MenuItem[];
     categoria: SelectItem[];
     selectedCategoria: string;
@@ -32,11 +34,18 @@ export class DespesasReceitasComponent implements OnInit {
     dataDespesaReceita = undefined;
     fixaparcelada: string;
     periodo: string;
-    editar: false;
-
+    hash: string;
+    origem: string;
+    tabela: string;
+    data0: string;
+    data: Date;
+    editar: true;
 
     constructor(private _router: Router,
-        private despesasReceitas: DespesasReceitasService
+        private despesasReceitas: DespesasReceitasService,
+        private activatedRoute: ActivatedRoute,
+        private caixaService: CaixaService,
+        private confirmationService: ConfirmationService
     ){
         this.despesaOUreceita = [
             {label:'Selecione', value:null},
@@ -64,6 +73,29 @@ export class DespesasReceitasComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.activatedRoute.params.subscribe((params: Params) => {
+                this.hash = params['hash'];
+                let tabela = params['tabela'];
+                this.origem = params['origem'];
+
+            this.caixaService.editar(this.hash, tabela).subscribe(
+                data => {
+                    this.tabela = tabela;
+                    this.descricao = data[0].descricao;
+                    this.categoria = data[0].selectedCategoria;
+                    this.tipo = data[0].tipo;
+                    this.valor = -1*data[0].valor;
+                    this.data0 = data[0].dataDespesaReceita;
+                    this.fixaparcelada = data[0].fixaparcelada;
+                    this.periodo = data[0].periodo;
+                    this.parcela = data[0].parcela;
+                    this.data = new Date(this.data0); //MM-DD-YYYY
+                    this.repetir = data[0].repetir;
+                },
+                error => console.log(error)
+            )
+        })
+
         this.menus = [
             {
                 label: 'Comprar Produto',
@@ -74,12 +106,16 @@ export class DespesasReceitasComponent implements OnInit {
                 routerLink: ['/vender']
             },
             {
+                label: 'Despesas e Receitas',
+                routerLink: ['/despesasreceitas']
+            },
+            {
                 label: 'Fluxo de Caixa',
                 routerLink: ['/fluxodecaixa']
             },
             {
                 label: 'Editar Lista',
-            },  
+            }
         ];
 
         this.br = {
@@ -183,28 +219,21 @@ export class DespesasReceitasComponent implements OnInit {
             repetir,
             fixaparcelada,
             periodo,
-            parcela
+            parcela,
+            hashExcluir
         ) {
             var listaVerify = [];
 
             if(descricao == undefined || descricao == null || descricao == "") {listaVerify.push(false)}else{listaVerify.push(true)}
-
-            if(selectedCategoria == undefined || selectedCategoria == null || selectedCategoria == "") {listaVerify.push(false)}else{listaVerify.push(true)}
-            if(this.categoriaList.indexOf(selectedCategoria) == -1) {listaVerify.push(false)}else{listaVerify.push(true)}
-
             if(tipo == undefined || tipo == null) {listaVerify.push(false)}else{listaVerify.push(true)}
-
             if(valor == undefined || valor == null || valor == 0) {listaVerify.push(false)}else{listaVerify.push(true)}
-
             if(dataDespesaReceita == undefined || dataDespesaReceita == null) {listaVerify.push(false)}else{listaVerify.push(true)}
 
             if(repetir) {
                 if(fixaparcelada == undefined || fixaparcelada == null) {listaVerify.push(false)}else{listaVerify.push(true)}
-
                 if(fixaparcelada == "fixa"){
                     if(periodo == undefined || periodo == null) {listaVerify.push(false)}else{listaVerify.push(true)}
                 }
-
                 if(fixaparcelada == "parcelada"){
                     if(periodo == undefined || periodo == null) {listaVerify.push(false)}else{listaVerify.push(true)}
                     if(parcela == undefined || parcela == null || parcela == "" || parcela < 2) {listaVerify.push(false)}else{listaVerify.push(true)}
@@ -212,19 +241,17 @@ export class DespesasReceitasComponent implements OnInit {
             }
 
             if(listaVerify.indexOf(false) == -1){
-                    this.verify = true;
-                }else{
-                    this.verify = false
-                }
-
+                this.verify = true;
+            }else{
+                this.verify = false
+            }
             listaVerify = [];
-         
+
             var hashString = this.randomString(32, '#aA!');
             var pwSHA256 = sha256(hashString);
 
             if(this.verify == true) {
-                this.showSucesso();
-                
+                //this.showSucesso();                
                 this.despesasReceitas.postDespesasReceitas(
                     descricao,
                     selectedCategoria,
@@ -236,19 +263,13 @@ export class DespesasReceitasComponent implements OnInit {
                     periodo,
                     parcela,
                     pwSHA256,
-                    false,
-                    "hashNaoExcluir"
+                    true,
+                    hashExcluir
                 ).subscribe(
                     data => {
-                        this.descricao = undefined;
-                        this.selectedCategoria = undefined;
-                        this.tipo = undefined;
-                        this.valor = 0;
-                        this.dataDespesaReceita = undefined;
-                        this.repetir = undefined;
-                        this.fixaparcelada = undefined;
-                        this.periodo = undefined;
-                        this.parcela = undefined;
+                        if(this.origem=="fc"){
+                            this._router.navigate(['/fluxodecaixa']);
+                        }
                     },
                     error => {
                         console.log(error)
@@ -264,8 +285,29 @@ export class DespesasReceitasComponent implements OnInit {
         this.msgs.push({severity:'error', summary:'Erro', detail:'Formulário preenchido incorretamente'});
     }
 
-    showSucesso() {
-        this.msgs = [];
-        this.msgs.push({severity:'success', summary:'Sucesso', detail:'Formulario enviado com sucesso'});
+    //showSucesso() {
+    //    this.msgs = [];
+    //    this.msgs.push({severity:'success', summary:'Sucesso', detail:'Formulario enviado com sucesso'});
+    //}
+
+    sair(){
+        if(this.origem=="fc"){
+            this._router.navigate(['/fluxodecaixa']);
+        }
+    }
+
+    excluir(hash) {
+        this.confirmationService.confirm({
+            message: 'Tem certeza que deseja excluir essa Nota?',
+            header: 'Excluir',
+            icon: 'fa fa-trash',
+            accept: () => {
+                this.despesasReceitas.exluirNotaDR(hash).subscribe(
+                    data => this._router.navigate(['/fluxodecaixa']),
+                    error => console.log(error)
+                )
+            },
+            reject: () => {}
+        });
     }
 }
