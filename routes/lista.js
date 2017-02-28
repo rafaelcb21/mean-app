@@ -1319,10 +1319,24 @@ router.post('/excluirNota', function(req, res, next) {
 
 router.post('/excluirVenda', function(req, res, next) {
   var hash = req.body.hash;
-  Venda.remove({ hash: hash}, function (err, doc2){});
-  Fluxo.remove({ hash: hash, tabela: "venda"}, function (err, doc2){});
-  res.status(200).json({
-    msg: "Excluido"
+  var hashIds = [];
+  Venda.find({hash: hash},function(err1, doc1){
+    for(let i = 0; i < doc1.length; i++){
+      hashIds.push(doc1[i].hashId)
+    }
+    Venda.remove({ hash: hash}, function (err2, doc2){});
+    Fluxo.remove({ hash: hash, tabela: "venda"}, function (err3, doc3){});
+
+    for(let i = 0; i < hashIds.length; i++){
+      Produto.update({hashId: hashIds[i]}, {"$set":{vendido: false, hashId: ""}},function(err4, doc4){
+        console.log(err4)
+        console.log(doc4)
+      })
+    }
+
+    res.status(200).json({
+      msg: "Excluido"
+    })
   })
 })
 
@@ -1355,7 +1369,7 @@ router.post('/vendaEdit', function(req, res, next) {
   var list2 = [];
   var list3 = [];
   var valor = [];
-  var listHash = [];
+  //var listHash = [];
   var hashIds = [];
 
   Venda.find({hash: hash},function(err1, doc1){
@@ -1370,17 +1384,14 @@ router.post('/vendaEdit', function(req, res, next) {
         console.log(err4)
         console.log(doc4)
       })
-    }
-  
+    }  
 
     var selectedProduto = selectedProduto1.concat(selectedProduto2);
     var quantidade0 = quantidade1.concat(quantidade2);
     var quantidade = quantidade0.map(Number);
     var margem = margem1.concat(margem2);
     var pm = pm1.concat(pm2);
-    var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);
-
-    
+    var quantidadeTotal = quantidade.reduce((a, b) => parseInt(a) + parseInt(b), 0);    
 
     for(let i = 0; i < valorPgto.length; i++) {
       var freteporProduto = (((valorPgto[i] / soma) * frete) / quantidadeTotal);
