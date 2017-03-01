@@ -9,10 +9,7 @@ import * as moment from 'moment';
 export class CaixaService {
 
     dataObject = [];
-    filter = [
-        {label:'Escolha o Periodo', value:null},
-        {label:'Todos', value:'todos'}
-    ];
+    filter = [{label:'Escolha o Periodo', value:null}];
     constructor(private _http: Http) {}
 
     fc(){
@@ -140,6 +137,11 @@ export class CaixaService {
                     var unique = lista.filter(function(elem, index, self) {
                         return index == self.indexOf(elem);
                     })
+                    
+
+                    while (this.filter.length > 0) {
+                        this.filter.pop();
+                    }
 
                     for(let i = 0; i < unique.length; i++) {
                         var mesFiltro = unique[i].substring(5,7);
@@ -158,8 +160,11 @@ export class CaixaService {
                         if(mesFiltro == "11"){mesNome = "Novembro"}
                         if(mesFiltro == "12"){mesNome = "Dezembro"}
 
+
                         this.filter.push({label: mesNome+" - "+anoNum, value: unique[i]})
                     }
+                    this.filter.unshift({label:'Todos', value:'todos'})
+                    this.filter.unshift({label:'Escolha o Periodo', value:null})                    
                     return {"data": this.dataObject}
                 }
             })

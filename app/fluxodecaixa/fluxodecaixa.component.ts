@@ -104,11 +104,10 @@ export class CaixaComponent implements OnInit {
             data => {
                 var start = moment().format("YYYY-MM");
                 //this.fluxodecaixa = data.data;
-                this.filtro(start);
+                this.filtro(start);                
             },
             error => console.log(error)
         )
-
         this.filtroDropdown = this.caixaService.filter;
     }
 

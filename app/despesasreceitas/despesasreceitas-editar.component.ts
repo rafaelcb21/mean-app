@@ -84,7 +84,7 @@ export class DespesasReceitasEditarComponent implements OnInit {
                     this.descricao = data[0].descricao;
                     this.categoria = data[0].selectedCategoria;
                     this.tipo = data[0].tipo;
-                    this.valor = -1*data[0].valor;
+                    this.valor = data[0].valor;
                     this.data0 = data[0].dataDespesaReceita;
                     this.fixaparcelada = data[0].fixaparcelada;
                     this.periodo = data[0].periodo;
