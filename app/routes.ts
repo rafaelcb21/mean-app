@@ -7,16 +7,17 @@ import { VenderEditarComponent } from './vender/vender-editar.component';
 import { CaixaComponent } from './fluxodecaixa/fluxodecaixa.component';
 import { DespesasReceitasComponent } from './despesasreceitas/despesasreceitas.component';
 import { DespesasReceitasEditarComponent } from './despesasreceitas/despesasreceitas-editar.component';
+import { AuthGuard } from './auth.guard';
 
 export const appRoutes: Routes = [
     {path: 'login', component: LoginComponent},
-    {path: 'fornecedor', component: FornecedorComponent},
-    {path: 'fornecedor-editar/:hash/:tabela/:origem', component: FornecedorEditarComponent},
-    {path: 'vender-editar/:hash/:tabela/:origem', component: VenderEditarComponent},
-    {path: 'despesasreceitas-editar/:hash/:tabela/:origem', component: DespesasReceitasEditarComponent},
-    {path: 'vender', component: VenderComponent},
-    {path: 'fluxodecaixa', component: CaixaComponent},
-    {path: 'despesasreceitas', component: DespesasReceitasComponent},
+    {path: 'fornecedor', component: FornecedorComponent, canActivate: [AuthGuard]},
+    {path: 'fornecedor-editar/:hash/:tabela/:origem', component: FornecedorEditarComponent, canActivate: [AuthGuard]},
+    {path: 'vender-editar/:hash/:tabela/:origem', component: VenderEditarComponent, canActivate: [AuthGuard]},
+    {path: 'despesasreceitas-editar/:hash/:tabela/:origem', component: DespesasReceitasEditarComponent, canActivate: [AuthGuard]},
+    {path: 'vender', component: VenderComponent, canActivate: [AuthGuard]},
+    {path: 'fluxodecaixa', component: CaixaComponent, canActivate: [AuthGuard]},
+    {path: 'despesasreceitas', component: DespesasReceitasComponent, canActivate: [AuthGuard]},
     {path: '', redirectTo: 'login', pathMatch: 'full'},
 ];
 

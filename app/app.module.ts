@@ -10,6 +10,7 @@ import { FornecedorEditarComponent } from './fornecedor/fornecedor-editar.compon
 import { FornecedorService } from './fornecedor/fornecedor.service';
 import { VenderService } from './vender/vender.service';
 import { LoginComponent } from './login/login.component';
+import { LoginService } from './login/login.service';
 import { VenderComponent } from './vender/vender.component';
 import { VenderEditarComponent } from './vender/vender-editar.component';
 import { CaixaComponent } from './fluxodecaixa/fluxodecaixa.component';
@@ -18,6 +19,7 @@ import { NumberBrasil } from './fluxodecaixa/fluxodecaixa.pipe';
 import { DespesasReceitasComponent } from './despesasreceitas/despesasreceitas.component';
 import { DespesasReceitasEditarComponent } from './despesasreceitas/despesasreceitas-editar.component';
 import { DespesasReceitasService } from './despesasreceitas/despesasreceitas.service';
+import { AuthGuard } from './auth.guard';
 
 import { 
   DropdownModule,
@@ -94,6 +96,8 @@ import { CurrencyMaskDirective } from './ng2-currency-mask-master/currency-mask.
     CaixaService,
     DespesasReceitasService,
     ConfirmationService,
+    LoginService,
+    AuthGuard,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     {provide: LOCALE_ID, useValue: "pt-BR"},
   ],

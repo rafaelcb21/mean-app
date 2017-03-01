@@ -1,1 +1,30 @@
-<h1>Login</h1>
+<div class="container">
+    <div class="centro">
+        <div>
+            <p-panel header="Autenticar-se">
+                <div class="margin">
+                    <p-fieldset legend="Login"> 
+                        <div class="display margin">
+                            <div class="field">
+                                <input type="text" pInputText [(ngModel)]="username" placeholder="Usuário"/>
+                            </div>
+                        </div>
+                        <div class="display margin bottom">
+                            <div class="field">
+                                <input type="password" pInputText [(ngModel)]="senha" placeholder="Senha"/>
+                            </div>
+                        </div>
+                    </p-fieldset>
+                </div>        
+                <div class="display-right margin">
+                    <div>
+                        <button 
+                            (click)="login(username, senha)"                        
+                            pButton type="button" label="Entrar" style="color:#fff;background:green;border-color:green;margin-bottom:12px;margin-top:5px">
+                        </button>
+                    </div>
+                </div>
+            </p-panel>
+        </div>
+    </div>
+</div>
